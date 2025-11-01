@@ -1,6 +1,18 @@
-[package]
-name = "cowsay-rs"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = ["crates/*"]
+resolver = "2"
 
-[dependencies]
+[workspace.package]
+edition = "2024"
+rust-version = "1.91"
+homepage = "https://franco-grobler.github.io/cowsay-rs/"
+documentation = "https://franco-grobler.github.io/cowsay-rs/"
+repository = "https://github.com/franco-grobler/cowsay-rs"
+authors = ["Franco Grobler <franco@grobler.fyi>"]
+license = "UNLICENSE"
+
+[workspace.dependencies]
+cowsay = { path = "crates/cowsay" }
+cowsay-cli = { path = "crates/cowsay-cli" }
+
+clap = { version = "4.5.51", features = ["derive"] }
