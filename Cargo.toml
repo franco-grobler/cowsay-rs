@@ -12,7 +12,9 @@ authors = ["Franco Grobler <franco@grobler.fyi>"]
 license = "UNLICENSE"
 
 [workspace.dependencies]
-cowsay = { path = "crates/cowsay" }
-cowsay-cli = { path = "crates/cowsay-cli" }
+cowsay-parser = { path = "crates/cowsay-parser" }
+cowsay-template = { path = "crates/cowsay-template" }
+# cowsay-cli = { path = "crates/cowsay-cli" }
 
 clap = { version = "4.5.51", features = ["derive"] }
+textwrap = { version = "0.16.2", features = ["terminal_size"] }
