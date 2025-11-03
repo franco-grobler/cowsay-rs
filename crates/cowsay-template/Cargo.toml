@@ -1,0 +1,16 @@
+[package]
+name = "cowsay-template"
+version = "0.1.0"
+publish = true
+authors = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+homepage = { workspace = true }
+documentation = { workspace = true }
+repository = { workspace = true }
+license = { workspace = true }
+
+[dependencies]
+
+[dev-dependencies]
+tempfile = "3.23.0"
