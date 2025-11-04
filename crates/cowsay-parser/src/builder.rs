@@ -98,6 +98,7 @@ impl CowBuilder {
         if let Some(value) = template {
             set_template = value;
         }
+        set_template.apply_variables(self.create_variable_map());
         Cow {
             template: set_template,
             text: self.text,
@@ -135,7 +136,18 @@ mod tests {
             .with_word_wrapped(false)
             .build(None);
 
-        assert_eq!(cow.template.render(), CowTemplate::default().render());
+        let rendered_template = cow.template.render();
+        let expected_template = [
+            r"        *   ^__^",
+            r"         *  (^^)\_______",
+            r"            (__)\       )\/\",
+            r"             U  ||----w |",
+            r"                ||     ||",
+            "",
+        ]
+        .join("\n");
+
+        assert_eq!(rendered_template, expected_template);
         assert_eq!(cow.text, "Custom text");
         assert!(cow.thinking);
         assert_eq!(cow.balloon_width, 50);
