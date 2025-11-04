@@ -21,11 +21,24 @@ pub struct CowTemplateResult {
 }
 
 impl CowTemplate {
-    pub fn new(
+    pub fn from_file(
         path: &Path,
         variables: HashMap<String, String>,
     ) -> Result<Self, ParseError> {
         let raw_content = load_template(path)?;
+        let cow = load_cow(raw_content.as_str())?;
+        Ok(CowTemplate {
+            variables,
+            raw_content,
+            cow,
+        })
+    }
+
+    pub fn from_template(
+        template: &str,
+        variables: HashMap<String, String>,
+    ) -> Result<Self, ParseError> {
+        let raw_content = template.to_string();
         let cow = load_cow(raw_content.as_str())?;
         Ok(CowTemplate {
             variables,
@@ -80,6 +93,40 @@ mod tests {
 
     #[test]
     fn it_works_with_template() {
+        let lines = [
+            r#"$the_cow = <<"EOC";"#,
+            "        $thoughts   ^__^",
+            r"         $thoughts  ($eyes)\_______",
+            r"            (__)\       )\/\",
+            r"             $tongue ||----w |",
+            r"                ||     ||",
+            "EOC",
+        ];
+
+        let variables = HashMap::from([
+            ("thoughts".to_string(), r"\".to_string()),
+            ("eyes".to_string(), "oo".to_string()),
+            ("tongue".to_string(), "  ".to_string()),
+        ]);
+        let cow =
+            CowTemplate::from_template(lines.join("\n").as_str(), variables)
+                .expect("Creating CowTemplate failed");
+
+        let output = cow.render();
+        let expected_output = [
+            r"        \   ^__^",
+            r"         \  (oo)\_______",
+            r"            (__)\       )\/\",
+            r"                ||----w |",
+            r"                ||     ||",
+        ]
+        .join("\n");
+
+        assert_eq!(expected_output, output);
+    }
+
+    #[test]
+    fn it_works_with_file() {
         let temp_dir = tempdir().unwrap();
         let test_cow = temp_dir.path().join("test.cow");
         let cow_file = File::create(&test_cow).unwrap();
@@ -101,7 +148,7 @@ mod tests {
             ("eyes".to_string(), "oo".to_string()),
             ("tongue".to_string(), "  ".to_string()),
         ]);
-        let cow = CowTemplate::new(test_cow.as_path(), variables)
+        let cow = CowTemplate::from_file(test_cow.as_path(), variables)
             .expect("Creating CowTemplate failed");
 
         let output = cow.render();
