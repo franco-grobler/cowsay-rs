@@ -69,6 +69,10 @@ impl CowTemplate {
         })
     }
 
+    pub fn apply_variables(&mut self, variables: HashMap<String, String>) {
+        self.variables = variables;
+    }
+
     pub fn render(self) -> String {
         let variable_regex =
             regex::Regex::new(r"\$\{?(\w+)}?").expect("Regex is fucked");
