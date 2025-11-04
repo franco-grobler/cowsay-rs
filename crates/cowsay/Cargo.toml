@@ -1,0 +1,19 @@
+[package]
+name = "cowsay"
+version = "0.1.0"
+publish = true
+edition.workspace = true
+rust-version.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+repository.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+cowsay-parser = { workspace = true }
+cowsay-template = { workspace = true }
+
+include_dir = "0.7.4"
+include_directory = "0.1.1"
+rand = "0.9.2"
