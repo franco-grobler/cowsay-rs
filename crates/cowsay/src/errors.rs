@@ -25,9 +25,7 @@ impl Display for CowsayError {
 
 impl Error for CowsayError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        match *self {
-            _ => None,
-        }
+        None
     }
 }
 
