@@ -61,6 +61,11 @@ impl CowsayOption {
         if self.wrap_column.is_some() {
             parser = parser.with_balloon_width(self.wrap_column.unwrap() as i8);
         }
-        Ok(parser.build_with_template(template.unwrap().as_str())?)
+
+        if template.is_none() {
+            Ok(parser.build(None))
+        } else {
+            Ok(parser.build_with_template(template.unwrap().as_str())?)
+        }
     }
 }
