@@ -1,7 +1,7 @@
 [package]
 name = "cowsay-template"
 version = "0.1.0"
-publish = true
+publish = false
 authors = { workspace = true }
 edition = { workspace = true }
 rust-version = { workspace = true }
