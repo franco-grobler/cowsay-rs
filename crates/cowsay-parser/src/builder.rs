@@ -1,12 +1,12 @@
-use std::{fs::File, io::Read, path::Path};
+use cowsay_template::{errors::ParseError, CowTemplate};
+use std::path::Path;
 
-use crate::{errors::ParseError, Cow};
+use crate::Cow;
 
 #[derive(Debug)]
 pub struct CowBuilder {
     eyes: String,
     tongue: String,
-    template: String,
     text: String,
     thoughts: String,
     thinking: bool,
@@ -19,7 +19,6 @@ impl Default for CowBuilder {
         CowBuilder {
             eyes: "oo".to_string(),
             tongue: "  ".to_string(),
-            template: "".to_string(),
             text: "Hello World".to_string(),
             thoughts: "o".to_string(),
             thinking: false,
@@ -38,23 +37,6 @@ impl CowBuilder {
     pub fn with_tongue(mut self, tongue: &str) -> Self {
         self.tongue = tongue.to_string();
         self
-    }
-
-    pub fn with_template(mut self, template: &str) -> Self {
-        self.template = template.to_string();
-        self
-    }
-
-    pub fn with_template_from_file(
-        mut self,
-        file_path: &Path,
-    ) -> Result<Self, ParseError> {
-        let mut file = File::open(file_path)?;
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)?;
-        self.template = contents;
-
-        Ok(self)
     }
 
     pub fn with_text(mut self, text: &str) -> Self {
@@ -82,13 +64,40 @@ impl CowBuilder {
         self
     }
 
-    pub fn build(self) -> Cow {
+    fn create_variable_map(&self) -> std::collections::HashMap<String, String> {
+        let mut variables = std::collections::HashMap::new();
+        variables.insert("eyes".to_string(), self.eyes.clone());
+        variables.insert("tongue".to_string(), self.tongue.clone());
+        variables.insert("thoughts".to_string(), self.thoughts.clone());
+        variables
+    }
+
+    pub fn build_with_template(
+        self,
+        template: &str,
+    ) -> Result<Cow, ParseError> {
+        let template =
+            CowTemplate::from_template(template, self.create_variable_map())?;
+        Ok(self.build(Some(template)))
+    }
+
+    pub fn build_with_template_from_file(
+        self,
+        file_path: &Path,
+    ) -> Result<Cow, ParseError> {
+        let template =
+            CowTemplate::from_file(file_path, self.create_variable_map())?;
+        Ok(self.build(Some(template)))
+    }
+
+    pub fn build(self, template: Option<CowTemplate>) -> Cow {
+        let mut set_template = CowTemplate::default();
+        if let Some(value) = template {
+            set_template = value;
+        }
         Cow {
-            eyes: self.eyes,
-            tongue: self.tongue,
-            template: self.template,
+            template: set_template,
             text: self.text,
-            thoughts: self.thoughts,
             thinking: self.thinking,
             balloon_width: self.balloon_width,
             word_wrap: self.word_wrap,
@@ -98,16 +107,14 @@ impl CowBuilder {
 
 #[cfg(test)]
 mod tests {
+    use cowsay_template::CowTemplate;
 
     #[test]
     fn has_default_values() {
-        let cow = super::Cow::builder().build();
+        let cow = super::Cow::builder().build(None);
 
-        assert_eq!(cow.eyes, "oo");
-        assert_eq!(cow.tongue, "  ");
-        assert_eq!(cow.template, "");
+        assert_eq!(cow.template.render(), CowTemplate::default().render());
         assert_eq!(cow.text, "Hello World");
-        assert_eq!(cow.thoughts, "o");
         assert!(!cow.thinking);
         assert_eq!(cow.balloon_width, 40);
         assert!(cow.word_wrap);
@@ -118,19 +125,15 @@ mod tests {
         let cow = super::Cow::builder()
             .with_eyes("^^")
             .with_tongue("U ")
-            .with_template("a cow template")
             .with_text("Custom text")
             .with_thoughts("*")
             .with_thinking(true)
             .with_balloon_width(50)
             .with_word_wrapped(false)
-            .build();
+            .build(None);
 
-        assert_eq!(cow.eyes, "^^");
-        assert_eq!(cow.tongue, "U ");
-        assert_eq!(cow.template, "a cow template");
+        assert_eq!(cow.template.render(), CowTemplate::default().render());
         assert_eq!(cow.text, "Custom text");
-        assert_eq!(cow.thoughts, "*");
         assert!(cow.thinking);
         assert_eq!(cow.balloon_width, 50);
         assert!(!cow.word_wrap);
