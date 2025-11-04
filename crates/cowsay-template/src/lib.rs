@@ -126,8 +126,6 @@ mod tests {
         ]
         .join("\n");
 
-        println!("Output:\n{}", output);
-        println!("Expected Output:\n{}", expected_output);
         assert_eq!(expected_output, output);
     }
 
