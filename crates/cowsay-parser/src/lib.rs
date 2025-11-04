@@ -1,17 +1,14 @@
+use cowsay_template::CowTemplate;
 use textwrap::wrap;
 
 use crate::builder::CowBuilder;
 
 mod builder;
-mod errors;
 
 #[derive(Debug)]
 pub struct Cow {
-    eyes: String,
-    tongue: String,
-    template: String,
+    template: CowTemplate,
     text: String,
-    thoughts: String,
     thinking: bool,
     balloon_width: i8,
     word_wrap: bool,
@@ -23,20 +20,14 @@ impl Cow {
     }
 
     pub fn say(mut self, phrase: Option<&str>) -> String {
-        // Placeholder implementation for generating the cow saying the text
         if let Some(value) = phrase {
             self.text = value.to_string();
         }
-        let template = self.format_template();
-        (self.generate_balloon() + &template).as_str().to_string()
+        self.generate_balloon() + &self.format_template()
     }
 
-    fn format_template(&self) -> String {
-        // Placeholder implementation for formatting the cow file
-        self.template
-            .replace("$eyes", &self.eyes)
-            .replace("$tongue", &self.tongue)
-            .replace("$thoughts", &self.thoughts)
+    fn format_template(self) -> String {
+        self.template.render()
     }
 
     fn generate_balloon(&self) -> String {
@@ -122,42 +113,26 @@ impl Cow {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn it_works() {
-        let cow = super::Cow::builder()
-            .with_eyes("oo")
-            .with_tongue("  ")
-            .with_text("Hello, World!")
-            .build();
-
-        let output = cow.say(None);
-        let expected_output = [
-            " _______________\n",
-            "< Hello, World! >\n",
-            " ---------------\n",
-        ];
-
-        assert_eq!(String::from_iter(expected_output), output);
-    }
-
-    #[test]
     fn it_works_with_template() {
         let cow = super::Cow::builder()
             .with_eyes("oo")
             .with_tongue("  ")
             .with_thoughts(r"\")
-            .with_template(
+            .with_text("Hello world")
+            .build_with_template(
                 [
+                    r#"$the_cow = <<"EOC";"#,
                     "        $thoughts   ^__^",
                     r"         $thoughts  ($eyes)\_______",
                     r"            (__)\       )\/\",
                     r"             $tongue ||----w |",
                     r"                ||     ||",
+                    "EOC",
                 ]
                 .join("\n")
                 .as_str(),
             )
-            .with_text("Hello world")
-            .build();
+            .expect("Could not parse template");
 
         let output = cow.say(None);
         let expected_output = [

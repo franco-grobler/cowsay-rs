@@ -11,4 +11,5 @@ repository = { workspace = true }
 license = { workspace = true }
 
 [dependencies]
+cowsay-template = { workspace = true }
 textwrap = { workspace = true }
