@@ -12,6 +12,7 @@ authors = ["Franco Grobler <franco@grobler.fyi>"]
 license = "UNLICENSE"
 
 [workspace.dependencies]
+cowsay = { path = "crates/cowsay" }
 cowsay-parser = { path = "crates/cowsay-parser" }
 cowsay-template = { path = "crates/cowsay-template" }
 # cowsay-cli = { path = "crates/cowsay-cli" }
