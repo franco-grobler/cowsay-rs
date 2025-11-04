@@ -4,6 +4,9 @@ use regex::Regex;
 
 use crate::errors::ParseError;
 
+/// Reads the content of a file to a string.
+///
+/// * `path`: Path of the file to read.
 pub fn load_template(path: &Path) -> Result<String, ParseError> {
     let mut file = File::open(path)?;
     let mut contents = String::new();
@@ -12,16 +15,23 @@ pub fn load_template(path: &Path) -> Result<String, ParseError> {
     Ok(contents)
 }
 
+/// Extrats the cow definition from a raw template string.
+///
+/// Strips escape characters before processing.
+///
+/// * `raw`: Cow template string.
 pub fn load_cow(raw: &str) -> Result<String, ParseError> {
     if raw.is_empty() {
         return Err(ParseError::InvalidTemplateFormat(
             "Empty template".to_string(),
         ));
     }
-    let cow_re = Regex::new(r#"\$the_cow\s*=\s*<<"*EOC"*;*\n([\s\S]*)\nEOC"#)
-        .expect("Regex is fucked");
+    let stripped = strip_escape_characters(raw);
 
-    cow_re.captures(raw).map_or_else(
+    let cow_re = Regex::new(r#"\$the_cow\s*=\s*<<"*EOC"*;*\n([\s\S]*)\nEOC"#)
+        .expect("Cow regex did not compile");
+
+    cow_re.captures(stripped.as_str()).map_or_else(
         || {
             Err(ParseError::InvalidTemplateFormat(
                 "Template does not match cow format".to_string(),
@@ -32,6 +42,16 @@ pub fn load_cow(raw: &str) -> Result<String, ParseError> {
             Ok(cow_content.to_string())
         },
     )
+}
+
+/// Remoces escape characters from a string.
+///
+/// * `text`: string to process.
+fn strip_escape_characters(text: &str) -> String {
+    regex::Regex::new(r#"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~])"#)
+        .expect("Substitution regex did not compile")
+        .replace_all(text, "$1")
+        .to_string()
 }
 
 pub fn find_template(
