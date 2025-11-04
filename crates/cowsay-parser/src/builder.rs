@@ -1,4 +1,7 @@
-use cowsay_template::{errors::ParseError, CowTemplate};
+use cowsay_template::{
+    errors::ParseError, CowTemplate, DEFAULT_EYES, DEFAULT_THOUGHTS,
+    DEFAULT_TONGUE,
+};
 use std::path::Path;
 
 use crate::Cow;
@@ -17,10 +20,10 @@ pub struct CowBuilder {
 impl Default for CowBuilder {
     fn default() -> Self {
         CowBuilder {
-            eyes: "oo".to_string(),
-            tongue: "  ".to_string(),
+            eyes: DEFAULT_EYES.to_string(),
+            tongue: DEFAULT_TONGUE.to_string(),
             text: "Hello World".to_string(),
-            thoughts: "o".to_string(),
+            thoughts: DEFAULT_THOUGHTS.to_string(),
             thinking: false,
             balloon_width: 40,
             word_wrap: true,
