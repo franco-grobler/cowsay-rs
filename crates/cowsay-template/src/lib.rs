@@ -74,8 +74,8 @@ impl CowTemplate {
     }
 
     pub fn render(self) -> String {
-        let variable_regex =
-            regex::Regex::new(r"\$\{?(\w+)}?").expect("Regex is fucked");
+        let variable_regex = regex::Regex::new(r"\$\{?(\w+)}?")
+            .expect("Variable regex did not compile");
         let mut rendered_content = self.cow.clone();
 
         variable_regex
@@ -90,12 +90,12 @@ impl CowTemplate {
                     }
                 }
             });
-        rendered_content
+        rendered_content + "\n"
     }
 
     pub fn render_with_description(self) -> CowTemplateResult {
-        let description_regex =
-            regex::Regex::new(r"^##(.*)").expect("Regex is fucked");
+        let description_regex = regex::Regex::new(r"^##(.*)")
+            .expect("Description regex did not compile");
         let description = if let Some(caps) =
             description_regex.captures(self.raw_content.as_str())
         {
@@ -127,6 +127,7 @@ mod tests {
             r"            (__)\       )\/\",
             r"                ||----w |",
             r"                ||     ||",
+            "",
         ]
         .join("\n");
 
@@ -161,6 +162,7 @@ mod tests {
             r"            (__)\       )\/\",
             r"                ||----w |",
             r"                ||     ||",
+            "",
         ]
         .join("\n");
 
@@ -200,6 +202,7 @@ mod tests {
             r"            (__)\       )\/\",
             r"                ||----w |",
             r"                ||     ||",
+            "",
         ]
         .join("\n");
 
