@@ -69,17 +69,18 @@ mod tests {
         for entry in glob("tests/expected_outputs/file_*.txt")
             .expect("Failed to read glob pattern")
         {
-            let file_name = entry
-                .as_ref()
-                .unwrap()
-                .file_prefix()
-                .unwrap()
-                .to_string_lossy();
-            let cow_name = file_name
-                .as_ref()
-                .strip_prefix("file_")
+            let path_buf = entry.expect("Failed to read glob entry");
+            let full_file_name_owned = path_buf
+                .file_name()
+                .expect("Failed to get file name")
+                .to_string_lossy()
+                .into_owned();
+            let file_name = full_file_name_owned
+                .strip_suffix(".txt")
                 .unwrap()
                 .to_string();
+            let cow_name =
+                file_name.clone().strip_prefix("file_").unwrap().to_string();
 
             options_test.push(OptionTest {
                 option: CowsayOption::builder().with_file(cow_name),
@@ -94,11 +95,15 @@ mod tests {
                 .expect("Failed to create parser")
                 .say(Some(PHRASE));
 
-            let expected_output = read_test_file(option.name);
+            let expected_output = read_test_file(option.name.clone());
 
             println!("Output:\n{}", output);
             println!("Expected Output:\n{}", expected_output);
-            assert_eq!(output, expected_output);
+            assert_eq!(
+                output, expected_output,
+                "Failed on cowfile {}",
+                option.name
+            );
         }
     }
 }
