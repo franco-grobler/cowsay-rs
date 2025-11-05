@@ -15,7 +15,7 @@ pub fn load_template(path: &Path) -> Result<String, ParseError> {
     Ok(contents)
 }
 
-/// Extrats the cow definition from a raw template string.
+/// Extracts the cow definition from a raw template string.
 ///
 /// Strips escape characters before processing.
 ///
@@ -44,7 +44,7 @@ pub fn load_cow(raw: &str) -> Result<String, ParseError> {
     )
 }
 
-/// Remoces escape characters from a string.
+/// Removes escape characters from a string.
 ///
 /// * `text`: string to process.
 fn strip_escape_characters(text: &str) -> String {

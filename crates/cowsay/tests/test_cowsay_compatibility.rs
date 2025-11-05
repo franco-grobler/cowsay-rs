@@ -97,8 +97,6 @@ mod tests {
 
             let expected_output = read_test_file(option.name.clone());
 
-            println!("Output:\n{}", output);
-            println!("Expected Output:\n{}", expected_output);
             assert_eq!(
                 output, expected_output,
                 "Failed on cowfile {}",
