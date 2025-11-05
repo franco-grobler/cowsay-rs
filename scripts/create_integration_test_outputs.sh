@@ -20,6 +20,7 @@ for cowfile in cows/*; do
 	options+=("-f '$cowname',file_${cowname}")
 done
 
+rm -r "$test_dir"
 mkdir -p "$test_dir"
 
 for option in "${options[@]}"; do
