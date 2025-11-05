@@ -48,7 +48,7 @@ pub fn load_cow(raw: &str) -> Result<String, ParseError> {
 ///
 /// * `text`: string to process.
 fn strip_escape_characters(text: &str) -> String {
-    regex::Regex::new(r#"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~])"#)
+    regex::Regex::new(r#"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~@])"#)
         .expect("Substitution regex did not compile")
         .replace_all(text, "$1")
         .to_string()
