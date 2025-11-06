@@ -80,18 +80,13 @@ impl CowTemplate {
         let variable_regex = patterns::get_variable_regex();
         let mut rendered_content = self.cow.clone();
 
-        variable_regex
-            .captures_iter(rendered_content.clone().as_str())
-            .for_each(|cap| {
-                let instance_name = cap.get(0);
-                if let Some(var_name) = cap.get(1) {
-                    let var_name_str = var_name.as_str();
-                    if let Some(value) = self.variables.get(var_name_str) {
-                        rendered_content = rendered_content
-                            .replace(instance_name.unwrap().as_str(), value);
-                    }
-                }
-            });
+        rendered_content = variable_regex
+            .replace_all(&rendered_content, |cap: &regex::Captures| {
+                self.variables
+                    .get(&cap[1])
+                    .map_or_else(|| cap[0].to_string(), |v| v.clone())
+            })
+            .into_owned();
         rendered_content + "\n"
     }
 
