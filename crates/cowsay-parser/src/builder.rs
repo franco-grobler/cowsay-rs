@@ -92,10 +92,7 @@ impl CowBuilder {
     }
 
     pub fn build(self, template: Option<CowTemplate>) -> Cow {
-        let mut set_template = CowTemplate::default();
-        if let Some(value) = template {
-            set_template = value;
-        }
+        let mut set_template = template.unwrap_or_default();
         set_template.apply_variables(self.create_variable_map());
         Cow {
             template: set_template,
