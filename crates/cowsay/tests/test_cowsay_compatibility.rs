@@ -3,7 +3,7 @@ mod tests {
     use glob::glob;
     use std::fs::read_to_string;
 
-    use cowsay::{builder::CowsayOptionBuilder, CowsayOption};
+    use cowsay::{CowsayOption, builder::CowsayOptionBuilder};
 
     const PHRASE: &str = "Hello, cowsay-rs!";
 
