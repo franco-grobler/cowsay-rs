@@ -56,9 +56,7 @@ impl CowsayOption {
             template = Some(cows::get_cow_from_file(file_name.as_str())?);
         }
 
-        if self.wrap {
-            parser = parser.with_word_wrapped(true);
-        }
+        parser = parser.with_word_wrapped(self.wrap);
         if self.wrap_column.is_some() {
             parser = parser.with_balloon_width(self.wrap_column.unwrap() as i8);
         }
