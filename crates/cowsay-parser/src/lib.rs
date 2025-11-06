@@ -10,7 +10,7 @@ pub struct Cow {
     template: CowTemplate,
     text: String,
     thinking: bool,
-    balloon_width: i8,
+    balloon_width: usize,
     word_wrap: bool,
 }
 
@@ -35,9 +35,9 @@ impl Cow {
         let mut line_count = 1;
         let is_multiline = self.word_wrap && self.text.len() > width as usize;
         if !is_multiline {
-            width = self.text.len() as i8;
+            width = self.text.len();
         } else {
-            line_count = ((self.text.len() as i8 / width) + 1) as usize;
+            line_count = ((self.text.len() / width) + 1) as usize;
         }
 
         let top_border = format!(" {}\n", "_".repeat(width as usize + 2));
