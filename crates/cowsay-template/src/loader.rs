@@ -1,8 +1,6 @@
 use std::{fs::File, io::Read, path::Path};
 
-use regex::Regex;
-
-use crate::errors::ParseError;
+use crate::{errors::ParseError, patterns};
 
 /// Reads the content of a file to a string.
 ///
@@ -28,8 +26,7 @@ pub fn load_cow(raw: &str) -> Result<String, ParseError> {
     }
     let stripped = strip_escape_characters(raw);
 
-    let cow_re = Regex::new(r#"\$the_cow\s*=\s*<<"*EOC"*;*\n([\s\S]*)\nEOC"#)
-        .expect("Cow regex did not compile");
+    let cow_re = patterns::get_cow_regex();
 
     cow_re.captures(stripped.as_str()).map_or_else(
         || {
@@ -48,8 +45,7 @@ pub fn load_cow(raw: &str) -> Result<String, ParseError> {
 ///
 /// * `text`: string to process.
 fn strip_escape_characters(text: &str) -> String {
-    regex::Regex::new(r#"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~@])"#)
-        .expect("Substitution regex did not compile")
+    patterns::get_substitution_regex()
         .replace_all(text, "$1")
         .to_string()
 }
