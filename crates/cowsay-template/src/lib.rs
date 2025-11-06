@@ -6,6 +6,7 @@ use crate::loader::{load_cow, load_template};
 
 pub mod errors;
 mod loader;
+mod patterns;
 
 pub const DEFAUL_COW: &str = include_str!("../../../cows/default.cow");
 pub const DEFAULT_EYES: &str = "oo";
@@ -74,8 +75,7 @@ impl CowTemplate {
     }
 
     pub fn render(self) -> String {
-        let variable_regex = regex::Regex::new(r"\$\{?(\w+)}?")
-            .expect("Variable regex did not compile");
+        let variable_regex = patterns::get_variable_regex();
         let mut rendered_content = self.cow.clone();
 
         variable_regex
@@ -94,8 +94,7 @@ impl CowTemplate {
     }
 
     pub fn render_with_description(self) -> CowTemplateResult {
-        let description_regex = regex::Regex::new(r"^##(.*)")
-            .expect("Description regex did not compile");
+        let description_regex = patterns::get_description_regex();
         let description = if let Some(caps) =
             description_regex.captures(self.raw_content.as_str())
         {
