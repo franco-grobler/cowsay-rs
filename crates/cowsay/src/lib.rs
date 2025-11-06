@@ -31,25 +31,32 @@ impl CowsayOption {
     pub fn parser(self) -> Result<CowParser, errors::CowsayError> {
         let mut template: Option<String> = None;
         let mut parser = CowParser::builder();
-        if self.borg {
-            parser = parser.with_eyes("==");
+        let (eyes, tongue) = if self.borg {
+            (Some("=="), None)
         } else if self.dead {
-            parser = parser.with_eyes("xx").with_tongue("U ");
+            (Some("xx"), Some("U "))
         } else if self.greedy {
-            parser = parser.with_eyes("$$");
+            (Some("$$"), None)
         } else if self.sleepy {
-            parser = parser.with_eyes("**").with_tongue("U ");
+            (Some("**"), Some("U "))
         } else if self.tired {
-            parser = parser.with_eyes("--");
+            (Some("--"), None)
         } else if self.wired {
-            parser = parser.with_eyes("OO");
+            (Some("OO"), None)
         } else if self.young {
-            parser = parser.with_eyes("..");
-        } else if let Some(eyes) = &self.eyes {
-            parser = parser.with_eyes(eyes);
-        } else if let Some(tongue) = &self.tongue {
-            parser = parser.with_tongue(tongue);
-        } else if self.random {
+            (Some(".."), None)
+        } else {
+            (self.eyes.as_deref(), self.tongue.as_deref())
+        };
+
+        if let Some(e) = eyes {
+            parser = parser.with_eyes(e);
+        }
+        if let Some(t) = tongue {
+            parser = parser.with_tongue(t);
+        }
+
+        if self.random {
             template = Some(cows::get_random_cow());
         } else if let Some(file) = &self.file {
             let file_name = format!("{}.cow", file);
@@ -58,7 +65,7 @@ impl CowsayOption {
 
         parser = parser.with_word_wrapped(self.wrap);
         if self.wrap_column.is_some() {
-            parser = parser.with_balloon_width(self.wrap_column.unwrap() as i8);
+            parser = parser.with_balloon_width(self.wrap_column.unwrap());
         }
 
         if template.is_none() {
