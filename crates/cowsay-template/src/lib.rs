@@ -44,29 +44,31 @@ impl Default for CowTemplate {
 }
 
 impl CowTemplate {
-    pub fn from_file(
-        path: &Path,
-        variables: HashMap<String, String>,
-    ) -> Result<Self, ParseError> {
+    pub fn from_file(path: &Path) -> Result<Self, ParseError> {
         let raw_content = load_template(path)?;
         let cow = load_cow(raw_content.as_str())?;
         Ok(CowTemplate {
-            variables,
             raw_content,
             cow,
+            variables: HashMap::from([
+                ("eyes".to_string(), DEFAULT_EYES.to_string()),
+                ("thoughts".to_string(), DEFAULT_THOUGHTS.to_string()),
+                ("tongue".to_string(), DEFAULT_TONGUE.to_string()),
+            ]),
         })
     }
 
-    pub fn from_template(
-        template: &str,
-        variables: HashMap<String, String>,
-    ) -> Result<Self, ParseError> {
+    pub fn from_template(template: &str) -> Result<Self, ParseError> {
         let raw_content = template.to_string();
         let cow = load_cow(raw_content.as_str())?;
         Ok(CowTemplate {
-            variables,
             raw_content,
             cow,
+            variables: HashMap::from([
+                ("eyes".to_string(), DEFAULT_EYES.to_string()),
+                ("thoughts".to_string(), DEFAULT_THOUGHTS.to_string()),
+                ("tongue".to_string(), DEFAULT_TONGUE.to_string()),
+            ]),
         })
     }
 
@@ -150,9 +152,9 @@ mod tests {
             ("eyes".to_string(), "oo".to_string()),
             ("tongue".to_string(), "  ".to_string()),
         ]);
-        let cow =
-            CowTemplate::from_template(lines.join("\n").as_str(), variables)
-                .expect("Creating CowTemplate failed");
+        let mut cow = CowTemplate::from_template(lines.join("\n").as_str())
+            .expect("Creating CowTemplate failed");
+        cow.apply_variables(variables);
 
         let output = cow.render();
         let expected_output = [
@@ -191,8 +193,9 @@ mod tests {
             ("eyes".to_string(), "oo".to_string()),
             ("tongue".to_string(), "  ".to_string()),
         ]);
-        let cow = CowTemplate::from_file(test_cow.as_path(), variables)
+        let mut cow = CowTemplate::from_file(test_cow.as_path())
             .expect("Creating CowTemplate failed");
+        cow.apply_variables(variables);
 
         let output = cow.render();
         let expected_output = [
