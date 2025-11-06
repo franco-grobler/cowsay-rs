@@ -49,24 +49,3 @@ fn strip_escape_characters(text: &str) -> String {
         .replace_all(text, "$1")
         .to_string()
 }
-
-pub fn find_template(
-    name: &str,
-    search_paths: &[&Path],
-) -> Result<String, ParseError> {
-    // Placeholder for finding template in given search paths
-    for path in search_paths {
-        let candidate = path.join(name);
-        if candidate.exists() {
-            return load_template(&candidate);
-        }
-    }
-
-    Err(ParseError::TemplateNotFound(
-        name.to_string(),
-        search_paths
-            .iter()
-            .map(|p| p.display().to_string())
-            .collect(),
-    ))
-}
