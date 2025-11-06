@@ -11,28 +11,27 @@ mod tests {
             .parser()
             .expect("Failed to create parser")
             .say(Some(long_input));
+        let expected_output = [
+            r#" ________________________________________"#,
+            r#"/ This is a very long input string that  \"#,
+            r#"| is intended to test how the cowsay     |"#,
+            r#"| implementation handles text wrapping   |"#,
+            r#"| and formatting when the input exceeds  |"#,
+            r#"| typical lengths. The quick brown fox   |"#,
+            r#"| jumps over the lazy dog. Lorem ipsum   |"#,
+            r#"| dolor sit amet, consectetur adipiscing |"#,
+            r#"| elit. Sed do eiusmod tempor incididunt |"#,
+            r#"\ ut labore et dolore magna aliqua.      /"#,
+            r#" ----------------------------------------"#,
+            r#"        \   ^__^"#,
+            r#"         \  (oo)\_______"#,
+            r#"            (__)\       )\/\"#,
+            r#"                ||----w |"#,
+            r#"                ||     ||"#,
+            "",
+        ]
+        .join("\n");
 
-        println!("{}", output);
-        assert_eq!(
-            output,
-            r##"
- ________________________________________
-/ "This is a very long input string that \
-| is intended to test how the cowsay     |
-| implementation handles text wrapping   |
-| and formatting when the input exceeds  |
-| typical lengths. The quick brown fox   |
-| jumps over the lazy dog. Lorem ipsum   |
-| dolor sit amet, consectetur adipiscing |
-| elit. Sed do eiusmod tempor incididunt |
-\ ut labore et dolore magna aliqua."     /
- ----------------------------------------
-        \   ^__^
-         \  (==)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-"##
-        )
+        assert_eq!(output, expected_output);
     }
 }
