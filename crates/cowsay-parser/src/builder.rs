@@ -79,8 +79,7 @@ impl CowBuilder {
         self,
         template: &str,
     ) -> Result<Cow, ParseError> {
-        let template =
-            CowTemplate::from_template(template, self.create_variable_map())?;
+        let template = CowTemplate::from_template(template)?;
         Ok(self.build(Some(template)))
     }
 
@@ -88,8 +87,7 @@ impl CowBuilder {
         self,
         file_path: &Path,
     ) -> Result<Cow, ParseError> {
-        let template =
-            CowTemplate::from_file(file_path, self.create_variable_map())?;
+        let template = CowTemplate::from_file(file_path)?;
         Ok(self.build(Some(template)))
     }
 
