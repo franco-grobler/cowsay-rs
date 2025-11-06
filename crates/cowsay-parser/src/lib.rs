@@ -40,8 +40,10 @@ impl Cow {
             line_count = (self.text.len() / width) + 1;
         }
 
-        let top_border = format!(" {}\n", "_".repeat(width + 2));
-        let btm_border = format!(" {}\n", "-".repeat(width + 2));
+        let top_border =
+            format!(" {}\n", "_".repeat(width + 2 * !is_multiline as usize));
+        let btm_border =
+            format!(" {}\n", "-".repeat(width + 2 * !is_multiline as usize));
 
         let lines = wrap(&self.text, width);
 
@@ -51,16 +53,25 @@ impl Cow {
             &lines[0],
             true,
             !is_multiline,
+            is_multiline,
+            width,
         ));
         if is_multiline {
             for line in &lines[1..lines.len() - 1] {
-                balloon_lines
-                    .push(self.format_balloon_line(line, false, false));
+                balloon_lines.push(self.format_balloon_line(
+                    line,
+                    false,
+                    false,
+                    is_multiline,
+                    width,
+                ));
             }
             balloon_lines.push(self.format_balloon_line(
                 &lines[line_count - 1],
                 false,
                 true,
+                is_multiline,
+                width,
             ));
         }
         balloon_lines.push(btm_border);
@@ -73,24 +84,56 @@ impl Cow {
         line: &str,
         is_first: bool,
         is_last: bool,
+        is_multiline: bool,
+        width: usize,
     ) -> String {
         let left_border = if is_first {
-            if self.thinking { "(" } else { "<" }
+            if self.thinking {
+                "("
+            } else if is_multiline {
+                "/"
+            } else {
+                "<"
+            }
         } else if is_last {
-            if self.thinking { ")" } else { ">" }
+            if self.thinking {
+                ")"
+            } else if is_multiline {
+                r"\"
+            } else {
+                ">"
+            }
         } else {
             "|"
         };
 
         let right_border = if is_first {
-            if self.thinking { ")" } else { ">" }
+            if self.thinking {
+                ")"
+            } else if is_multiline {
+                r"\"
+            } else {
+                ">"
+            }
         } else if is_last {
-            if self.thinking { "(" } else { "<" }
+            if self.thinking {
+                "("
+            } else if is_multiline {
+                "/"
+            } else {
+                "<"
+            }
         } else {
             "|"
         };
 
-        format!("{} {} {}\n", left_border, line, right_border)
+        format!(
+            "{} {:width$} {}\n",
+            left_border,
+            line,
+            right_border,
+            width = width - 2
+        )
     }
 }
 
