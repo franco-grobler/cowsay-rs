@@ -1,5 +1,5 @@
 use crate::errors::CowsayError;
-use include_directory::{include_directory, Dir};
+use include_directory::{Dir, include_directory};
 
 use rand::seq::IteratorRandom;
 
