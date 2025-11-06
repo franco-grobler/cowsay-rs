@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.87"
+rust-version = "1.91.0"
 homepage = "https://franco-grobler.github.io/cowsay-rs/"
 documentation = "https://franco-grobler.github.io/cowsay-rs/"
 repository = "https://github.com/franco-grobler/cowsay-rs"
