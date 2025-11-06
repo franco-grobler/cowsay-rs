@@ -13,7 +13,7 @@ pub fn get_cow_regex() -> &'static Regex {
 pub fn get_description_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
 
-    RE.get_or_init(|| Regex::new(r"^##(.*)").unwrap())
+    RE.get_or_init(|| Regex::new(r"(?m)^##\s?(.*)").unwrap())
 }
 
 pub fn get_substitution_regex() -> &'static Regex {
