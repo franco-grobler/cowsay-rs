@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.91.0"
+rust-version = "1.87.0"
 homepage = "https://franco-grobler.github.io/cowsay-rs/"
 documentation = "https://franco-grobler.github.io/cowsay-rs/"
 repository = "https://github.com/franco-grobler/cowsay-rs"
@@ -19,3 +19,32 @@ cowsay-template = { path = "crates/cowsay-template" }
 
 clap = { version = "4.5.51", features = ["derive"] }
 textwrap = { version = "0.16.2", features = ["terminal_size"] }
+
+
+[workspace.lints.rust]
+# Deny lints that are "warn" by default
+warnings = "deny"
+
+# --- Code Quality & Correctness ---
+unreachable_pub = "deny"            # Detects public items that are not reachable
+unsafe_code = "deny"                # Forbids any use of `unsafe` blocks.
+undocumented_unsafe_blocks = "deny"
+
+# --- Documentation ---
+missing_docs = "deny"                  # Requires all public items to be documented
+missing_debug_implementations = "deny" # Requires `#[derive(Debug)]` on structs/enums
+
+# --- Style ---
+non_snake_case = "deny"
+non_camel_case_types = "deny"
+non_upper_case_globals = "deny"
+
+# === Clippy Lints ===
+[workspace.lints.clippy]
+pedantic = { level = "deny", priority = -1 } # Very strict, opinionated lints
+nursery = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
+
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"      # Good to have, but `pedantic` enables it.
