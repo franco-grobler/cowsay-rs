@@ -75,33 +75,17 @@ impl Cow {
         is_last: bool,
     ) -> String {
         let left_border = if is_first {
-            if self.thinking {
-                "("
-            } else {
-                "<"
-            }
+            if self.thinking { "(" } else { "<" }
         } else if is_last {
-            if self.thinking {
-                ")"
-            } else {
-                ">"
-            }
+            if self.thinking { ")" } else { ">" }
         } else {
             "|"
         };
 
         let right_border = if is_first {
-            if self.thinking {
-                ")"
-            } else {
-                ">"
-            }
+            if self.thinking { ")" } else { ">" }
         } else if is_last {
-            if self.thinking {
-                "("
-            } else {
-                "<"
-            }
+            if self.thinking { "(" } else { "<" }
         } else {
             "|"
         };
