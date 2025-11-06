@@ -9,5 +9,10 @@ repository.workspace = true
 authors.workspace = true
 license.workspace = true
 
+[[bin]]
+name = "cowsay-rs"
+path = "src/main.rs"
+
 [dependencies]
+cowsay = { workspace = true }
 clap = { workspace = true }
