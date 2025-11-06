@@ -53,8 +53,8 @@ impl CowsayOptionBuilder {
         self
     }
 
-    pub fn with_file<S: Into<String>>(mut self, filename: S) -> Self {
-        self.file = Some(filename.into());
+    pub fn with_file(mut self, filename: String) -> Self {
+        self.file = Some(filename);
         self
     }
 
@@ -63,13 +63,13 @@ impl CowsayOptionBuilder {
         self
     }
 
-    pub fn with_eyes<S: Into<String>>(mut self, eyes: S) -> Self {
-        self.eyes = Some(eyes.into());
+    pub fn with_eyes(mut self, eyes: String) -> Self {
+        self.eyes = Some(eyes);
         self
     }
 
-    pub fn with_tongue<S: Into<String>>(mut self, tongue: S) -> Self {
-        self.tongue = Some(tongue.into());
+    pub fn with_tongue(mut self, tongue: String) -> Self {
+        self.tongue = Some(tongue);
         self
     }
 
@@ -132,10 +132,10 @@ mod tests {
             .with_sleepy(true)
             .with_tired(true)
             .with_wired(true)
-            .with_file("custom.cow")
+            .with_file("custom.cow".to_string())
             .with_random(true)
-            .with_eyes("&&")
-            .with_tongue("U ")
+            .with_eyes("&&".to_string())
+            .with_tongue("U ".to_string())
             .with_wrap(true)
             .with_wrap_column(50)
             .build();
