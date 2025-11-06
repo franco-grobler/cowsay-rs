@@ -11,7 +11,6 @@
   languages.rust = {
     enable = true;
     channel = "stable";
-    version = "latest";
     components = [
       "rustc"
       "cargo"
@@ -19,5 +18,6 @@
       "rustfmt"
       "rust-analyzer"
     ];
+    version = "1.91.0";
   };
 }
