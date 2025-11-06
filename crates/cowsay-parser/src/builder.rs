@@ -1,6 +1,6 @@
 use cowsay_template::{
-    errors::ParseError, CowTemplate, DEFAULT_EYES, DEFAULT_THOUGHTS,
-    DEFAULT_TONGUE,
+    CowTemplate, DEFAULT_EYES, DEFAULT_THOUGHTS, DEFAULT_TONGUE,
+    errors::ParseError,
 };
 use std::path::Path;
 
@@ -13,7 +13,7 @@ pub struct CowBuilder {
     text: String,
     thoughts: String,
     thinking: bool,
-    balloon_width: i8,
+    balloon_width: usize,
     word_wrap: bool,
 }
 
@@ -57,7 +57,7 @@ impl CowBuilder {
         self
     }
 
-    pub fn with_balloon_width(mut self, width: i8) -> Self {
+    pub fn with_balloon_width(mut self, width: usize) -> Self {
         self.balloon_width = width;
         self
     }

@@ -33,17 +33,17 @@ impl Cow {
     fn generate_balloon(&self) -> String {
         let mut width = self.balloon_width;
         let mut line_count = 1;
-        let is_multiline = self.word_wrap && self.text.len() > width as usize;
+        let is_multiline = self.word_wrap && self.text.len() > width;
         if !is_multiline {
             width = self.text.len();
         } else {
-            line_count = ((self.text.len() / width) + 1) as usize;
+            line_count = (self.text.len() / width) + 1;
         }
 
-        let top_border = format!(" {}\n", "_".repeat(width as usize + 2));
-        let btm_border = format!(" {}\n", "-".repeat(width as usize + 2));
+        let top_border = format!(" {}\n", "_".repeat(width + 2));
+        let btm_border = format!(" {}\n", "-".repeat(width + 2));
 
-        let lines = wrap(&self.text, width as usize);
+        let lines = wrap(&self.text, width);
 
         let mut balloon_lines: Vec<String> = Vec::with_capacity(line_count + 2);
         balloon_lines.push(top_border);
