@@ -14,7 +14,6 @@ license.workspace = true
 cowsay-parser = { workspace = true }
 cowsay-template = { workspace = true }
 
-include_dir = { workspace = true }
 include_directory = { workspace = true }
 rand = { workspace = true }
 
