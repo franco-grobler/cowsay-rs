@@ -1,0 +1,210 @@
+name: CI
+
+permissions: {}
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  CARGO_TERM_COLOR: always
+  RUSTUP_MAX_RETRIES: 10
+  PACKAGE_NAME: cowsay-rs
+  NEXTEST_PROFILE: ci
+
+jobs:
+  determine_changes:
+    name: "Determine changes"
+    runs-on: ubuntu-latest
+    outputs:
+      # Flag that is raised when any code is changed
+      code: ${{ steps.check_code.outputs.changed }}
+
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine merge base
+        id: merge_base
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref || 'main' }}
+        run: |
+          sha=$(git merge-base HEAD "origin/${BASE_REF}")
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Check if there was any code related change
+        id: check_code
+        env:
+          MERGE_BASE: ${{ steps.merge_base.outputs.sha }}
+        run: |
+          if git diff --quiet "${MERGE_BASE}...HEAD" -- \
+            ':!docs/**' \
+            ':!devenv*' \
+          ; then
+              echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  cargo-fmt:
+    name: "cargo fmt"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: "Install Rust toolchain"
+        run: rustup component add rustfmt
+      - run: cargo fmt --all --check
+
+  cargo-clippy:
+    name: "cargo clippy"
+    runs-on: ubuntu-latest
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main' }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - name: "Install Rust toolchain"
+        run: rustup component add clippy
+      - name: "Clippy"
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+  cargo-test-linux:
+    name: "cargo test (linux)"
+    runs-on: ubuntu-latest
+    needs: determine_changes
+    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - name: "Install Rust toolchain"
+        run: rustup show
+      - name: "Install cargo nextest"
+        uses: taiki-e/install-action@81ee1d48d9194cdcab880cbdc7d36e87d39874cb # v2.62.45
+        with:
+          tool: cargo-nextest
+      - name: "Run tests"
+        run: cargo nextest run --all-features --profile ci
+      - name: "Check docs" # Check for broken links in the documentation.
+        run: cargo doc --all --no-deps --document-private-items
+        env:
+          RUSTDOCFLAGS: "-D warnings"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cowsay-rs
+          path: target/debug/cowsay-rs
+
+  cargo-test-linux-release:
+    name: "cargo test (linux, release)"
+    # release builds timeout on GitHub runners, so this job is just skipped on forks in the `if` check
+    runs-on: depot-ubuntu-22.04-16
+    needs: determine_changes
+    if: |
+      github.repository == 'astral-sh/ruff' &&
+      !contains(github.event.pull_request.labels.*.name, 'no-test') &&
+      (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main')
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - name: "Install Rust toolchain"
+        run: rustup show
+      - name: "Install cargo nextest"
+        uses: taiki-e/install-action@81ee1d48d9194cdcab880cbdc7d36e87d39874cb # v2.62.45
+        with:
+          tool: cargo-nextest
+      - name: "Run tests"
+        run: cargo nextest run --all-features --profile ci
+
+  cargo-test-other:
+    strategy:
+      matrix:
+        platform:
+          - windows-latest
+          - macos-latest
+    name: "cargo test (${{ matrix.platform }})"
+    runs-on: ${{ matrix.platform }}
+    needs: determine_changes
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-test') && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - name: "Install Rust toolchain"
+        run: rustup show
+      - name: "Install cargo nextest"
+        uses: taiki-e/install-action@81ee1d48d9194cdcab880cbdc7d36e87d39874cb # v2.62.45
+        with:
+          tool: cargo-nextest
+      - name: "Run tests"
+        run: |
+          cargo nextest run --all-features --profile ci
+          cargo test --all-features --doc
+
+  cargo-shear:
+    name: "cargo shear"
+    runs-on: ubuntu-latest
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: cargo-bins/cargo-binstall@b3f755e95653da9a2d25b99154edfdbd5b356d0a # v1.15.10
+      - run: cargo binstall --no-confirm cargo-shear
+      - run: cargo shear
+
+  pre-commit:
+    name: "pre-commit"
+    runs-on: ${{ github.repository == 'astral-sh/ruff' && 'depot-ubuntu-22.04-16' || 'ubuntu-latest' }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: 22
+      - name: "Cache pre-commit"
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: "Run pre-commit"
+        run: |
+          echo '```console' > "$GITHUB_STEP_SUMMARY"
+          # Enable color output for pre-commit and remove it for the summary
+          # Use --hook-stage=manual to enable slower pre-commit hooks that are skipped by default
+          SKIP=cargo-fmt,clippy,dev-generate-all uvx --python="${PYTHON_VERSION}" pre-commit run --all-files --show-diff-on-failure --color=always --hook-stage=manual | \
+            tee >(sed -E 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[mGK]//g' >> "$GITHUB_STEP_SUMMARY") >&1
+          exit_code="${PIPESTATUS[0]}"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          exit "$exit_code"
