@@ -139,6 +139,8 @@ impl Cow {
 
 #[cfg(test)]
 mod tests {
+    use pretty_assertions::assert_str_eq;
+
     #[test]
     fn it_works_with_template() {
         let cow = super::Cow::builder()
@@ -175,6 +177,6 @@ mod tests {
         ]
         .join("\n");
 
-        assert_eq!(expected_output, output);
+        assert_str_eq!(expected_output, output);
     }
 }

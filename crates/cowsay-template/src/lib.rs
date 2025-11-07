@@ -111,6 +111,7 @@ mod tests {
     use std::{fs::File, io::Write};
 
     use super::*;
+    use pretty_assertions::assert_str_eq;
     use tempfile::tempdir;
 
     #[test]
@@ -127,7 +128,7 @@ mod tests {
         ]
         .join("\n");
 
-        assert_eq!(expected_output, output);
+        assert_str_eq!(expected_output, output);
     }
 
     #[test]
@@ -162,7 +163,7 @@ mod tests {
         ]
         .join("\n");
 
-        assert_eq!(expected_output, output);
+        assert_str_eq!(expected_output, output);
     }
 
     #[test]
@@ -203,7 +204,7 @@ mod tests {
         ]
         .join("\n");
 
-        assert_eq!(expected_output, output);
+        assert_str_eq!(expected_output, output);
 
         drop(cow_file);
         temp_dir.close().unwrap();
