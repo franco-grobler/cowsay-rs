@@ -23,40 +23,6 @@ env:
   NEXTEST_PROFILE: ci
 
 jobs:
-  determine_changes:
-    name: "Determine changes"
-    runs-on: ubuntu-latest
-    outputs:
-      # Flag that is raised when any code is changed
-      code: ${{ steps.check_code.outputs.changed }}
-
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-
-      - name: Determine merge base
-        id: merge_base
-        env:
-          BASE_REF: ${{ github.event.pull_request.base.ref || 'main' }}
-        run: |
-          sha=$(git merge-base HEAD "origin/${BASE_REF}")
-          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
-
-      - name: Check if there was any code related change
-        id: check_code
-        env:
-          MERGE_BASE: ${{ steps.merge_base.outputs.sha }}
-        run: |
-          if git diff --quiet "${MERGE_BASE}...HEAD" -- \
-            ':!docs/**' \
-            ':!devenv*' \
-          ; then
-              echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-              echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
   cargo-fmt:
     name: "cargo fmt"
     runs-on: ubuntu-latest
@@ -72,8 +38,6 @@ jobs:
   cargo-clippy:
     name: "cargo clippy"
     runs-on: ubuntu-latest
-    needs: determine_changes
-    if: ${{ needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -88,8 +52,6 @@ jobs:
   cargo-test-linux:
     name: "cargo test (linux)"
     runs-on: ubuntu-latest
-    needs: determine_changes
-    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -116,8 +78,6 @@ jobs:
   cargo-test-linux-release:
     name: "cargo test (linux, release)"
     runs-on: depot-ubuntu-22.04-16
-    needs: determine_changes
-    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -141,8 +101,6 @@ jobs:
           - macos-latest
     name: "cargo test (${{ matrix.platform }})"
     runs-on: ${{ matrix.platform }}
-    needs: determine_changes
-    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -163,8 +121,6 @@ jobs:
   cargo-shear:
     name: "cargo shear"
     runs-on: ubuntu-latest
-    needs: determine_changes
-    if: ${{ needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
