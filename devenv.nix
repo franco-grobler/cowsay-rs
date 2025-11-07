@@ -12,6 +12,7 @@
     pkgs.cargo-shear
 
     # Utilities
+    pkgs.pre-commit
     pkgs.just
   ];
 
