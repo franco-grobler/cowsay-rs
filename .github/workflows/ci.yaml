@@ -20,6 +20,7 @@ env:
   CARGO_TERM_COLOR: always
   RUSTUP_MAX_RETRIES: 10
   PACKAGE_NAME: cowsay-rs
+  PYTHON_VERSION: "3.13"
   NEXTEST_PROFILE: ci
 
 jobs:
