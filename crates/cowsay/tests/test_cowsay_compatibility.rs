@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests {
     use glob::glob;
+    use pretty_assertions::assert_str_eq;
     use std::fs::read_to_string;
 
     use cowsay::{CowsayOption, builder::CowsayOptionBuilder};
@@ -59,7 +60,7 @@ mod tests {
 
             let expected_output = read_test_file(option.name);
 
-            assert_eq!(output, expected_output);
+            assert_str_eq!(output, expected_output);
         }
     }
 
@@ -97,8 +98,9 @@ mod tests {
 
             let expected_output = read_test_file(option.name.clone());
 
-            assert_eq!(
-                output, expected_output,
+            assert_str_eq!(
+                output,
+                expected_output,
                 "Failed on cowfile {}",
                 option.name
             );

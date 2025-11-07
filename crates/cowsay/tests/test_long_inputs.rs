@@ -1,5 +1,6 @@
 #[cfg(test)]
 mod tests {
+    use pretty_assertions::assert_str_eq;
 
     #[test]
     fn test_long_input() {
@@ -32,6 +33,6 @@ mod tests {
         ]
         .join("\n");
 
-        assert_eq!(output, expected_output);
+        assert_str_eq!(output, expected_output);
     }
 }
