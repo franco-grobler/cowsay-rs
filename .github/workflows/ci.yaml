@@ -115,13 +115,9 @@ jobs:
 
   cargo-test-linux-release:
     name: "cargo test (linux, release)"
-    # release builds timeout on GitHub runners, so this job is just skipped on forks in the `if` check
     runs-on: depot-ubuntu-22.04-16
     needs: determine_changes
-    if: |
-      github.repository == 'astral-sh/ruff' &&
-      !contains(github.event.pull_request.labels.*.name, 'no-test') &&
-      (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main')
+    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -146,7 +142,7 @@ jobs:
     name: "cargo test (${{ matrix.platform }})"
     runs-on: ${{ matrix.platform }}
     needs: determine_changes
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-test') && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
+    if: ${{ (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -179,7 +175,7 @@ jobs:
 
   pre-commit:
     name: "pre-commit"
-    runs-on: ${{ github.repository == 'astral-sh/ruff' && 'depot-ubuntu-22.04-16' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
