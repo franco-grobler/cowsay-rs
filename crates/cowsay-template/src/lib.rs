@@ -8,7 +8,7 @@ pub mod errors;
 mod loader;
 mod patterns;
 
-pub const DEFAUL_COW: &str = include_str!("../../../cows/default.cow");
+pub const DEFAULT_COW: &str = include_str!("../../../cows/default.cow");
 pub const DEFAULT_EYES: &str = "oo";
 pub const DEFAULT_THOUGHTS: &str = r"\";
 pub const DEFAULT_TONGUE: &str = "  ";
@@ -28,7 +28,7 @@ pub struct CowTemplateResult {
 
 impl Default for CowTemplate {
     fn default() -> Self {
-        let raw_content = DEFAUL_COW.to_string();
+        let raw_content = DEFAULT_COW.to_string();
         let cow =
             load_cow(raw_content.as_str()).expect("Loading default cow failed");
         CowTemplate {
