@@ -6,6 +6,3 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
-
-nixpkgs:
-  allowBroken: true
