@@ -5,7 +5,14 @@
 
 {
   # https://devenv.sh/packages/
-  packages = [ pkgs.just ];
+  packages = [
+    # Testing and coverage tools
+    pkgs.cargo-nextest
+    pkgs.cargo-llvm-cov
+
+    # Utilities
+    pkgs.just
+  ];
 
   # https://devenv.sh/languages/
   languages.rust = {
