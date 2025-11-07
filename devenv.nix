@@ -8,7 +8,8 @@
   packages = [
     # Testing and coverage tools
     pkgs.cargo-nextest
-    pkgs.cargo-llvm-cov
+    # pkgs.cargo-llvm-cov
+    pkgs.cargo-shear
 
     # Utilities
     pkgs.just
