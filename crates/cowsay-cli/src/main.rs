@@ -79,11 +79,20 @@ fn main() -> io::Result<()> {
     }
 
     let options = builder.build();
-    let parser = options.parser().unwrap();
+
+    let parser = match options.parser() {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("Error creating cowsay parser: {}", e);
+            std::process::exit(1);
+        }
+    };
+
     if args.text.is_empty() {
         eprintln!("Error: No text provided for cowsay.");
         std::process::exit(1);
     }
+
     let cow = parser.say(Some(args.text.as_str()));
 
     let mut stdout = io::stdout();
