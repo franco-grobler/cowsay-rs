@@ -78,7 +78,7 @@ jobs:
 
   cargo-test-linux-release:
     name: "cargo test (linux, release)"
-    runs-on: depot-ubuntu-22.04-16
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
