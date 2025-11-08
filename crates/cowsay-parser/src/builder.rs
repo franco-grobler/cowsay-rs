@@ -2,28 +2,28 @@ use cowsay_template::{
     CowTemplate, DEFAULT_EYES, DEFAULT_THOUGHTS, DEFAULT_TONGUE,
     errors::ParseError,
 };
-use std::path::Path;
+use std::{collections::HashMap, path::Path};
 
 use crate::Cow;
 
 #[derive(Debug)]
-pub struct CowBuilder {
-    eyes: String,
-    tongue: String,
-    text: String,
-    thoughts: String,
+pub struct CowBuilder<'a> {
+    eyes: &'a str,
+    tongue: &'a str,
+    text: &'a str,
+    thoughts: &'a str,
     thinking: bool,
     balloon_width: usize,
     word_wrap: bool,
 }
 
-impl Default for CowBuilder {
+impl<'a> Default for CowBuilder<'a> {
     fn default() -> Self {
         CowBuilder {
-            eyes: DEFAULT_EYES.to_string(),
-            tongue: DEFAULT_TONGUE.to_string(),
-            text: "Hello World".to_string(),
-            thoughts: DEFAULT_THOUGHTS.to_string(),
+            eyes: DEFAULT_EYES,
+            tongue: DEFAULT_TONGUE,
+            text: "Hello World",
+            thoughts: DEFAULT_THOUGHTS,
             thinking: false,
             balloon_width: 40,
             word_wrap: true,
@@ -31,24 +31,24 @@ impl Default for CowBuilder {
     }
 }
 
-impl CowBuilder {
-    pub fn with_eyes(mut self, eyes: &str) -> Self {
-        self.eyes = eyes.to_string();
+impl<'a> CowBuilder<'a> {
+    pub fn with_eyes(mut self, eyes: &'a str) -> Self {
+        self.eyes = eyes;
         self
     }
 
-    pub fn with_tongue(mut self, tongue: &str) -> Self {
-        self.tongue = tongue.to_string();
+    pub fn with_tongue(mut self, tongue: &'a str) -> Self {
+        self.tongue = tongue;
         self
     }
 
-    pub fn with_text(mut self, text: &str) -> Self {
-        self.text = text.to_string();
+    pub fn with_text(mut self, text: &'a str) -> Self {
+        self.text = text;
         self
     }
 
-    pub fn with_thoughts(mut self, thoughts: &str) -> Self {
-        self.thoughts = thoughts.to_string();
+    pub fn with_thoughts(mut self, thoughts: &'a str) -> Self {
+        self.thoughts = thoughts;
         self
     }
 
@@ -67,12 +67,13 @@ impl CowBuilder {
         self
     }
 
-    fn create_variable_map(&self) -> std::collections::HashMap<String, String> {
-        let mut variables = std::collections::HashMap::new();
-        variables.insert("eyes".to_string(), self.eyes.clone());
-        variables.insert("tongue".to_string(), self.tongue.clone());
-        variables.insert("thoughts".to_string(), self.thoughts.clone());
-        variables
+    fn create_variable_map(&self) -> HashMap<String, String> {
+        HashMap::from([
+            ("eyes".to_string(), self.eyes.to_string()),
+            ("tongue".to_string(), self.tongue.to_string()),
+            ("text".to_string(), self.text.to_string()),
+            ("thoughts".to_string(), self.thoughts.to_string()),
+        ])
     }
 
     pub fn build_with_template(
@@ -96,7 +97,7 @@ impl CowBuilder {
         set_template.apply_variables(self.create_variable_map());
         Cow {
             template: set_template,
-            text: self.text,
+            text: self.text.to_string(),
             thinking: self.thinking,
             balloon_width: self.balloon_width,
             word_wrap: self.word_wrap,
