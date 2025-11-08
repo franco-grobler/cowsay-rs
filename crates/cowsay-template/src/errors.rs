@@ -30,18 +30,10 @@ impl Display for ParseError {
     }
 }
 
-impl Error for ParseError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        match *self {
-            ParseError::IoError(ref e) => Some(e),
-            ParseError::InvalidTemplateFormat(ref _item) => None,
-            _ => None,
-        }
-    }
-}
+impl Error for ParseError {}
 
 impl From<std::io::Error> for ParseError {
     fn from(err: std::io::Error) -> Self {
-        ParseError::IoError(err) // Example: treating IO errors as database errors
+        ParseError::IoError(err)
     }
 }
