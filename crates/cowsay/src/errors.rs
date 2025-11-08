@@ -14,7 +14,7 @@ impl Display for CowsayError {
     fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
         match self {
             CowsayError::CowfileNotFound(item) => {
-                write!(f, "Could not find cowfile  for {}", item)
+                write!(f, "Could not find cowfile for {}", item)
             }
             CowsayError::CowfileParseError(item) => {
                 write!(f, "Could not parse cowfile: {}", item)
