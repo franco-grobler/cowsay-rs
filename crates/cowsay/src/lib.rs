@@ -57,7 +57,7 @@ impl CowsayOption {
         }
 
         if self.random {
-            template = Some(cows::get_random_cow());
+            template = Some(cows::get_random_cow()?);
         } else if let Some(file) = &self.file {
             let file_name = format!("{}.cow", file);
             template = Some(cows::get_cow_from_file(file_name.as_str())?);
