@@ -6,22 +6,22 @@ use crate::builder::CowBuilder;
 mod builder;
 
 #[derive(Debug)]
-pub struct Cow {
+pub struct Cow<'a> {
     template: CowTemplate,
-    text: String,
+    text: &'a str,
     thinking: bool,
     balloon_width: usize,
     word_wrap: bool,
 }
 
-impl Cow {
+impl<'a> Cow<'a> {
     pub fn builder() -> builder::CowBuilder<'static> {
         CowBuilder::default()
     }
 
-    pub fn say(mut self, phrase: Option<&str>) -> String {
+    pub fn say(mut self, phrase: Option<&'a str>) -> String {
         if let Some(value) = phrase {
-            self.text = value.to_string();
+            self.text = value;
         }
         self.generate_balloon() + &self.format_template()
     }
@@ -45,7 +45,7 @@ impl Cow {
         let btm_border =
             format!(" {}\n", "-".repeat(width + 2 * !is_multiline as usize));
 
-        let lines = wrap(&self.text, width);
+        let lines = wrap(self.text, width);
 
         let mut balloon_lines: Vec<String> = Vec::with_capacity(line_count + 2);
         balloon_lines.push(top_border);
@@ -143,24 +143,23 @@ mod tests {
 
     #[test]
     fn it_works_with_template() {
+        let template = [
+            r#"$the_cow = <<"EOC";"#,
+            "        $thoughts   ^__^",
+            r"         $thoughts  ($eyes)\_______",
+            r"            (__)\       )\/\",
+            r"             $tongue ||----w |",
+            r"                ||     ||",
+            "EOC",
+        ]
+        .join("\n");
+
         let cow = super::Cow::builder()
             .with_eyes("oo")
             .with_tongue("  ")
             .with_thoughts(r"\")
             .with_text("Hello world")
-            .build_with_template(
-                [
-                    r#"$the_cow = <<"EOC";"#,
-                    "        $thoughts   ^__^",
-                    r"         $thoughts  ($eyes)\_______",
-                    r"            (__)\       )\/\",
-                    r"             $tongue ||----w |",
-                    r"                ||     ||",
-                    "EOC",
-                ]
-                .join("\n")
-                .as_str(),
-            )
+            .build_with_template(template.as_str())
             .expect("Could not parse template");
 
         let output = cow.say(None);
