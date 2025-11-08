@@ -7,6 +7,7 @@
   # https://devenv.sh/packages/
   packages = [
     # Testing and coverage tools
+    pkgs.cargo-audit
     pkgs.cargo-nextest
     # pkgs.cargo-llvm-cov
     pkgs.cargo-shear
