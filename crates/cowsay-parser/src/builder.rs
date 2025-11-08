@@ -78,26 +78,26 @@ impl<'a> CowBuilder<'a> {
 
     pub fn build_with_template(
         self,
-        template: &str,
-    ) -> Result<Cow, ParseError> {
+        template: &'a str,
+    ) -> Result<Cow<'a>, ParseError> {
         let template = CowTemplate::from_template(template)?;
         Ok(self.build(Some(template)))
     }
 
     pub fn build_with_template_from_file(
         self,
-        file_path: &Path,
-    ) -> Result<Cow, ParseError> {
+        file_path: &'a Path,
+    ) -> Result<Cow<'a>, ParseError> {
         let template = CowTemplate::from_file(file_path)?;
         Ok(self.build(Some(template)))
     }
 
-    pub fn build(self, template: Option<CowTemplate>) -> Cow {
+    pub fn build(self, template: Option<CowTemplate>) -> Cow<'a> {
         let mut set_template = template.unwrap_or_default();
         set_template.apply_variables(self.create_variable_map());
         Cow {
             template: set_template,
-            text: self.text.to_string(),
+            text: self.text,
             thinking: self.thinking,
             balloon_width: self.balloon_width,
             word_wrap: self.word_wrap,
