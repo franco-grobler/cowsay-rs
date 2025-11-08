@@ -15,7 +15,7 @@ pub struct Cow {
 }
 
 impl Cow {
-    pub fn builder() -> builder::CowBuilder {
+    pub fn builder() -> builder::CowBuilder<'static> {
         CowBuilder::default()
     }
 
