@@ -78,9 +78,9 @@ impl<'a> CowBuilder<'a> {
 
     pub fn build_with_template(
         self,
-        template: &'a str,
+        template: String,
     ) -> Result<Cow<'a>, ParseError> {
-        let template = CowTemplate::from_template(template)?;
+        let template = CowTemplate::from_template(template.as_str())?;
         Ok(self.build(Some(template)))
     }
 
