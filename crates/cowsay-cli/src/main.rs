@@ -66,13 +66,13 @@ fn main() -> io::Result<()> {
         .with_random(args.random);
 
     if let Some(ref file) = args.file {
-        builder = builder.with_file(file.to_string());
+        builder = builder.with_file(file);
     }
     if let Some(ref eyes) = args.eyes {
-        builder = builder.with_eyes(eyes.to_string());
+        builder = builder.with_eyes(eyes);
     }
     if let Some(ref tongue) = args.tongue {
-        builder = builder.with_tongue(tongue.to_string());
+        builder = builder.with_tongue(tongue);
     }
     if let Some(wrap_column) = args.wrap_column {
         builder = builder.with_wrap(true).with_wrap_column(wrap_column);
