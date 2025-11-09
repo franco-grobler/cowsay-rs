@@ -8,8 +8,8 @@ mod tests {
 
     const PHRASE: &str = "Hello, cowsay-rs!";
 
-    struct OptionTest {
-        option: CowsayOptionBuilder,
+    struct OptionTest<'a> {
+        option: CowsayOptionBuilder<'a>,
         name: String,
     }
 
@@ -70,18 +70,15 @@ mod tests {
         for entry in glob("tests/expected_outputs/file_*.txt")
             .expect("Failed to read glob pattern")
         {
-            let path_buf = entry.expect("Failed to read glob entry");
+            let path_buf = entry.expect("Failed to read glob entry").leak();
             let full_file_name_owned = path_buf
                 .file_name()
                 .expect("Failed to get file name")
                 .to_string_lossy()
-                .into_owned();
-            let file_name = full_file_name_owned
-                .strip_suffix(".txt")
-                .unwrap()
-                .to_string();
-            let cow_name =
-                file_name.clone().strip_prefix("file_").unwrap().to_string();
+                .to_string()
+                .leak();
+            let file_name = full_file_name_owned.strip_suffix(".txt").unwrap();
+            let cow_name = file_name.strip_prefix("file_").unwrap();
 
             options_test.push(OptionTest {
                 option: CowsayOption::builder().with_file(cow_name),
