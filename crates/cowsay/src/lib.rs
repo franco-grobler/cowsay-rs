@@ -7,7 +7,7 @@ pub mod cows;
 pub mod errors;
 
 #[derive(Debug)]
-pub struct CowsayOption {
+pub struct CowsayOption<'a> {
     borg: bool,
     dead: bool,
     greedy: bool,
@@ -15,21 +15,21 @@ pub struct CowsayOption {
     tired: bool,
     wired: bool,
     young: bool,
-    file: Option<String>,
+    file: Option<&'a str>,
     random: bool,
-    eyes: Option<String>,
-    tongue: Option<String>,
+    eyes: Option<&'a str>,
+    tongue: Option<&'a str>,
     wrap: bool,
     wrap_column: Option<usize>,
 }
 
-impl CowsayOption {
-    pub fn builder() -> CowsayOptionBuilder {
+impl<'a> CowsayOption<'a> {
+    pub fn builder() -> CowsayOptionBuilder<'a> {
         CowsayOptionBuilder::default()
     }
 
-    pub fn parser(self) -> Result<CowParser, errors::CowsayError> {
-        let mut template: Option<String> = None;
+    pub fn parser(self) -> Result<CowParser<'a>, errors::CowsayError> {
+        let mut template: String = String::new();
         let mut parser = CowParser::builder();
         let (eyes, tongue) = if self.borg {
             (Some("=="), None)
@@ -46,7 +46,7 @@ impl CowsayOption {
         } else if self.young {
             (Some(".."), None)
         } else {
-            (self.eyes.as_deref(), self.tongue.as_deref())
+            (self.eyes, self.tongue)
         };
 
         if let Some(e) = eyes {
@@ -56,22 +56,22 @@ impl CowsayOption {
             parser = parser.with_tongue(t);
         }
 
-        if self.random {
-            template = Some(cows::get_random_cow()?);
-        } else if let Some(file) = &self.file {
-            let file_name = format!("{}.cow", file);
-            template = Some(cows::get_cow_from_file(file_name.as_str())?);
-        }
-
         parser = parser.with_word_wrapped(self.wrap);
         if self.wrap_column.is_some() {
             parser = parser.with_balloon_width(self.wrap_column.unwrap());
         }
 
-        if template.is_none() {
+        if self.random {
+            template = cows::get_random_cow()?;
+        } else if let Some(file) = &self.file {
+            let file_name = format!("{}.cow", file);
+            template = cows::get_cow_from_file(file_name.as_str())?;
+        }
+
+        if template.is_empty() {
             Ok(parser.build(None))
         } else {
-            Ok(parser.build_with_template(template.unwrap().as_str())?)
+            Ok(parser.build_with_template(template)?)
         }
     }
 }

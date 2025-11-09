@@ -1,7 +1,7 @@
 use crate::CowsayOption;
 
 #[derive(Debug, Default)]
-pub struct CowsayOptionBuilder {
+pub struct CowsayOptionBuilder<'a> {
     borg: bool,
     dead: bool,
     greedy: bool,
@@ -9,15 +9,15 @@ pub struct CowsayOptionBuilder {
     tired: bool,
     wired: bool,
     young: bool,
-    file: Option<String>,
+    file: Option<&'a str>,
     random: bool,
-    eyes: Option<String>,
-    tongue: Option<String>,
+    eyes: Option<&'a str>,
+    tongue: Option<&'a str>,
     wrap: bool,
     wrap_column: Option<usize>,
 }
 
-impl CowsayOptionBuilder {
+impl<'a> CowsayOptionBuilder<'a> {
     pub fn with_borg(mut self, value: bool) -> Self {
         self.borg = value;
         self
@@ -53,7 +53,7 @@ impl CowsayOptionBuilder {
         self
     }
 
-    pub fn with_file(mut self, filename: String) -> Self {
+    pub fn with_file(mut self, filename: &'a str) -> Self {
         self.file = Some(filename);
         self
     }
@@ -63,12 +63,12 @@ impl CowsayOptionBuilder {
         self
     }
 
-    pub fn with_eyes(mut self, eyes: String) -> Self {
+    pub fn with_eyes(mut self, eyes: &'a str) -> Self {
         self.eyes = Some(eyes);
         self
     }
 
-    pub fn with_tongue(mut self, tongue: String) -> Self {
+    pub fn with_tongue(mut self, tongue: &'a str) -> Self {
         self.tongue = Some(tongue);
         self
     }
@@ -83,7 +83,7 @@ impl CowsayOptionBuilder {
         self
     }
 
-    pub fn build(self) -> CowsayOption {
+    pub fn build(self) -> CowsayOption<'a> {
         CowsayOption {
             borg: self.borg,
             dead: self.dead,
@@ -132,10 +132,10 @@ mod tests {
             .with_sleepy(true)
             .with_tired(true)
             .with_wired(true)
-            .with_file("custom.cow".to_string())
+            .with_file("custom.cow")
             .with_random(true)
-            .with_eyes("&&".to_string())
-            .with_tongue("U ".to_string())
+            .with_eyes("&&")
+            .with_tongue("U ")
             .with_wrap(true)
             .with_wrap_column(50)
             .build();
