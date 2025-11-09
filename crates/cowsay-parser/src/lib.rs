@@ -159,7 +159,7 @@ mod tests {
             .with_tongue("  ")
             .with_thoughts(r"\")
             .with_text("Hello world")
-            .build_with_template(template.as_str())
+            .build_with_template(template)
             .expect("Could not parse template");
 
         let output = cow.say(None);
