@@ -55,7 +55,7 @@ jobs:
   cargo-test-linux:
     name: "cargo test (linux)"
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -81,7 +81,7 @@ jobs:
   cargo-test-linux-release:
     name: "cargo test (linux, release)"
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -103,7 +103,7 @@ jobs:
           - macos-latest
     name: "cargo test (${{ matrix.platform }})"
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
