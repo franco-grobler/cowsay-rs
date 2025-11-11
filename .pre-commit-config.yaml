@@ -11,7 +11,7 @@ repos:
         args: [
             --scopes,
             # yamllint disable-line
-            "cowsay,parser,template,cli,wasm",
+            "cowsay,parser,template,cli,wasm,website",
             --strict,
             --verbose,
             build,

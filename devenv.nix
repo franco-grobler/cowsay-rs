@@ -27,6 +27,25 @@
       "rust-analyzer"
     ];
     toolchainFile = ./rust-toolchain.toml;
+  languages = {
+    javascript = {
+      enable = true;
+      yarn = {
+        enable = true;
+      };
+    };
+    rust = {
+      enable = true;
+      channel = "stable";
+      components = [
+        "rustc"
+        "cargo"
+        "clippy"
+        "rustfmt"
+        "rust-analyzer"
+      ];
+      version = "1.91.0";
+    };
   };
 
   enterShell = ''
