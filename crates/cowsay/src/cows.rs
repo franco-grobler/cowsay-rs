@@ -1,4 +1,5 @@
 use crate::errors::CowsayError;
+use cowsay_template::errors::ParseError;
 use include_directory::{Dir, include_directory};
 
 use rand::seq::IteratorRandom;
@@ -21,11 +22,17 @@ pub fn get_random_cow() -> Result<String, CowsayError> {
 }
 
 pub fn get_cow_from_file(file_name: &str) -> Result<String, CowsayError> {
-    let cowfile = COWS
-        .get_file(file_name)
-        .and_then(|f| f.contents_utf8().map(|s| s.to_string()));
-    match cowfile.is_some() {
-        true => Ok(cowfile.unwrap()),
-        false => Err(CowsayError::CowfileNotFound(file_name.to_string())),
+    let file = COWS.get_file(file_name);
+    match file {
+        Some(f) => match f.contents_utf8() {
+            Some(contents) => Ok(contents.to_string()),
+            None => Err(CowsayError::CowfileParseError(
+                ParseError::InvalidTemplateFormat(format!(
+                    "cowfile '{}' is not valid UTF-8",
+                    file_name
+                )),
+            )),
+        },
+        None => Err(CowsayError::CowfileNotFound(file_name.to_string())),
     }
 }
