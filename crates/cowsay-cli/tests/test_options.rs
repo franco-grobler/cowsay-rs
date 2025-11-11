@@ -173,7 +173,7 @@ mod test {
     #[test]
     fn test_random() {
         let mut cmd = cargo_bin_cmd!("cowsay-rs");
-        cmd.arg("-d").arg("Hello, World!");
+        cmd.arg("-r").arg("Hello, World!");
         cmd.assert().success().stdout(contains(
             [
                 r" _______________",
