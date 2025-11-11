@@ -30,7 +30,14 @@ impl Display for ParseError {
     }
 }
 
-impl Error for ParseError {}
+impl Error for ParseError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            ParseError::IoError(e) => Some(e),
+            _ => None,
+        }
+    }
+}
 
 impl From<std::io::Error> for ParseError {
     fn from(err: std::io::Error) -> Self {
