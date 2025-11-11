@@ -23,7 +23,14 @@ impl Display for CowsayError {
     }
 }
 
-impl Error for CowsayError {}
+impl Error for CowsayError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            CowsayError::CowfileParseError(e) => Some(e),
+            _ => None,
+        }
+    }
+}
 
 impl From<ParseError> for CowsayError {
     fn from(err: ParseError) -> Self {
