@@ -178,24 +178,20 @@ impl Options {
             .with_random(self.random)
             .with_wrap(self.wrap);
 
-        if self.file.is_some() {
-            let file = self.file.as_ref().unwrap();
-            builder = builder.with_cowfile(file.as_str());
+        if let Some(file) = self.file.as_deref() {
+            builder = builder.with_cowfile(file);
         }
 
-        if self.eyes.is_some() {
-            let eyes = self.eyes.as_ref().unwrap();
+        if let Some(eyes) = self.eyes.as_deref() {
             builder = builder.with_eyes(eyes);
         }
-        if self.tongue.is_some() {
-            let tongue = self.tongue.as_ref().unwrap();
+
+        if let Some(tongue) = self.tongue.as_deref() {
             builder = builder.with_tongue(tongue);
         }
 
-        if self.wrap_column.is_some() {
-            builder = builder
-                .with_wrap(true)
-                .with_wrap_column(self.wrap_column.unwrap());
+        if let Some(wrap_column) = self.wrap_column {
+            builder = builder.with_wrap(true).with_wrap_column(wrap_column);
         }
 
         builder.build()
