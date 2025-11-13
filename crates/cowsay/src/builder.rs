@@ -19,6 +19,7 @@ use crate::CowsayOption;
 ///     .build();
 /// ```
 #[derive(Debug, Default)]
+#[allow(clippy::struct_excessive_bools)]
 pub struct CowsayOptionBuilder<'a> {
     borg: bool,
     dead: bool,
@@ -336,7 +337,6 @@ impl<'a> CowsayOptionBuilder<'a> {
             tongue: self.tongue,
             wrap: self.wrap,
             wrap_column: self.wrap_column,
-            message: self.message,
         }
     }
 }
@@ -360,7 +360,6 @@ mod tests {
         assert!(options.tongue.is_none());
         assert!(!options.wrap);
         assert!(options.wrap_column.is_none());
-        assert!(options.message.is_none());
     }
 
     #[test]
@@ -393,6 +392,5 @@ mod tests {
         assert_eq!(options.tongue.unwrap(), "U ");
         assert!(options.wrap);
         assert_eq!(options.wrap_column.unwrap(), 50);
-        assert_eq!(options.message.unwrap(), "Test message");
     }
 }
