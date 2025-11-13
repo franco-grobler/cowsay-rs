@@ -9,7 +9,7 @@ use crate::CowsayOption;
 /// # Examples
 ///
 /// ```
-/// use cowsay::CowsayOptionBuilder;
+/// use cowsay::builder::CowsayOptionBuilder;
 ///
 /// let options = CowsayOptionBuilder::default()
 ///     .with_message("Hello, world!")
@@ -47,7 +47,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_message("Moo!");
     /// ```
@@ -66,7 +66,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_borg(true);
     /// ```
@@ -85,7 +85,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_dead(true);
     /// ```
@@ -104,7 +104,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_greedy(true);
     /// ```
@@ -123,7 +123,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_sleepy(true);
     /// ```
@@ -142,7 +142,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_tired(true);
     /// ```
@@ -161,7 +161,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_wired(true);
     /// ```
@@ -180,7 +180,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_young(true);
     /// ```
@@ -199,7 +199,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_cowfile("tux");
     /// ```
@@ -218,7 +218,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_random(true);
     /// ```
@@ -237,7 +237,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_eyes("^^");
     /// ```
@@ -256,7 +256,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_tongue("U ");
     /// ```
@@ -275,7 +275,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_wrap(true);
     /// ```
@@ -296,7 +296,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let builder = CowsayOptionBuilder::default().with_wrap_column(60);
     /// ```
@@ -315,7 +315,7 @@ impl<'a> CowsayOptionBuilder<'a> {
     /// # Examples
     ///
     /// ```
-    /// use cowsay::CowsayOptionBuilder;
+    /// use cowsay::builder::CowsayOptionBuilder;
     ///
     /// let options = CowsayOptionBuilder::default()
     ///     .with_message("Hello")

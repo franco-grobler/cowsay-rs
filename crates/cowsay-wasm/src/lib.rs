@@ -103,7 +103,7 @@ impl Options {
     /// import { Options } from 'cowsay-wasm';
     ///
     /// const options = new Options({
-    ///   cow: 'tux',
+    ///   file: 'tux',
     ///   eyes: '^^',
     /// });
     /// ```
