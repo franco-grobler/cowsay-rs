@@ -17,7 +17,7 @@ pub struct CowBuilder<'a> {
     word_wrap: bool,
 }
 
-impl<'a> Default for CowBuilder<'a> {
+impl Default for CowBuilder<'_> {
     fn default() -> Self {
         CowBuilder {
             eyes: DEFAULT_EYES,
@@ -32,37 +32,37 @@ impl<'a> Default for CowBuilder<'a> {
 }
 
 impl<'a> CowBuilder<'a> {
-    pub fn with_eyes(mut self, eyes: &'a str) -> Self {
+    pub const fn with_eyes(mut self, eyes: &'a str) -> Self {
         self.eyes = eyes;
         self
     }
 
-    pub fn with_tongue(mut self, tongue: &'a str) -> Self {
+    pub const fn with_tongue(mut self, tongue: &'a str) -> Self {
         self.tongue = tongue;
         self
     }
 
-    pub fn with_text(mut self, text: &'a str) -> Self {
+    pub const fn with_text(mut self, text: &'a str) -> Self {
         self.text = text;
         self
     }
 
-    pub fn with_thoughts(mut self, thoughts: &'a str) -> Self {
+    pub const fn with_thoughts(mut self, thoughts: &'a str) -> Self {
         self.thoughts = thoughts;
         self
     }
 
-    pub fn with_thinking(mut self, thinking: bool) -> Self {
+    pub const fn with_thinking(mut self, thinking: bool) -> Self {
         self.thinking = thinking;
         self
     }
 
-    pub fn with_balloon_width(mut self, width: usize) -> Self {
+    pub const fn with_balloon_width(mut self, width: usize) -> Self {
         self.balloon_width = width;
         self
     }
 
-    pub fn with_word_wrapped(mut self, wrap: bool) -> Self {
+    pub const fn with_word_wrapped(mut self, wrap: bool) -> Self {
         self.word_wrap = wrap;
         self
     }
@@ -78,9 +78,9 @@ impl<'a> CowBuilder<'a> {
 
     pub fn build_with_template(
         self,
-        template: String,
+        template: &str,
     ) -> Result<Cow<'a>, ParseError> {
-        let template = CowTemplate::from_template(template.as_str())?;
+        let template = CowTemplate::from_template(template)?;
         Ok(self.build(Some(template)))
     }
 
