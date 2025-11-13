@@ -1,21 +1,27 @@
+//! Template parsing errors.
+
 use std::error::Error;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
 #[derive(Debug)]
+/// Template parsing errors.
 pub enum ParseError {
+    /// File reading errors.
     IoError(std::io::Error),
+    /// Template could not be found.
     TemplateNotFound(String, Vec<String>),
+    /// Template could not be parsed.
     InvalidTemplateFormat(String),
 }
 
 impl Display for ParseError {
     fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
         match self {
-            ParseError::IoError(item) => {
-                write!(f, "{} could not be accessed", item)
+            Self::IoError(item) => {
+                write!(f, "{item} could not be accessed")
             }
-            ParseError::TemplateNotFound(item, locations) => {
+            Self::TemplateNotFound(item, locations) => {
                 write!(
                     f,
                     "Template not found: {}\nSearched locations:\n {}",
@@ -23,8 +29,8 @@ impl Display for ParseError {
                     locations.join("\n")
                 )
             }
-            ParseError::InvalidTemplateFormat(item) => {
-                write!(f, "Invalid template format: {}", item)
+            Self::InvalidTemplateFormat(item) => {
+                write!(f, "Invalid template format: {item}")
             }
         }
     }
@@ -33,7 +39,7 @@ impl Display for ParseError {
 impl Error for ParseError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            ParseError::IoError(e) => Some(e),
+            Self::IoError(e) => Some(e),
             _ => None,
         }
     }
@@ -41,6 +47,6 @@ impl Error for ParseError {
 
 impl From<std::io::Error> for ParseError {
     fn from(err: std::io::Error) -> Self {
-        ParseError::IoError(err)
+        Self::IoError(err)
     }
 }
