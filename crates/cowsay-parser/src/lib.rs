@@ -1,3 +1,5 @@
+//! Entry point for cowsay-parser library.
+
 use cowsay_template::CowTemplate;
 use textwrap::wrap;
 
@@ -6,6 +8,13 @@ use crate::builder::CowBuilder;
 mod builder;
 
 #[derive(Debug)]
+/// Primary struct for generating cowsay output.
+///
+/// * `template`: template structure to use for rendering the cow.
+/// * `text`: Balloon text.
+/// * `thinking`: Use thinking balloon style.
+/// * `balloon_width`: Column width for the balloon.
+/// * `word_wrap`: Wrap text in the balloon.
 pub struct Cow<'a> {
     template: CowTemplate,
     text: &'a str,
@@ -15,10 +24,14 @@ pub struct Cow<'a> {
 }
 
 impl<'a> Cow<'a> {
+    /// Builder for constructing a `Cow` instance.
     pub fn builder() -> builder::CowBuilder<'static> {
         CowBuilder::default()
     }
 
+    /// Generate cowsay output.
+    ///
+    /// * `phrase`: Override balloon text if provided.
     pub fn say(mut self, phrase: Option<&'a str>) -> String {
         if let Some(value) = phrase {
             self.text = value;
@@ -34,16 +47,20 @@ impl<'a> Cow<'a> {
         let mut width = self.balloon_width;
         let mut line_count = 1;
         let is_multiline = self.word_wrap && self.text.len() > width;
-        if !is_multiline {
-            width = self.text.len();
-        } else {
+        if is_multiline {
             line_count = (self.text.len() / width) + 1;
+        } else {
+            width = self.text.len();
         }
 
-        let top_border =
-            format!(" {}\n", "_".repeat(width + 2 * !is_multiline as usize));
-        let btm_border =
-            format!(" {}\n", "-".repeat(width + 2 * !is_multiline as usize));
+        let top_border = format!(
+            " {}\n",
+            "_".repeat(width + 2 * usize::from(!is_multiline))
+        );
+        let btm_border = format!(
+            " {}\n",
+            "-".repeat(width + 2 * usize::from(!is_multiline))
+        );
 
         let lines = wrap(self.text, width);
 
@@ -159,7 +176,7 @@ mod tests {
             .with_tongue("  ")
             .with_thoughts(r"\")
             .with_text("Hello world")
-            .build_with_template(template)
+            .build_with_template(template.as_str())
             .expect("Could not parse template");
 
         let output = cow.say(None);

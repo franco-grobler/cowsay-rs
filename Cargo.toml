@@ -44,9 +44,8 @@ wasm-bindgen-test = { version = "0.3.55" }
 warnings = "deny"
 
 # --- Code Quality & Correctness ---
-unreachable_pub = "deny"            # Detects public items that are not reachable
-unsafe_code = "deny"                # Forbids any use of `unsafe` blocks.
-undocumented_unsafe_blocks = "deny"
+unreachable_pub = "deny" # Detects public items that are not reachable
+unsafe_code = "deny"     # Forbids any use of `unsafe` blocks.
 
 # --- Documentation ---
 missing_docs = "deny"                  # Requires all public items to be documented
@@ -59,10 +58,11 @@ non_upper_case_globals = "deny"
 
 # === Clippy Lints ===
 [workspace.lints.clippy]
-pedantic = { level = "deny", priority = -1 } # Very strict, opinionated lints
+pedantic = { level = "deny", priority = -1 }
 nursery = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
 
 module_name_repetitions = "allow"
 must_use_candidate = "allow"
-missing_errors_doc = "allow"      # Good to have, but `pedantic` enables it.
+missing_errors_doc = "allow"
+redundant_pub_crate = "allow"

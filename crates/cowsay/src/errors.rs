@@ -1,3 +1,5 @@
+//! Crate specific errors.
+
 use std::error::Error;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -5,8 +7,11 @@ use std::fmt::Formatter;
 use cowsay_template::errors::ParseError;
 
 #[derive(Debug)]
+/// Cowsay specific errors.
 pub enum CowsayError {
+    /// Unable to find cowfile.
     CowfileNotFound(String),
+    /// Could not parse cowfile.
     CowfileParseError(ParseError),
 }
 
