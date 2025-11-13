@@ -1,3 +1,5 @@
+//! Tests for cowsay with long input strings to verify proper text wrapping and formatting.
+
 #[cfg(test)]
 mod tests {
     use pretty_assertions::assert_str_eq;
@@ -13,22 +15,22 @@ mod tests {
             .expect("Failed to create parser")
             .say(Some(long_input));
         let expected_output = [
-            r#" ________________________________________"#,
-            r#"/ This is a very long input string that  \"#,
-            r#"| is intended to test how the cowsay     |"#,
-            r#"| implementation handles text wrapping   |"#,
-            r#"| and formatting when the input exceeds  |"#,
-            r#"| typical lengths. The quick brown fox   |"#,
-            r#"| jumps over the lazy dog. Lorem ipsum   |"#,
-            r#"| dolor sit amet, consectetur adipiscing |"#,
-            r#"| elit. Sed do eiusmod tempor incididunt |"#,
-            r#"\ ut labore et dolore magna aliqua.      /"#,
-            r#" ----------------------------------------"#,
-            r#"        \   ^__^"#,
-            r#"         \  (oo)\_______"#,
-            r#"            (__)\       )\/\"#,
-            r#"                ||----w |"#,
-            r#"                ||     ||"#,
+            r" ________________________________________",
+            r"/ This is a very long input string that  \",
+            r"| is intended to test how the cowsay     |",
+            r"| implementation handles text wrapping   |",
+            r"| and formatting when the input exceeds  |",
+            r"| typical lengths. The quick brown fox   |",
+            r"| jumps over the lazy dog. Lorem ipsum   |",
+            r"| dolor sit amet, consectetur adipiscing |",
+            r"| elit. Sed do eiusmod tempor incididunt |",
+            r"\ ut labore et dolore magna aliqua.      /",
+            r" ----------------------------------------",
+            r"        \   ^__^",
+            r"         \  (oo)\_______",
+            r"            (__)\       )\/\",
+            r"                ||----w |",
+            r"                ||     ||",
             "",
         ]
         .join("\n");
