@@ -10,6 +10,10 @@ documentation = { workspace = true }
 description.workspace = true
 repository = { workspace = true }
 license = { workspace = true }
+categories.workspace = true
+keywords.workspace = true
+readme.workspace = true
+description = "A template engine for cowsay templates"
 
 [dependencies]
 regex = { workspace = true }
@@ -17,3 +21,6 @@ regex = { workspace = true }
 [dev-dependencies]
 pretty_assertions = "1.4.1"
 tempfile = "3.23.0"
+
+[lints]
+workspace = true

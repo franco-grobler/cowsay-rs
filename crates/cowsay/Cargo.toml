@@ -10,6 +10,10 @@ description.workspace = true
 repository.workspace = true
 authors.workspace = true
 license.workspace = true
+categories.workspace = true
+keywords.workspace = true
+readme.workspace = true
+description = "A Rust implementation of the classic cowsay program"
 
 [dependencies]
 cowsay-parser = { workspace = true }
@@ -21,3 +25,6 @@ rand = { workspace = true }
 [dev-dependencies]
 glob = "0.3.3"
 pretty_assertions = "1.4.1"
+
+[lints]
+workspace = true
