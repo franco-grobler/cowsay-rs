@@ -1,3 +1,25 @@
+//! A WebAssembly wrapper for the `cowsay` crate, enabling its use in JavaScript
+//! environments.
+//!
+//! This crate provides a `cowsay` function that can be called from JavaScript
+//! to generate ASCII art of a cow saying a message. It exposes an `Options`
+//! struct to allow customization of the cow's appearance and behavior.
+//!
+//! # Examples
+//!
+//! ```javascript
+//! import { Options } from 'cowsay-wasm';
+//!
+//! const options = new Options({
+//!   message: 'Hello from WASM!',
+//!   cow: 'default',
+//!   wrap: true,
+//! });
+//!
+//! const cowMessage = options.say();
+//! console.log(cowMessage);
+//! ```
+
 use cowsay::CowsayOption;
 use js_sys::Error;
 use wasm_bindgen::{JsValue, prelude::wasm_bindgen};
@@ -6,24 +28,17 @@ pub(crate) fn into_error<E: std::fmt::Display>(err: E) -> Error {
     Error::new(&err.to_string())
 }
 
+/// Defines the configuration options for a `cowsay` message in a WebAssembly context.
+///
+/// This struct holds all the customizable parameters for generating a cowsay
+/// message, such as the cow's appearance (e.g., `borg`, `dead`), the cowfile
+/// to use, eye and tongue strings, and text wrapping settings.
+///
+/// Instances of `Options` are created using the `new` constructor or
+/// `default_options` for a default configuration.
 #[derive(Debug)]
 #[allow(clippy::struct_excessive_bools)]
 #[wasm_bindgen]
-/// Options cowsay accepts.
-///
-/// * `borg`: Borg appearance.
-/// * `dead`: Dead appearance.
-/// * `greedy`: Greedy appearance.
-/// * `sleepy`: Sleepy appearance.
-/// * `tired`: Tired appearance.
-/// * `wired`: Wired appearance.
-/// * `young`: Young appearance.
-/// * `file`: Template file name, or template string.
-/// * `random`: Use a random template.
-/// * `eyes`: Characters to use for the eyes.
-/// * `tongue`: Characters to use for the tongue.
-/// * `wrap`: Should the text be wrapped?
-/// * `wrap_column`: Column width to wrap text at.
 pub struct Options {
     borg: bool,
     dead: bool,
@@ -40,24 +55,14 @@ pub struct Options {
     wrap_column: Option<usize>,
 }
 
+/// A helper struct for deserializing `Options` from a JavaScript object.
+///
+/// This struct is used internally by the `Options::new` constructor to
+/// deserialize a `JsValue` into a structured format. All fields are optional
+/// to allow for partial configuration from the JavaScript side.
 #[derive(Debug, serde::Deserialize)]
 #[allow(clippy::struct_excessive_bools)]
 #[wasm_bindgen]
-/// Options cowsay accepts.
-///
-/// * `borg`: Borg appearance.
-/// * `dead`: Dead appearance.
-/// * `greedy`: Greedy appearance.
-/// * `sleepy`: Sleepy appearance.
-/// * `tired`: Tired appearance.
-/// * `wired`: Wired appearance.
-/// * `young`: Young appearance.
-/// * `file`: Template file name, or template string.
-/// * `random`: Use a random template.
-/// * `eyes`: Characters to use for the eyes.
-/// * `tongue`: Characters to use for the tongue.
-/// * `wrap`: Should the text be wrapped?
-/// * `wrap_column`: Column width to wrap text at.
 pub struct OptionsConstructor {
     borg: Option<bool>,
     dead: Option<bool>,
@@ -76,6 +81,32 @@ pub struct OptionsConstructor {
 
 #[wasm_bindgen]
 impl Options {
+    /// Creates a new `Options` instance from a JavaScript object.
+    ///
+    /// This constructor accepts a `JsValue` representing a JavaScript object
+    /// with configuration properties. Missing properties will be set to their
+    /// default values.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - A `JsValue` containing the configuration options.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` which is:
+    /// - `Ok(Options)` if the `JsValue` is successfully parsed.
+    /// - `Err(Error)` if the `JsValue` cannot be deserialized into `OptionsConstructor`.
+    ///
+    /// # Examples
+    ///
+    /// ```javascript
+    /// import { Options } from 'cowsay-wasm';
+    ///
+    /// const options = new Options({
+    ///   cow: 'tux',
+    ///   eyes: '^^',
+    /// });
+    /// ```
     #[wasm_bindgen(constructor)]
     pub fn new(options: JsValue) -> Result<Self, Error> {
         let options: OptionsConstructor =
@@ -98,7 +129,24 @@ impl Options {
         })
     }
 
-    #[wasm_bindgen(constructor)]
+    /// Creates a new `Options` instance with default values.
+    ///
+    /// This provides a convenient way to get a default set of options, which
+    /// can then be used to generate a standard cowsay message.
+    ///
+    /// # Returns
+    ///
+    /// An `Options` struct with default settings (e.g., `wrap` is `true`,
+    /// all appearance modes are `false`).
+    ///
+    /// # Examples
+    ///
+    /// ```javascript
+    /// import { Options } from 'cowsay-wasm';
+    ///
+    /// const defaultOptions = Options.default_options();
+    /// ```
+    #[wasm_bindgen]
     #[allow(clippy::missing_const_for_fn)]
     pub fn default_options() -> Self {
         Self {
@@ -153,6 +201,31 @@ impl Options {
         builder.build()
     }
 
+    /// Generates the cowsay message based on the configured options.
+    ///
+    /// This method takes the current `Options` and a message string, then
+    /// invokes the core `cowsay` logic to produce the final ASCII art.
+    ///
+    /// # Arguments
+    ///
+    /// * `message` - The text message for the cow to say.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` which is:
+    /// - `Ok(String)` containing the complete cowsay message.
+    /// - `Err(Error)` if there is an issue with parsing the options or
+    ///   generating the message (e.g., cowfile not found).
+    ///
+    /// # Examples
+    ///
+    /// ```javascript
+    /// import { Options } from 'cowsay-wasm';
+    ///
+    /// const options = Options.default_options();
+    /// const cowMessage = options.say('Moo!');
+    /// console.log(cowMessage);
+    /// ```
     pub fn say(&self, message: &str) -> Result<String, Error> {
         let cowsay_option = self.to_cowsay_option();
         let parser = cowsay_option.parser().map_err(into_error)?;
