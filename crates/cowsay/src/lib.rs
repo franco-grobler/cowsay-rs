@@ -12,12 +12,9 @@
 //! let cow_message = CowsayOption::builder()
 //!     .with_message(message)
 //!     .build()
-//!     .unwrap()
-//!     .parser()
-//!     .unwrap()
-//!     .think();
+//!     .parser();
 //!
-//! println!("{}", cow_message);
+//! println!("{}", cow_message.unwrap().say(None));
 //! ```
 
 use crate::builder::CowsayOptionBuilder;
@@ -94,9 +91,7 @@ impl<'a> CowsayOption<'a> {
     /// let parser = CowsayOption::builder()
     ///     .with_message("Hello")
     ///     .build()
-    ///     .unwrap()
-    ///     .parser()
-    ///     .unwrap();
+    ///     .parser();
     /// ```
     pub fn parser(self) -> Result<CowParser<'a>, errors::CowsayError> {
         let mut template: String = String::new();
