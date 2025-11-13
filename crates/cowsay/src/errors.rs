@@ -18,11 +18,11 @@ pub enum CowsayError {
 impl Display for CowsayError {
     fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
         match self {
-            CowsayError::CowfileNotFound(item) => {
-                write!(f, "Could not find cowfile for {}", item)
+            Self::CowfileNotFound(item) => {
+                write!(f, "Could not find cowfile for {item}")
             }
-            CowsayError::CowfileParseError(item) => {
-                write!(f, "Could not parse cowfile: {}", item)
+            Self::CowfileParseError(item) => {
+                write!(f, "Could not parse cowfile: {item}")
             }
         }
     }
@@ -31,14 +31,14 @@ impl Display for CowsayError {
 impl Error for CowsayError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            CowsayError::CowfileParseError(e) => Some(e),
-            _ => None,
+            Self::CowfileParseError(e) => Some(e),
+            Self::CowfileNotFound(_) => None,
         }
     }
 }
 
 impl From<ParseError> for CowsayError {
     fn from(err: ParseError) -> Self {
-        CowsayError::CowfileParseError(err)
+        Self::CowfileParseError(err)
     }
 }
