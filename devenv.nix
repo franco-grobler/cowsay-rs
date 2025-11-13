@@ -20,7 +20,6 @@
   # https://devenv.sh/languages/
   languages.rust = {
     enable = true;
-    channel = "stable";
     components = [
       "rustc"
       "cargo"
@@ -28,6 +27,6 @@
       "rustfmt"
       "rust-analyzer"
     ];
-    version = "1.91.0";
+    toolchainFile = ./rust-toolchain.toml;
   };
 }
