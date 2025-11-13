@@ -10,6 +10,8 @@ documentation = "https://franco-grobler.github.io/cowsay-rs/"
 repository = "https://github.com/franco-grobler/cowsay-rs"
 authors = ["Franco Grobler <franco@grobler.fyi>"]
 license = "UNLICENSE"
+categories = ["command-line-utilities"]
+keywords = ["cowsay", "cli", "command-line", "ascii-art", "fun"]
 
 [workspace.dependencies]
 cowsay = { path = "crates/cowsay" }
@@ -17,10 +19,24 @@ cowsay-parser = { path = "crates/cowsay-parser" }
 cowsay-template = { path = "crates/cowsay-template" }
 
 clap = { version = "4.5.51", features = ["derive"] }
+console_error_panic_hook = { version = "0.1.7" }
+console_log = { version = "1.0.0" }
+getrandom = { version = "0.3.4" }
 include_directory = "0.1.1"
-regex = "1.12.2"
+js-sys = { version = "0.3.82" }
+log = { version = "0.4.17" }
 rand = "0.9.2"
+regex = "1.12.2"
+serde = { version = "1.0.197", features = ["derive"] }
+serde-wasm-bindgen = { version = "0.6.4" }
 textwrap = { version = "0.16.2", features = ["terminal_size"] }
+uuid = { version = "1.18.1", features = [
+  "v4",
+  "fast-rng",
+  "macro-diagnostics",
+] }
+wasm-bindgen = { version = "0.2.105" }
+wasm-bindgen-test = { version = "0.3.55" }
 
 
 [workspace.lints.rust]
