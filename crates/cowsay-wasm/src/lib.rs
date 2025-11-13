@@ -231,7 +231,7 @@ impl Options {
         let parser = cowsay_option.parser().map_err(into_error)?;
 
         if message.is_empty() {
-            Error::new("Message cannot be empty");
+            return Err(Error::new("Message cannot be empty"));
         }
 
         let cow = parser.say(Some(message));
