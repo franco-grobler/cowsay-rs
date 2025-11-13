@@ -1,3 +1,5 @@
+//! Tests to ensure compatibility between cowsay-rs and original Perl cowsay.
+
 #[cfg(test)]
 mod tests {
     use glob::glob;
@@ -13,8 +15,8 @@ mod tests {
         name: String,
     }
 
-    fn read_test_file(name: String) -> String {
-        let file_path = format!("tests/expected_outputs/{}.txt", name);
+    fn read_test_file(name: &str) -> String {
+        let file_path = format!("tests/expected_outputs/{name}.txt");
         read_to_string(file_path).expect("Failed to read test file")
     }
 
@@ -58,7 +60,7 @@ mod tests {
                 .expect("Failed to create parser")
                 .say(Some(PHRASE));
 
-            let expected_output = read_test_file(option.name);
+            let expected_output = read_test_file(&option.name);
 
             assert_str_eq!(output, expected_output);
         }
@@ -81,7 +83,7 @@ mod tests {
             let cow_name = file_name.strip_prefix("file_").unwrap();
 
             options_test.push(OptionTest {
-                option: CowsayOption::builder().with_file(cow_name),
+                option: CowsayOption::builder().with_cowfile(cow_name),
                 name: file_name.to_string(),
             });
         }
@@ -93,7 +95,7 @@ mod tests {
                 .expect("Failed to create parser")
                 .say(Some(PHRASE));
 
-            let expected_output = read_test_file(option.name.clone());
+            let expected_output = read_test_file(&option.name.clone());
 
             assert_str_eq!(
                 output,
