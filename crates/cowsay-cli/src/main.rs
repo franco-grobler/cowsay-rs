@@ -64,7 +64,7 @@ fn main() -> io::Result<()> {
         .with_random(args.random);
 
     if let Some(ref file) = args.file {
-        builder = builder.with_file(file);
+        builder = builder.with_cowfile(file);
     }
     if let Some(ref eyes) = args.eyes {
         builder = builder.with_eyes(eyes);
@@ -81,7 +81,7 @@ fn main() -> io::Result<()> {
     let parser = match options.parser() {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("Error creating cowsay parser: {}", e);
+            eprintln!("Error creating cowsay parser: {e}");
             std::process::exit(1);
         }
     };
