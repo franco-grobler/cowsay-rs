@@ -16,24 +16,24 @@ description = "WebAssembly bindings for Cowsay-RS"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
-[features]
-default = ["console_error_panic_hook"]
+# [features]
+# default = ["console_error_panic_hook"]
 
 [dependencies]
 cowsay = { workspace = true }
 
-console_error_panic_hook = { workspace = true, optional = true }
-console_log = { workspace = true }
+# console_error_panic_hook = { workspace = true, optional = true }
+# console_log = { workspace = true }
 js-sys = { workspace = true }
-log = { workspace = true }
-getrandom = { workspace = true, features = ["wasm_js"] }
+# log = { workspace = true }
+# getrandom = { workspace = true, features = ["wasm_js"] }
 serde = { workspace = true }
 serde-wasm-bindgen = { workspace = true }
 wasm-bindgen = { workspace = true }
-uuid = { workspace = true, features = ["js"] }
+# uuid = { workspace = true, features = ["js"] }
 
 [dev-dependencies]
-wasm-bindgen-test = { workspace = true }
+# wasm-bindgen-test = { workspace = true }
 
 [lints]
 workspace = true
