@@ -95,7 +95,7 @@ mod tests {
                 .expect("Failed to create parser")
                 .say(Some(PHRASE));
 
-            let expected_output = read_test_file(&option.name.clone());
+            let expected_output = read_test_file(&option.name);
 
             assert_str_eq!(
                 output,
