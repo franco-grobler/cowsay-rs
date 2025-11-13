@@ -1,21 +1,24 @@
 use crate::CowsayOption;
 
-#[derive(Debug, Default)]
-/// Builder for `CowsayOption`.
+/// A builder for creating `CowsayOption` instances.
 ///
-/// * `borg`: Borg appearance.
-/// * `dead`: Dead appearance.
-/// * `greedy`: Greedy appearance.
-/// * `sleepy`: Sleepy appearance.
-/// * `tired`: Tired appearance.
-/// * `wired`: Wired appearance.
-/// * `young`: Young appearance.
-/// * `file`: Filename of the cowfile to use.
-/// * `random`: Choose a random cowfile.
-/// * `eyes`: Eyes string.
-/// * `tongue`: Tongue string.
-/// * `wrap`: Text wrapping.
-/// * `wrap_column`: Wrap column number.
+/// This builder provides a fluent API to configure various aspects of the cowsay
+/// message, such as the cow's appearance, the cow file to use, eyes, tongue,
+/// and text wrapping options.
+///
+/// # Examples
+///
+/// ```
+/// use cowsay::CowsayOptionBuilder;
+///
+/// let options = CowsayOptionBuilder::default()
+///     .with_message("Hello, world!")
+///     .with_cowfile("default")
+///     .with_eyes("oo")
+///     .with_wrap_column(40)
+///     .build();
+/// ```
+#[derive(Debug, Default)]
 pub struct CowsayOptionBuilder<'a> {
     borg: bool,
     dead: bool,
@@ -30,115 +33,295 @@ pub struct CowsayOptionBuilder<'a> {
     tongue: Option<&'a str>,
     wrap: bool,
     wrap_column: Option<usize>,
+    message: Option<&'a str>,
 }
 
 impl<'a> CowsayOptionBuilder<'a> {
-    /// Sets borg appearance.
+    /// Sets the message to be displayed by the cow.
     ///
-    /// * `value`: Should borg appearance be used.
+    /// # Arguments
+    ///
+    /// * `message` - The text message for the cow to say.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_message("Moo!");
+    /// ```
+    #[must_use]
+    pub const fn with_message(mut self, message: &'a str) -> Self {
+        self.message = Some(message);
+        self
+    }
+
+    /// Configures the cow to have a "borg" appearance.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable borg appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_borg(true);
+    /// ```
+    #[must_use]
     pub const fn with_borg(mut self, value: bool) -> Self {
         self.borg = value;
         self
     }
 
-    /// Sets dead appearance.
+    /// Configures the cow to have a "dead" appearance.
     ///
-    /// * `value`: Should dead appearance be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable dead appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_dead(true);
+    /// ```
+    #[must_use]
     pub const fn with_dead(mut self, value: bool) -> Self {
         self.dead = value;
         self
     }
 
-    /// Sets greedy appearance.
+    /// Configures the cow to have a "greedy" appearance.
     ///
-    /// * `value`: Should greedy appearance be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable greedy appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_greedy(true);
+    /// ```
+    #[must_use]
     pub const fn with_greedy(mut self, value: bool) -> Self {
         self.greedy = value;
         self
     }
 
-    /// Sets sleepy appearance.
+    /// Configures the cow to have a "sleepy" appearance.
     ///
-    /// * `value`: Should sleepy appearance be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable sleepy appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_sleepy(true);
+    /// ```
+    #[must_use]
     pub const fn with_sleepy(mut self, value: bool) -> Self {
         self.sleepy = value;
         self
     }
 
-    /// Sets tired appearance.
+    /// Configures the cow to have a "tired" appearance.
     ///
-    /// * `value`: Should tired appearance be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable tired appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_tired(true);
+    /// ```
+    #[must_use]
     pub const fn with_tired(mut self, value: bool) -> Self {
         self.tired = value;
         self
     }
 
-    /// Sets wired appearance.
+    /// Configures the cow to have a "wired" appearance.
     ///
-    /// * `value`: Should wired appearance be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable wired appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_wired(true);
+    /// ```
+    #[must_use]
     pub const fn with_wired(mut self, value: bool) -> Self {
         self.wired = value;
         self
     }
 
-    /// Sets young appearance.
+    /// Configures the cow to have a "young" appearance.
     ///
-    /// * `value`: Use young appearance.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable young appearance, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_young(true);
+    /// ```
+    #[must_use]
     pub const fn with_young(mut self, value: bool) -> Self {
         self.young = value;
         self
     }
 
-    /// Set cowfile name.
+    /// Specifies the filename of the cowfile to use.
     ///
-    /// * `filename`: Name of the cowfile to use.
-    pub const fn with_file(mut self, filename: &'a str) -> Self {
+    /// # Arguments
+    ///
+    /// * `filename` - The name of the `.cow` file (without the extension).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_cowfile("tux");
+    /// ```
+    #[must_use]
+    pub const fn with_cowfile(mut self, filename: &'a str) -> Self {
         self.file = Some(filename);
         self
     }
 
-    /// Set random cowfile usage.
+    /// Configures the builder to select a random cowfile.
     ///
-    /// * `value`: Should a random cowfile be used.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable random cowfile selection, `false` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_random(true);
+    /// ```
+    #[must_use]
     pub const fn with_random(mut self, value: bool) -> Self {
         self.random = value;
         self
     }
 
-    /// Set the eyes string.
+    /// Sets the eyes string for the cow.
     ///
-    /// * `eyes`: String to use for the eyes.
+    /// # Arguments
+    ///
+    /// * `eyes` - A two-character string representing the cow's eyes (e.g., "oo", "==").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_eyes("^^");
+    /// ```
+    #[must_use]
     pub const fn with_eyes(mut self, eyes: &'a str) -> Self {
         self.eyes = Some(eyes);
         self
     }
 
-    /// Set the tongue string.
+    /// Sets the tongue string for the cow.
     ///
-    /// * `tongue`: String to use for the tongue.
+    /// # Arguments
+    ///
+    /// * `tongue` - A two-character string representing the cow's tongue (e.g., "U ", "L ").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_tongue("U ");
+    /// ```
+    #[must_use]
     pub const fn with_tongue(mut self, tongue: &'a str) -> Self {
         self.tongue = Some(tongue);
         self
     }
 
-    /// Set wrapping behavior.
+    /// Enables or disables text wrapping for the message.
     ///
-    /// * `value`: Should wrapping be enabled.
+    /// # Arguments
+    ///
+    /// * `value` - `true` to enable wrapping, `false` to disable.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_wrap(true);
+    /// ```
+    #[must_use]
     pub const fn with_wrap(mut self, value: bool) -> Self {
         self.wrap = value;
         self
     }
 
-    /// Sets the wrap column.
+    /// Sets the column at which the message should be wrapped.
     ///
-    /// * `column`: Column number to wrap at.
+    /// This option is only effective if `with_wrap(true)` is also set.
+    ///
+    /// # Arguments
+    ///
+    /// * `column` - The maximum column width for wrapping.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let builder = CowsayOptionBuilder::default().with_wrap_column(60);
+    /// ```
+    #[must_use]
     pub const fn with_wrap_column(mut self, column: usize) -> Self {
         self.wrap_column = Some(column);
         self
     }
 
-    /// Creates a `CowsayOption` from the builder.
-    pub fn build(self) -> CowsayOption<'a> {
+    /// Builds a `CowsayOption` instance from the configured builder.
+    ///
+    /// # Returns
+    ///
+    /// A `CowsayOption` struct containing all the specified configurations.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use cowsay::CowsayOptionBuilder;
+    ///
+    /// let options = CowsayOptionBuilder::default()
+    ///     .with_message("Hello")
+    ///     .build();
+    /// ```
+    #[must_use]
+    pub const fn build(self) -> CowsayOption<'a> {
         CowsayOption {
             borg: self.borg,
             dead: self.dead,
@@ -153,6 +336,7 @@ impl<'a> CowsayOptionBuilder<'a> {
             tongue: self.tongue,
             wrap: self.wrap,
             wrap_column: self.wrap_column,
+            message: self.message,
         }
     }
 }
@@ -176,6 +360,7 @@ mod tests {
         assert!(options.tongue.is_none());
         assert!(!options.wrap);
         assert!(options.wrap_column.is_none());
+        assert!(options.message.is_none());
     }
 
     #[test]
@@ -187,12 +372,13 @@ mod tests {
             .with_sleepy(true)
             .with_tired(true)
             .with_wired(true)
-            .with_file("custom.cow")
+            .with_cowfile("custom.cow")
             .with_random(true)
             .with_eyes("&&")
             .with_tongue("U ")
             .with_wrap(true)
             .with_wrap_column(50)
+            .with_message("Test message")
             .build();
 
         assert!(options.borg);
@@ -207,5 +393,6 @@ mod tests {
         assert_eq!(options.tongue.unwrap(), "U ");
         assert!(options.wrap);
         assert_eq!(options.wrap_column.unwrap(), 50);
+        assert_eq!(options.message.unwrap(), "Test message");
     }
 }
