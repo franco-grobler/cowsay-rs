@@ -1,6 +1,21 @@
 use crate::CowsayOption;
 
 #[derive(Debug, Default)]
+/// Builder for `CowsayOption`.
+///
+/// * `borg`: Borg appearance.
+/// * `dead`: Dead appearance.
+/// * `greedy`: Greedy appearance.
+/// * `sleepy`: Sleepy appearance.
+/// * `tired`: Tired appearance.
+/// * `wired`: Wired appearance.
+/// * `young`: Young appearance.
+/// * `file`: Filename of the cowfile to use.
+/// * `random`: Choose a random cowfile.
+/// * `eyes`: Eyes string.
+/// * `tongue`: Tongue string.
+/// * `wrap`: Text wrapping.
+/// * `wrap_column`: Wrap column number.
 pub struct CowsayOptionBuilder<'a> {
     borg: bool,
     dead: bool,
@@ -18,71 +33,111 @@ pub struct CowsayOptionBuilder<'a> {
 }
 
 impl<'a> CowsayOptionBuilder<'a> {
-    pub fn with_borg(mut self, value: bool) -> Self {
+    /// Sets borg appearance.
+    ///
+    /// * `value`: Should borg appearance be used.
+    pub const fn with_borg(mut self, value: bool) -> Self {
         self.borg = value;
         self
     }
 
-    pub fn with_dead(mut self, value: bool) -> Self {
+    /// Sets dead appearance.
+    ///
+    /// * `value`: Should dead appearance be used.
+    pub const fn with_dead(mut self, value: bool) -> Self {
         self.dead = value;
         self
     }
 
-    pub fn with_greedy(mut self, value: bool) -> Self {
+    /// Sets greedy appearance.
+    ///
+    /// * `value`: Should greedy appearance be used.
+    pub const fn with_greedy(mut self, value: bool) -> Self {
         self.greedy = value;
         self
     }
 
-    pub fn with_sleepy(mut self, value: bool) -> Self {
+    /// Sets sleepy appearance.
+    ///
+    /// * `value`: Should sleepy appearance be used.
+    pub const fn with_sleepy(mut self, value: bool) -> Self {
         self.sleepy = value;
         self
     }
 
-    pub fn with_tired(mut self, value: bool) -> Self {
+    /// Sets tired appearance.
+    ///
+    /// * `value`: Should tired appearance be used.
+    pub const fn with_tired(mut self, value: bool) -> Self {
         self.tired = value;
         self
     }
 
-    pub fn with_wired(mut self, value: bool) -> Self {
+    /// Sets wired appearance.
+    ///
+    /// * `value`: Should wired appearance be used.
+    pub const fn with_wired(mut self, value: bool) -> Self {
         self.wired = value;
         self
     }
 
-    pub fn with_young(mut self, value: bool) -> Self {
+    /// Sets young appearance.
+    ///
+    /// * `value`: Use young appearance.
+    pub const fn with_young(mut self, value: bool) -> Self {
         self.young = value;
         self
     }
 
-    pub fn with_file(mut self, filename: &'a str) -> Self {
+    /// Set cowfile name.
+    ///
+    /// * `filename`: Name of the cowfile to use.
+    pub const fn with_file(mut self, filename: &'a str) -> Self {
         self.file = Some(filename);
         self
     }
 
-    pub fn with_random(mut self, value: bool) -> Self {
+    /// Set random cowfile usage.
+    ///
+    /// * `value`: Should a random cowfile be used.
+    pub const fn with_random(mut self, value: bool) -> Self {
         self.random = value;
         self
     }
 
-    pub fn with_eyes(mut self, eyes: &'a str) -> Self {
+    /// Set the eyes string.
+    ///
+    /// * `eyes`: String to use for the eyes.
+    pub const fn with_eyes(mut self, eyes: &'a str) -> Self {
         self.eyes = Some(eyes);
         self
     }
 
-    pub fn with_tongue(mut self, tongue: &'a str) -> Self {
+    /// Set the tongue string.
+    ///
+    /// * `tongue`: String to use for the tongue.
+    pub const fn with_tongue(mut self, tongue: &'a str) -> Self {
         self.tongue = Some(tongue);
         self
     }
 
-    pub fn with_wrap(mut self, value: bool) -> Self {
+    /// Set wrapping behavior.
+    ///
+    /// * `value`: Should wrapping be enabled.
+    pub const fn with_wrap(mut self, value: bool) -> Self {
         self.wrap = value;
         self
     }
 
-    pub fn with_wrap_column(mut self, column: usize) -> Self {
+    /// Sets the wrap column.
+    ///
+    /// * `column`: Column number to wrap at.
+    pub const fn with_wrap_column(mut self, column: usize) -> Self {
         self.wrap_column = Some(column);
         self
     }
 
+    /// Creates a `CowsayOption` from the builder.
     pub fn build(self) -> CowsayOption<'a> {
         CowsayOption {
             borg: self.borg,

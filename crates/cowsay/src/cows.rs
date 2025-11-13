@@ -6,6 +6,7 @@ use rand::seq::IteratorRandom;
 
 static COWS: Dir<'_> = include_directory!("$CARGO_MANIFEST_DIR/../../cows");
 
+/// Choose a random cowfile from the built-in cows.
 pub fn get_random_cow() -> Result<String, CowsayError> {
     let mut rng = rand::rng();
     let file_name = COWS
@@ -18,6 +19,7 @@ pub fn get_random_cow() -> Result<String, CowsayError> {
     get_cow_from_file(&file_name)
 }
 
+/// Read a cowfile from the built-in cows.
 pub fn get_cow_from_file(file_name: &str) -> Result<String, CowsayError> {
     let file = COWS.get_file(file_name);
     match file {

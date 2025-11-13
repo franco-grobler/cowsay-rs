@@ -1,3 +1,5 @@
+//! Cowfile template parser and renderer.
+
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -8,12 +10,21 @@ pub mod errors;
 mod loader;
 mod patterns;
 
+/// Default cowfile template content.
 pub const DEFAULT_COW: &str = include_str!("../../../cows/default.cow");
+/// Default eyes variable.
 pub const DEFAULT_EYES: &str = "oo";
+/// Default thoughts variable.
 pub const DEFAULT_THOUGHTS: &str = r"\";
+/// Default tongue variable.
 pub const DEFAULT_TONGUE: &str = "  ";
 
 #[derive(Debug)]
+/// Represents a cowfile template that can be rendered with variables.
+///
+/// * `raw_content`: Raw template content as a string.
+/// * `cow`: Extracted cow from cowfile content.
+/// * `variables`: Variables to be applied in the template.
 pub struct CowTemplate {
     raw_content: String,
     cow: String,
@@ -21,8 +32,11 @@ pub struct CowTemplate {
 }
 
 #[derive(Debug)]
+/// Results of rendering a cowfile template.
 pub struct CowTemplateResult {
+    /// Rendered cow.
     pub rendered: String,
+    /// Top level comments of cowfile.
     pub description: String,
 }
 
@@ -31,7 +45,7 @@ impl Default for CowTemplate {
         let raw_content = DEFAULT_COW.to_string();
         let cow =
             load_cow(raw_content.as_str()).expect("Loading default cow failed");
-        CowTemplate {
+        Self {
             raw_content,
             cow,
             variables: HashMap::from([
@@ -44,10 +58,13 @@ impl Default for CowTemplate {
 }
 
 impl CowTemplate {
+    /// Creates a ``CowTemplate`` from a file path.
+    ///
+    /// * `path`: Path to the cowfile template.
     pub fn from_file(path: &Path) -> Result<Self, ParseError> {
         let raw_content = load_template(path)?;
         let cow = load_cow(raw_content.as_str())?;
-        Ok(CowTemplate {
+        Ok(Self {
             raw_content,
             cow,
             variables: HashMap::from([
@@ -58,10 +75,13 @@ impl CowTemplate {
         })
     }
 
+    /// Creates a ``CowTemplate`` from a template string.
+    ///
+    /// * `template`: Raw cowfile template string.
     pub fn from_template(template: &str) -> Result<Self, ParseError> {
         let raw_content = template.to_string();
         let cow = load_cow(raw_content.as_str())?;
-        Ok(CowTemplate {
+        Ok(Self {
             raw_content,
             cow,
             variables: HashMap::from([
@@ -72,10 +92,14 @@ impl CowTemplate {
         })
     }
 
+    /// Updates the variables used in the template.
+    ///
+    /// * `variables`: New variables to apply.
     pub fn apply_variables(&mut self, variables: HashMap<String, String>) {
         self.variables = variables;
     }
 
+    /// Renders the cowfile template with the applied variables.
     pub fn render(self) -> String {
         let variable_regex = patterns::get_variable_regex();
         let mut rendered_content = self.cow.clone();
@@ -84,21 +108,20 @@ impl CowTemplate {
             .replace_all(&rendered_content, |cap: &regex::Captures| {
                 self.variables
                     .get(&cap[1])
-                    .map_or_else(|| cap[0].to_string(), |v| v.clone())
+                    .map_or_else(|| cap[0].to_string(), Clone::clone)
             })
             .into_owned();
         rendered_content + "\n"
     }
 
+    /// Renders the cowfile template with the applied variables and extracts the description.
     pub fn render_with_description(self) -> CowTemplateResult {
         let description_regex = patterns::get_description_regex();
-        let description = if let Some(caps) =
-            description_regex.captures(self.raw_content.as_str())
-        {
-            caps.get(1).map_or("", |m| m.as_str()).trim().to_string()
-        } else {
-            String::from("No description available")
-        };
+        let description = description_regex
+            .captures(self.raw_content.as_str())
+            .map_or_else(String::new, |caps| {
+                caps.get(1).map_or("", |m| m.as_str()).trim().to_string()
+            });
         CowTemplateResult {
             rendered: self.render(),
             description,
@@ -181,7 +204,7 @@ mod tests {
             "EOC",
         ];
         for line in lines {
-            writeln!(&cow_file, "{}", line).unwrap();
+            writeln!(&cow_file, "{line}").unwrap();
         }
 
         let variables = HashMap::from([

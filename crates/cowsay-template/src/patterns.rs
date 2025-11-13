@@ -2,7 +2,8 @@ use std::sync::OnceLock;
 
 use regex::Regex;
 
-pub fn get_cow_regex() -> &'static Regex {
+/// Regex for extracting the cow from the cowfile.
+pub(crate) fn get_cow_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
 
     RE.get_or_init(|| {
@@ -10,21 +11,24 @@ pub fn get_cow_regex() -> &'static Regex {
     })
 }
 
-pub fn get_description_regex() -> &'static Regex {
+/// Regex for extracting the description from the cowfile.
+pub(crate) fn get_description_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
 
     RE.get_or_init(|| Regex::new(r"(?m)^##\s?(.*)").unwrap())
 }
 
-pub fn get_substitution_regex() -> &'static Regex {
+/// Regex for matching escaped special characters in the template.
+pub(crate) fn get_substitution_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
 
     RE.get_or_init(|| {
-        Regex::new(r#"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~@])"#).unwrap()
+        Regex::new(r"\\([\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&\-~@])").unwrap()
     })
 }
 
-pub fn get_variable_regex() -> &'static Regex {
+/// Regex for matching variable placeholders in the template.
+pub(crate) fn get_variable_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
 
     RE.get_or_init(|| Regex::new(r"\$\{?(\w+)}?").unwrap())

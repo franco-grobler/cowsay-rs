@@ -5,7 +5,7 @@ use crate::{errors::ParseError, patterns};
 /// Reads the content of a file to a string.
 ///
 /// * `path`: Path of the file to read.
-pub fn load_template(path: &Path) -> Result<String, ParseError> {
+pub(crate) fn load_template(path: &Path) -> Result<String, ParseError> {
     let mut file = File::open(path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
@@ -18,7 +18,7 @@ pub fn load_template(path: &Path) -> Result<String, ParseError> {
 /// Strips escape characters before processing.
 ///
 /// * `raw`: Cow template string.
-pub fn load_cow(raw: &str) -> Result<String, ParseError> {
+pub(crate) fn load_cow(raw: &str) -> Result<String, ParseError> {
     if raw.is_empty() {
         return Err(ParseError::InvalidTemplateFormat(
             "Empty template".to_string(),

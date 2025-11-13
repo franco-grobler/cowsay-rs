@@ -71,7 +71,7 @@ impl<'a> CowsayOption<'a> {
         if template.is_empty() {
             Ok(parser.build(None))
         } else {
-            Ok(parser.build_with_template(template)?)
+            Ok(parser.build_with_template(&template)?)
         }
     }
 }
