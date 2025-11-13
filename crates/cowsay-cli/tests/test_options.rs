@@ -1,3 +1,5 @@
+//! Run integration tests for different cow options.
+
 #[cfg(test)]
 mod test {
     use assert_cmd::cargo::cargo_bin_cmd;
@@ -25,7 +27,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 
     #[test]
@@ -49,7 +51,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 
     #[test]
@@ -73,7 +75,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
     #[test]
     fn test_sleepy() {
@@ -96,7 +98,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
     #[test]
     fn test_tired() {
@@ -119,7 +121,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 
     #[test]
@@ -143,7 +145,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 
     #[test]
@@ -167,7 +169,7 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 
     #[test]
@@ -206,6 +208,6 @@ mod test {
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
             expected_output
-        )
+        );
     }
 }

@@ -1,9 +1,22 @@
+//! A command-line interface for generating cowsay-style ASCII art.
+//!
+//! This application is a clone of the classic `cowsay` utility, written in Rust.
+//! It allows users to create messages spoken by an ASCII cow, with various
+//! customization options for appearance and cow type.
+
 use std::io::{self, Write};
 
 use clap::Parser;
 use cowsay::CowsayOption;
 
+/// Represents the command-line arguments for the `cowsay-rs` application.
+///
+/// This struct uses `clap` to parse and manage command-line arguments,
+/// providing options to customize the cowsay output, such as selecting
+/// different cow appearances, specifying a cowfile, setting eye and tongue
+/// strings, and controlling text wrapping.
 #[derive(Debug, Parser)]
+#[allow(clippy::struct_excessive_bools)]
 #[command(version, about = "cowsay clone, with speed.", long_about = "")]
 pub struct CowsayArgs {
     /// Borg appearance mode
