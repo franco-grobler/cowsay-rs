@@ -14,7 +14,6 @@
 
     # Utilities
     pkgs.pre-commit
-    pkgs.just
   ];
 
   # https://devenv.sh/languages/
@@ -29,4 +28,8 @@
     ];
     toolchainFile = ./rust-toolchain.toml;
   };
+
+  enterShell = ''
+    unset DEVELOPER_DIR;
+  '';
 }
