@@ -22,7 +22,7 @@ cowsay-template = { path = "crates/cowsay-template" }
 clap = { version = "4.5.51", features = ["derive"] }
 # console_error_panic_hook = { version = "0.1.7" }
 # console_log = { version = "1.0.0" }
-# getrandom = { version = "0.3.4" }
+getrandom = { version = "0.3.4" }
 include_directory = "0.1.1"
 js-sys = { version = "0.3.82" }
 # log = { version = "0.4.17" }
@@ -37,7 +37,7 @@ textwrap = { version = "0.16.2", features = [] }
 #   "macro-diagnostics",
 # ] }
 wasm-bindgen = { version = "0.2.105" }
-# wasm-bindgen-test = { version = "0.3.55" }
+wasm-bindgen-test = { version = "0.3.55" }
 
 
 [workspace.lints.rust]
