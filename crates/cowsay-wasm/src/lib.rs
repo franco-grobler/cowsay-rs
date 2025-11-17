@@ -1,236 +1,61 @@
-//! A WebAssembly wrapper for the `cowsay` crate, enabling its use in JavaScript
-//! environments.
+//! Perform global constructor initialization.
 //!
-//! This crate provides a `cowsay` function that can be called from JavaScript
-//! to generate ASCII art of a cow saying a message. It exposes an `Options`
-//! struct to allow customization of the cow's appearance and behavior.
-//!
-//! # Examples
-//!
-//! ```javascript
-//! import { Options } from 'cowsay-wasm';
-//!
-//! const options = new Options({
-//!   message: 'Hello from WASM!',
-//!   cow: 'default',
-//!   wrap: true,
-//! });
-//!
-//! const cowMessage = options.say();
-//! console.log(cowMessage);
-//! ```
+//! This function is conditionally compiled for WASM targets. It explicitly calls
+//! `__wasm_call_ctors()` to ensure that global constructors, particularly those
+//! registered by crates like `inventory`, are executed. This is necessary because
+//! WASM environments might not automatically call these constructors as native
+//! environments do.
+use wasm_bindgen::prelude::wasm_bindgen;
 
-use cowsay::CowsayOption;
-use js_sys::Error;
-use wasm_bindgen::{JsValue, prelude::wasm_bindgen};
+pub mod options;
 
-pub(crate) fn into_error<E: std::fmt::Display>(err: E) -> Error {
-    Error::new(&err.to_string())
+#[cfg(target_family = "wasm")]
+#[expect(unsafe_code)]
+/// Initialize global constructors for WASM targets.
+pub fn before_main() {
+    unsafe extern "C" {
+        fn __wasm_call_ctors();
+    }
+
+    // Salsa uses the `inventory` crate, which registers global constructors that may need to be
+    // called explicitly on WASM. See <https://github.com/dtolnay/inventory/blob/master/src/lib.rs#L105>
+    // for details.
+    unsafe {
+        __wasm_call_ctors();
+    }
 }
 
-/// Defines the configuration options for a `cowsay` message in a WebAssembly context.
+#[cfg(not(target_family = "wasm"))]
+/// Do nothing on non-WASM targets.
+pub const fn before_main() {}
+
+#[wasm_bindgen(start)]
+/// Main entry point for the WebAssembly module.
 ///
-/// This struct holds all the customizable parameters for generating a cowsay
-/// message, such as the cow's appearance (e.g., `borg`, `dead`), the cowfile
-/// to use, eye and tongue strings, and text wrapping settings.
+/// This function is automatically called when the WASM module is instantiated.
+/// It performs necessary setup, including:
+/// - Calling `before_main` for global constructor initialization.
+/// - Setting up a panic hook for better error messages in the browser console
+///   when the `console_error_panic_hook` feature is enabled.
+/// - Initialising the `console_log` logger to output messages to the browser's
+///   developer console.
 ///
-/// Instances of `Options` are created using the `new` constructor or
-/// `default_options` for a default configuration.
-#[derive(Debug)]
-#[allow(clippy::struct_excessive_bools)]
-#[wasm_bindgen]
-pub struct Options {
-    borg: bool,
-    dead: bool,
-    greedy: bool,
-    sleepy: bool,
-    tired: bool,
-    wired: bool,
-    young: bool,
-    file: Option<String>,
-    random: bool,
-    eyes: Option<String>,
-    tongue: Option<String>,
-    wrap: bool,
-    wrap_column: Option<usize>,
-}
+/// # Panics
+/// WASM could not be initialised if the logger fails to initialize.
+pub fn run() {
+    use log::Level;
 
-/// A helper struct for deserializing `Options` from a JavaScript object.
-///
-/// This struct is used internally by the `Options::new` constructor to
-/// deserialize a `JsValue` into a structured format. All fields are optional
-/// to allow for partial configuration from the JavaScript side.
-#[derive(Debug, serde::Deserialize)]
-#[allow(clippy::struct_excessive_bools)]
-#[wasm_bindgen]
-pub struct OptionsConstructor {
-    borg: Option<bool>,
-    dead: Option<bool>,
-    greedy: Option<bool>,
-    sleepy: Option<bool>,
-    tired: Option<bool>,
-    wired: Option<bool>,
-    young: Option<bool>,
-    file: Option<String>,
-    random: Option<bool>,
-    eyes: Option<String>,
-    tongue: Option<String>,
-    wrap: Option<bool>,
-    wrap_column: Option<usize>,
-}
+    before_main();
 
-#[wasm_bindgen]
-impl Options {
-    /// Creates a new `Options` instance from a JavaScript object.
-    ///
-    /// This constructor accepts a `JsValue` representing a JavaScript object
-    /// with configuration properties. Missing properties will be set to their
-    /// default values.
-    ///
-    /// # Arguments
-    ///
-    /// * `options` - A `JsValue` containing the configuration options.
-    ///
-    /// # Returns
-    ///
-    /// A `Result` which is:
-    /// - `Ok(Options)` if the `JsValue` is successfully parsed.
-    /// - `Err(Error)` if the `JsValue` cannot be deserialized into `OptionsConstructor`.
-    ///
-    /// # Examples
-    ///
-    /// ```javascript
-    /// import { Options } from 'cowsay-wasm';
-    ///
-    /// const options = new Options({
-    ///   file: 'tux',
-    ///   eyes: '^^',
-    /// });
-    /// ```
-    #[wasm_bindgen(constructor)]
-    pub fn new(options: JsValue) -> Result<Self, Error> {
-        let options: OptionsConstructor =
-            serde_wasm_bindgen::from_value(options).map_err(into_error)?;
+    // When the `console_error_panic_hook` feature is enabled, we can call the
+    // `set_panic_hook` function at least once during initialization, and then
+    // we will get better error messages if our code ever panics.
+    //
+    // For more details see
+    // https://github.com/rustwasm/console_error_panic_hook#readme
+    #[cfg(feature = "console_error_panic_hook")]
+    console_error_panic_hook::set_once();
 
-        Ok(Self {
-            borg: options.borg.unwrap_or(false),
-            dead: options.dead.unwrap_or(false),
-            greedy: options.greedy.unwrap_or(false),
-            sleepy: options.sleepy.unwrap_or(false),
-            tired: options.tired.unwrap_or(false),
-            wired: options.wired.unwrap_or(false),
-            young: options.young.unwrap_or(false),
-            file: options.file,
-            random: options.random.unwrap_or(false),
-            eyes: options.eyes,
-            tongue: options.tongue,
-            wrap: options.wrap.unwrap_or(false),
-            wrap_column: options.wrap_column,
-        })
-    }
-
-    /// Creates a new `Options` instance with default values.
-    ///
-    /// This provides a convenient way to get a default set of options, which
-    /// can then be used to generate a standard cowsay message.
-    ///
-    /// # Returns
-    ///
-    /// An `Options` struct with default settings (e.g., `wrap` is `true`,
-    /// all appearance modes are `false`).
-    ///
-    /// # Examples
-    ///
-    /// ```javascript
-    /// import { Options } from 'cowsay-wasm';
-    ///
-    /// const defaultOptions = Options.default_options();
-    /// ```
-    #[wasm_bindgen]
-    #[allow(clippy::missing_const_for_fn)]
-    pub fn default_options() -> Self {
-        Self {
-            borg: false,
-            dead: false,
-            greedy: false,
-            sleepy: false,
-            tired: false,
-            wired: false,
-            young: false,
-            file: None,
-            random: false,
-            eyes: None,
-            tongue: None,
-            wrap: true,
-            wrap_column: None,
-        }
-    }
-
-    fn to_cowsay_option(&self) -> CowsayOption<'_> {
-        let mut builder = CowsayOption::builder()
-            .with_borg(self.borg)
-            .with_dead(self.dead)
-            .with_greedy(self.greedy)
-            .with_sleepy(self.sleepy)
-            .with_tired(self.tired)
-            .with_wired(self.wired)
-            .with_young(self.young)
-            .with_random(self.random)
-            .with_wrap(self.wrap);
-
-        if let Some(file) = self.file.as_deref() {
-            builder = builder.with_cowfile(file);
-        }
-
-        if let Some(eyes) = self.eyes.as_deref() {
-            builder = builder.with_eyes(eyes);
-        }
-
-        if let Some(tongue) = self.tongue.as_deref() {
-            builder = builder.with_tongue(tongue);
-        }
-
-        if let Some(wrap_column) = self.wrap_column {
-            builder = builder.with_wrap(true).with_wrap_column(wrap_column);
-        }
-
-        builder.build()
-    }
-
-    /// Generates the cowsay message based on the configured options.
-    ///
-    /// This method takes the current `Options` and a message string, then
-    /// invokes the core `cowsay` logic to produce the final ASCII art.
-    ///
-    /// # Arguments
-    ///
-    /// * `message` - The text message for the cow to say.
-    ///
-    /// # Returns
-    ///
-    /// A `Result` which is:
-    /// - `Ok(String)` containing the complete cowsay message.
-    /// - `Err(Error)` if there is an issue with parsing the options or
-    ///   generating the message (e.g., cowfile not found).
-    ///
-    /// # Examples
-    ///
-    /// ```javascript
-    /// import { Options } from 'cowsay-wasm';
-    ///
-    /// const options = Options.default_options();
-    /// const cowMessage = options.say('Moo!');
-    /// console.log(cowMessage);
-    /// ```
-    pub fn say(&self, message: &str) -> Result<String, Error> {
-        let cowsay_option = self.to_cowsay_option();
-        let parser = cowsay_option.parser().map_err(into_error)?;
-
-        if message.is_empty() {
-            return Err(Error::new("Message cannot be empty"));
-        }
-
-        let cow = parser.say(Some(message));
-        Ok(cow)
-    }
+    console_log::init_with_level(Level::Debug)
+        .expect("Initializing logger went wrong.");
 }
