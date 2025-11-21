@@ -30,7 +30,7 @@
   languages = {
     javascript = {
       enable = true;
-      yarn = {
+      bun = {
         enable = true;
       };
     };
