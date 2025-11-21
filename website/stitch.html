@@ -1,0 +1,272 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>cowsay-rs: A friendly cowsay for the Rust era</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <style>
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#34a853",
+              "background-light": "#ffffff",
+              "background-dark": "#141e16",
+              "accent-secondary": "#DEA584",
+              "text-primary": "#222222",
+              "text-secondary": "#555555",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "1.5rem",
+              xl: "2rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="font-display bg-background-light text-text-primary">
+    <div
+      class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden"
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="flex flex-1 justify-center py-5">
+          <div
+            class="layout-content-container flex flex-col max-w-[960px] flex-1 px-4 sm:px-8"
+          >
+            <!-- TopNavBar -->
+            <header
+              class="flex items-center justify-between whitespace-nowrap px-2 sm:px-6 py-4"
+            >
+              <div class="flex items-center gap-3 text-text-primary">
+                <div class="size-6 text-text-primary">
+                  <svg
+                    fill="currentColor"
+                    viewbox="0 0 48 48"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M42,39.9998 C42,42.2098 40.209,43.9998 38,43.9998 L10,43.9998 C7.791,43.9998 6,42.2098 6,39.9998 L6,17.9998 C6,15.7898 7.791,13.9998 10,13.9998 L38,13.9998 C40.209,13.9998 42,15.7898 42,17.9998 L42,39.9998 Z M24,3.9998 C24,6.2088 22.209,7.9998 20,7.9998 C17.791,7.9998 16,6.2088 16,3.9998 C16,1.7898 17.791,-0.0002 20,-0.0002 C22.209,-0.0002 24,1.7898 24,3.9998 Z M32,3.9998 C32,6.2088 30.209,7.9998 28,7.9998 C25.791,7.9998 24,6.2088 24,3.9998 C24,1.7898 25.791,-0.0002 28,-0.0002 C30.209,-0.0002 32,1.7898 32,3.9998 Z"
+                    ></path>
+                  </svg>
+                </div>
+                <h2
+                  class="text-text-primary text-xl font-bold font-mono tracking-tight"
+                >
+                  cowsay-rs
+                </h2>
+              </div>
+            </header>
+            <main class="flex flex-col gap-16 md:gap-24 py-10 md:py-16">
+              <!-- HeroSection -->
+              <div class="flex flex-col gap-6 text-center items-center">
+                <h1
+                  class="text-text-primary text-4xl font-extrabold leading-tight tracking-[-0.033em] md:text-6xl"
+                >
+                  A friendly cowsay for the Rust era.
+                </h1>
+                <p
+                  class="text-text-secondary text-lg font-normal leading-normal max-w-2xl md:text-xl"
+                >
+                  cowsay-rs is a modern, fast, and fun rewrite of the classic
+                  cowsay command-line program, built with Rust and WebAssembly.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-wide"
+                  >
+                    <span class="truncate">Try it Live! 🐄</span>
+                  </button>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-background-light text-accent-secondary text-base font-bold leading-normal tracking-wide border-2 border-accent-secondary"
+                  >
+                    <span class="truncate">Get Started 🦀</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Playground Section -->
+              <div class="flex flex-col gap-6 items-center">
+                <h2
+                  class="text-text-primary text-3xl font-bold leading-tight tracking-tight md:text-4xl"
+                >
+                  Try cowsay-rs in your browser!
+                </h2>
+                <div class="w-full max-w-xl">
+                  <label class="flex flex-col w-full">
+                    <p
+                      class="text-text-secondary text-base font-medium leading-normal pb-2"
+                    >
+                      Enter your message
+                    </p>
+                    <input
+                      class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 border border-gray-300 bg-background-light h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+                      value="Hello, world!"
+                    />
+                  </label>
+                </div>
+                <div class="w-full bg-gray-50 p-6 rounded-lg overflow-x-auto">
+                  <pre
+                    class="text-sm font-mono leading-relaxed text-text-primary whitespace-pre"
+                  >  <span class="text-accent-secondary">&lt;</span> Hello, world! <span class="text-accent-secondary">&gt;</span>
+   <span class="text-accent-secondary">\</span>
+    <span class="text-accent-secondary">\</span>
+        <span class="text-accent-secondary">_~_~_</span>
+       <span class="text-accent-secondary">( o o )</span>
+      <span class="text-accent-secondary">/  V  \</span>
+     <span class="text-accent-secondary">/(  _  )\</span>
+       <span class="text-accent-secondary">^^ ^^</span>
+</pre>
+                </div>
+              </div>
+              <!-- Install / Get Started Section -->
+              <div class="flex flex-col gap-8 items-center">
+                <h2
+                  class="text-text-primary text-3xl font-bold leading-tight tracking-tight md:text-4xl"
+                >
+                  Get Your Own Cow.
+                </h2>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl"
+                >
+                  <div class="flex flex-col gap-4">
+                    <h3 class="text-xl font-bold text-text-primary">
+                      Install with cargo
+                    </h3>
+                    <div
+                      class="relative bg-gray-50 p-4 rounded-lg font-mono text-text-secondary"
+                    >
+                      <code>cargo install cowsay-rs</code>
+                      <button
+                        class="absolute top-3 right-3 p-2 rounded-md hover:bg-gray-200"
+                      >
+                        <span
+                          class="material-symbols-outlined text-base"
+                          data-icon="content_copy"
+                          >content_copy</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-4">
+                    <h3 class="text-xl font-bold text-text-primary">
+                      Use in your Web Project
+                    </h3>
+                    <div
+                      class="relative bg-gray-50 p-4 rounded-lg font-mono text-text-secondary"
+                    >
+                      <code>npm install @cowsay-rs/web</code>
+                      <button
+                        class="absolute top-3 right-3 p-2 rounded-md hover:bg-gray-200"
+                      >
+                        <span
+                          class="material-symbols-outlined text-base"
+                          data-icon="content_copy"
+                          >content_copy</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Project Links Section -->
+              <div class="flex flex-col gap-6 items-center">
+                <h2
+                  class="text-text-primary text-3xl font-bold leading-tight tracking-tight md:text-4xl"
+                >
+                  Around the Pasture
+                </h2>
+                <ul class="flex flex-col gap-3 text-center">
+                  <li>
+                    <a
+                      class="text-lg text-primary hover:underline font-semibold"
+                      href="#"
+                      >GitHub Repository</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="text-lg text-primary hover:underline font-semibold"
+                      href="#"
+                      >crates.io Package</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="text-lg text-primary hover:underline font-semibold"
+                      href="#"
+                      >npm Package</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="text-lg text-primary hover:underline font-semibold"
+                      href="#"
+                      >Documentation</a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <!-- About Section -->
+              <div
+                class="flex flex-col gap-8 items-center text-center max-w-3xl mx-auto"
+              >
+                <h2
+                  class="text-text-primary text-3xl font-bold leading-tight tracking-tight md:text-4xl"
+                >
+                  About This Project
+                </h2>
+                <p class="text-text-secondary text-base leading-relaxed">
+                  Hello! I'm Franco, a software developer passionate about
+                  open-source and learning new technologies. I created cowsay-rs
+                  as a fun weekend project to dive deeper into the Rust
+                  programming language and its ecosystem. It started as a simple
+                  command-line tool and quickly evolved into a fun experiment
+                  with WebAssembly, allowing it to run directly in the browser.
+                </p>
+                <div class="flex flex-col gap-4 w-full items-center">
+                  <h3 class="text-xl font-bold text-text-primary">
+                    What's the use of a Rust cow?
+                  </h3>
+                  <ul
+                    class="list-disc list-inside text-left text-text-secondary marker:text-primary"
+                  >
+                    <li>Learning Rust in a fun, hands-on way.</li>
+                    <li>Exploring the power of WebAssembly (WASM).</li>
+                    <li>
+                      Giving back to the developer community with a useful (and
+                      amusing) tool.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
