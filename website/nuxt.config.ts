@@ -1,5 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
+const debugSettings = false;
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	app: {
@@ -20,7 +22,14 @@ export default defineNuxtConfig({
 		autoImport: false,
 	},
 
-	devtools: { enabled: true },
+	devtools: {
+		enabled: debugSettings,
+
+		timeline: {
+			enabled: debugSettings,
+		},
+	},
+	debug: debugSettings,
 
 	modules: ["@nuxt/eslint"],
 

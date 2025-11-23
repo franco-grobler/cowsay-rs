@@ -11,6 +11,8 @@
             <AppHeader />
 
             <NuxtPage />
+
+            <AppFooter />
           </div>
         </div>
       </div>
@@ -21,10 +23,11 @@
 <script setup lang="ts">
 import { useHead, useSeoMeta } from "#app";
 import AppHeader from "@/components/layout/AppHeader.vue";
+import AppFooter from "@/components/layout/AppFooter.vue";
 
 useSeoMeta({
   description: "Command line utility for talking cows.",
-  ogTitle: "[og:title]",
+  ogTitle: "Cowsay-RS",
   ogDescription: "[og:description]",
   ogImage: "[og:image]",
   ogUrl: "[og:url]",
@@ -41,8 +44,8 @@ useHead({
   link: [
     {
       rel: "icon",
-      type: "image/svg+xml",
-      href: "/favicon.png",
+      type: "image/webp",
+      href: "/favicon.ico",
     },
   ],
 });
