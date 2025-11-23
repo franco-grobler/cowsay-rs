@@ -19,7 +19,7 @@
       </form>
       <div class="flex flex-col gap-3 min-w-[300px]">
         <TextField v-model="text" label="Text" placeholder="Hello, World!" />
-        <TextArea v-model="template" label="Cowfile" rows="7" />
+        <TextArea v-model="template" label="Cowfile" rows="6" />
       </div>
       <div>
         <TextArea
@@ -29,15 +29,10 @@
         />
       </div>
     </div>
-    <div class="flex flex-row justify-between gap-5 my-4">
-      <DefaultBtn>Try it live</DefaultBtn>
-      <DefaultBtn>Get started</DefaultBtn>
-    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import DefaultBtn from "@/components/buttons/DefaultBtn.vue";
 import TextField from "@/components/fields/TextField.vue";
 import TextArea from "@/components/fields/TextArea.vue";
 import SectionTitle from "@/components/titles/SectionTitle.vue";

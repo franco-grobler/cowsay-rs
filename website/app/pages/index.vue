@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <IntroductionView />
-    <AboutView />
+    <AboutView class="my-6" />
     <PlaygroundView />
   </div>
 </template>

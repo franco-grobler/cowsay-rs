@@ -1,9 +1,9 @@
 <template>
   <section class="text-center">
-    <SectionTitle>About is project</SectionTitle>
+    <SectionTitle class="mb-4">About is project</SectionTitle>
     <p>
       The original cowsay was released in 1999 - the year I was born - by Tony
-      Monroe. Tony maintaiend the project until 2016, when he released the final
+      Monroe. Tony maintained the project until 2016, when he released the final
       version. After this, the
       <a href="https://github.com/cowsay-org">cowsay-org</a> was formed to
       maintain the project.
@@ -16,7 +16,7 @@
       The slightly more utilitarian reason is to build something in Rust without
       the risk of breaking something important. A cli printing ASCII cows is
       basically as low risk as you can get, while still having some, admittedly
-      questionable, use.
+      questionable, utility.
     </p>
   </section>
 </template>
