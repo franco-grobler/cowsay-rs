@@ -1,6 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 
-const debugSettings = false;
+const debugSettings = true;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -24,10 +24,6 @@ export default defineNuxtConfig({
 
 	devtools: {
 		enabled: debugSettings,
-
-		timeline: {
-			enabled: debugSettings,
-		},
 	},
 	debug: debugSettings,
 
