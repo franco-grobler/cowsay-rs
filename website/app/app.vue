@@ -1,5 +1,5 @@
 <template>
-  <body class="font-display bg-background-light text-text-primary">
+  <div class="font-display bg-background-light text-text-primary">
     <div
       class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden"
     >
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-  </body>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -25,7 +25,7 @@ import { useHead, useSeoMeta } from "#app";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 
-import logo from "@/assets/logo.svg";
+const logo = new URL("@/assets/logo.svg", import.meta.url).href;
 
 const title = "Cowsay-RS";
 const description = "Command line utility for talking cows.";
