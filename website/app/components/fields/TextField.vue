@@ -3,7 +3,6 @@
     <label class="block">
       <span>{{ props.label }}</span>
       <input
-        id="field"
         v-model="model"
         :type="props.type"
         :placeholder="props.placeholder"
