@@ -6,7 +6,7 @@
       <div class="layout-container flex h-full grow flex-col">
         <div class="flex flex-1 justify-center py-5">
           <div
-            class="layout-content-container flex flex-col max-w-[960px] flex-1 px-4 sm:px-8"
+            class="layout-content-container flex flex-col max-w-[1020px] flex-1 px-4 sm:px-8"
           >
             <AppHeader />
 
@@ -25,15 +25,19 @@ import { useHead, useSeoMeta } from "#app";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 
+import logo from "@/assets/logo.svg";
+
+const title = "Cowsay-RS";
+const description = "Command line utility for talking cows.";
 useSeoMeta({
-  description: "Command line utility for talking cows.",
-  ogTitle: "Cowsay-RS",
-  ogDescription: "[og:description]",
-  ogImage: "[og:image]",
-  ogUrl: "[og:url]",
-  twitterTitle: "[twitter:title]",
-  twitterDescription: "[twitter:description]",
-  twitterImage: "[twitter:image]",
+  description: description,
+  ogTitle: title,
+  ogDescription: description,
+  ogImage: logo,
+  ogUrl: import.meta.env.BASE_URL,
+  twitterTitle: title,
+  twitterDescription: description,
+  twitterImage: logo,
   twitterCard: "summary",
 });
 
