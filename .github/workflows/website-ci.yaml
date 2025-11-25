@@ -1,0 +1,41 @@
+name: Website CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group:
+    ${{ github.workflow }}-${{ github.ref_name }}-${{
+    github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: bun install
+
+  eslint:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: bun run lint
+
+  prettier:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: bun run format
