@@ -1,9 +1,16 @@
 name: Deploy Website to GitHub Pages
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+
+defaults:
+  run:
+    shell: bash
+    working-directory: website
+
 jobs:
   build:
     runs-on: ubuntu-latest
