@@ -1,6 +1,6 @@
 <template>
   <section class="text-center">
-    <SectionTitle class="mb-4">About is project</SectionTitle>
+    <SectionTitle class="mb-4">About this project</SectionTitle>
     <p>
       The original cowsay was released in 1999 - the year I was born - by Tony
       Monroe. Tony maintained the project until 2016, when he released the final

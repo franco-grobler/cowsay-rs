@@ -1,6 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 
-const debugSettings = true;
+const debugSettings = import.meta.env.NODE_ENV === "local";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
