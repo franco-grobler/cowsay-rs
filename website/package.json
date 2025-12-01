@@ -5,6 +5,10 @@
 	"scripts": {
 		"build": "nuxt build",
 		"dev": "nuxt dev",
+		"build:wasm": "wasm-pack build ../crates/cowsay-wasm --target web --out-dir ../../website/vendored/cowsay/",
+		"dev:wasm": "wasm-pack build ../crates/cowsay-wasm --dev --target web --out-dir ../../website/vendored/cowsay/",
+		"predev:build": "npm run dev:wasm",
+		"dev:build": "vite build",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare",
@@ -15,6 +19,7 @@
 	},
 	"dependencies": {
 		"@heroicons/vue": "^2.2.0",
+		"cowsay-wasm": "./vendored/cowsay",
 		"nuxt": "^4.2.1",
 		"tailwindcss": "^4.1.17",
 		"vue": "^3.5.24",
