@@ -90,3 +90,12 @@ pub fn get_cow_from_file(file_name: &str) -> Result<String, CowsayError> {
         },
     )
 }
+
+/// Returns a list of all cows included by default.
+pub fn list_cows() -> Vec<String> {
+    COWS.files()
+        .filter_map(|f| f.path().as_os_str().to_str())
+        .filter_map(|c| c.strip_suffix(".cow"))
+        .map(Into::into)
+        .collect()
+}
