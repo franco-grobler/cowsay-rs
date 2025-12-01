@@ -7,7 +7,7 @@
 use std::io::{self, Write};
 
 use clap::Parser;
-use cowsay::CowsayOption;
+use cowsay::{CowsayOption, cows::list_cows};
 
 /// Represents the command-line arguments for the `cowsay-rs` application.
 ///
@@ -57,13 +57,29 @@ pub struct CowsayArgs {
     #[arg(short = 'W', long = "wrap")]
     wrap_column: Option<usize>,
 
+    /// List all available cows.
+    #[arg(short, long)]
+    list: bool,
+
     /// Text to be displayed inside the speech balloon.
-    #[arg(required = true)]
-    text: String,
+    #[arg()]
+    text: Option<String>,
 }
 
 fn main() -> io::Result<()> {
     let args = CowsayArgs::parse();
+
+    if args.list {
+        let mut stdout = io::stdout();
+        let cows = list_cows();
+        return stdout.write_all(cows.join(" ").as_bytes());
+    }
+
+    let text = args.text.unwrap_or(String::new());
+    if text.is_empty() {
+        eprintln!("Error: No text provided for cowsay.");
+        std::process::exit(1);
+    }
 
     let mut builder = CowsayOption::builder();
     builder = builder
@@ -99,12 +115,7 @@ fn main() -> io::Result<()> {
         }
     };
 
-    if args.text.is_empty() {
-        eprintln!("Error: No text provided for cowsay.");
-        std::process::exit(1);
-    }
-
-    let cow = parser.say(Some(args.text.as_str()));
+    let cow = parser.say(Some(text.as_str()));
 
     let mut stdout = io::stdout();
     stdout.write_all(cow.as_bytes())
