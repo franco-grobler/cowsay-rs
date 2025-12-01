@@ -4,7 +4,7 @@
       <span>{{ props.label }}</span>
       <input
         v-model="model"
-        :type="props.type"
+        type="numeric"
         :placeholder="props.placeholder"
         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         :class="{
@@ -24,25 +24,23 @@ import type { ValidationRule } from "@/composables/formValidation";
 import ErrorList from "@/components/fields/ErrorList.vue";
 import useComputedErrors from "~/composables/errors";
 
-const model = defineModel<string>({ default: "", required: true });
+const model = defineModel<number>({ default: 0, required: true });
 
 const props = withDefaults(
   defineProps<{
     label: string;
     placeholder: string;
-    type?: HTMLInputElement["type"];
 
     errors?: string[];
-    validationRules?: ValidationRule<string>[];
+    validationRules?: ValidationRule<number>[];
   }>(),
   {
-    type: "text",
     errors: () => [],
     validationRules: () => [],
   },
 );
 
-const computedErrs = useComputedErrors(
+const computedErrs = useComputedErrors<number>(
   model,
   props.validationRules,
   props.errors,
