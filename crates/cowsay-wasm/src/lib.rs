@@ -7,6 +7,8 @@
 //! environments do.
 use wasm_bindgen::prelude::wasm_bindgen;
 
+use cowsay::cows;
+
 pub mod options;
 
 #[cfg(target_family = "wasm")]
@@ -58,4 +60,10 @@ pub fn run() {
 
     console_log::init_with_level(Level::Debug)
         .expect("Initializing logger went wrong.");
+}
+
+#[wasm_bindgen(js_name = listCows)]
+/// Return a list of all selectable cows
+pub fn list_cows() -> Vec<String> {
+    cows::list_cows()
 }
