@@ -5,6 +5,7 @@
       <textarea
         v-model="model"
         :rows="props.rows"
+        :readonly="props.readonly"
         class="mt-1 block h-full w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
       />
     </label>
@@ -19,10 +20,12 @@ const model = defineModel<string>();
 const props = withDefaults(
   defineProps<{
     label: string;
+    readonly?: boolean;
     rows?: number | string | undefined;
     validationRules?: ValidationRule<string>[];
   }>(),
   {
+    readonly: false,
     rows: undefined,
     validationRules: () => [],
   },
