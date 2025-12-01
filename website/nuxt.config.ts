@@ -29,6 +29,8 @@ export default defineNuxtConfig({
 
 	modules: ["@nuxt/eslint"],
 
+	ssr: false,
+
 	vite: {
 		plugins: [tailwindcss()],
 	},
