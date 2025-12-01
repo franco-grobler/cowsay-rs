@@ -44,11 +44,12 @@ impl<'a> Cow<'a> {
     }
 
     fn generate_balloon(&self) -> String {
+        let text = self.text.trim();
         let mut width = self.balloon_width;
         let mut line_count = 1;
-        let is_multiline = self.word_wrap && self.text.len() > width;
+        let is_multiline = self.word_wrap && text.len() > width;
         if is_multiline {
-            line_count = (self.text.len() / width) + 1;
+            line_count = (text.len() / width) + 1;
         } else {
             width = self.text.len();
         }
@@ -62,7 +63,7 @@ impl<'a> Cow<'a> {
             "-".repeat(width + 2 * usize::from(!is_multiline))
         );
 
-        let lines = wrap(self.text, width);
+        let lines = wrap(text, width);
 
         let mut balloon_lines: Vec<String> = Vec::with_capacity(line_count + 2);
         balloon_lines.push(top_border);
