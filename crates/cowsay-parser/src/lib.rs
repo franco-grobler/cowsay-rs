@@ -46,27 +46,20 @@ impl<'a> Cow<'a> {
     fn generate_balloon(&self) -> String {
         let text = self.text.trim();
         let mut width = self.balloon_width;
-        let mut line_count = 1;
-        let is_multiline = self.word_wrap && text.len() > width;
-        if is_multiline {
-            line_count = (text.len() / width) + 1;
-        } else {
-            width = self.text.len();
-        }
-
-        let top_border = format!(
-            " {}\n",
-            "_".repeat(width + 2 * usize::from(!is_multiline))
-        );
-        let btm_border = format!(
-            " {}\n",
-            "-".repeat(width + 2 * usize::from(!is_multiline))
-        );
 
         let lines = wrap(text, width);
+        let line_count = lines.len();
+
+        width = lines
+            .clone()
+            .into_iter()
+            .map(|f| Some(f.len()))
+            .max_by(std::cmp::Ord::cmp)
+            .map_or(self.balloon_width, |val| val.unwrap());
+
+        let is_multiline = self.word_wrap && text.len() > width;
 
         let mut balloon_lines: Vec<String> = Vec::with_capacity(line_count + 2);
-        balloon_lines.push(top_border);
         balloon_lines.push(self.format_balloon_line(
             &lines[0],
             true,
@@ -75,7 +68,7 @@ impl<'a> Cow<'a> {
             width,
         ));
         if is_multiline {
-            for line in &lines[1..lines.len() - 1] {
+            for line in &lines[1..line_count - 1] {
                 balloon_lines.push(self.format_balloon_line(
                     line,
                     false,
@@ -92,6 +85,11 @@ impl<'a> Cow<'a> {
                 width,
             ));
         }
+
+        let top_border = format!(" {}\n", "_".repeat(width + 2));
+        let btm_border = format!(" {}\n", "-".repeat(width + 2));
+
+        balloon_lines.insert(0, top_border);
         balloon_lines.push(btm_border);
 
         String::from_iter(balloon_lines)
@@ -145,13 +143,7 @@ impl<'a> Cow<'a> {
             "|"
         };
 
-        format!(
-            "{} {:width$} {}\n",
-            left_border,
-            line,
-            right_border,
-            width = width - 2
-        )
+        format!("{left_border} {line:width$} {right_border}\n")
     }
 }
 
