@@ -189,10 +189,10 @@ mod test {
     #[test]
     fn test_configure_looks() {
         let expected_output = [
-            r" _______",
-            r"/ Hello \",
-            r"\ World /",
-            r" -------",
+            r" ________",
+            r"/ Hello, \",
+            r"\ World! /",
+            r" --------",
             r"        \   ^__^",
             r"         \  (EE)\_______",
             r"            (__)\       )\/\",
@@ -203,7 +203,10 @@ mod test {
         .join("\n");
 
         let mut cmd = cargo_bin_cmd!("cowsay-rs");
-        cmd.arg("-e=EE").arg("-T=T ").arg("-W=7").arg("Hello World");
+        cmd.arg("-e=EE")
+            .arg("-T=T ")
+            .arg("-W=7")
+            .arg("Hello, World!");
         cmd.assert().success();
         assert_str_eq!(
             String::from_utf8(cmd.output().unwrap().stdout).unwrap(),
