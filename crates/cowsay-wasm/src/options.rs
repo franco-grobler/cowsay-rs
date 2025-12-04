@@ -20,8 +20,11 @@
 //! console.log(cowMessage);
 //! ```
 
+use std::str::FromStr;
+
 use cowsay::CowsayOption;
 use js_sys::Error;
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::{JsValue, prelude::wasm_bindgen};
 
 pub(crate) fn into_error<E: std::fmt::Display>(err: E) -> Error {
@@ -60,7 +63,7 @@ pub struct Options {
 /// This struct is used internally by the `Options::new` constructor to
 /// deserialize a `JsValue` into a structured format. All fields are optional
 /// to allow for partial configuration from the JavaScript side.
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[allow(clippy::struct_excessive_bools)]
 #[wasm_bindgen]
 pub struct OptionsConstructor {
@@ -76,7 +79,7 @@ pub struct OptionsConstructor {
     eyes: Option<String>,
     tongue: Option<String>,
     wrap: Option<bool>,
-    wrap_column: Option<usize>,
+    wrap_column: Option<String>,
 }
 
 #[wasm_bindgen]
@@ -112,6 +115,9 @@ impl Options {
         let options: OptionsConstructor =
             serde_wasm_bindgen::from_value(options).map_err(into_error)?;
 
+        let wrap_column: Option<usize> = options
+            .wrap_column
+            .map(|x| usize::from_str(&x).unwrap_or(0));
         Ok(Self {
             borg: options.borg.unwrap_or(false),
             dead: options.dead.unwrap_or(false),
@@ -125,7 +131,10 @@ impl Options {
             eyes: options.eyes,
             tongue: options.tongue,
             wrap: options.wrap.unwrap_or(false),
-            wrap_column: options.wrap_column,
+            wrap_column: match wrap_column {
+                Some(0) | None => None,
+                Some(x) => Some(x),
+            },
         })
     }
 
