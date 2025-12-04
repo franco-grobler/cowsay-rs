@@ -59,7 +59,7 @@ const wrap = ref<boolean>(true);
 const wrapColumn = ref<number>(40);
 
 const twoLetterRule = (value: string) =>
-  value.length > 2 ? "Cannot be more than two letters." : false;
+  value.length > 2 ? "Let's now make weird cows." : false;
 
 const cowData = computed<CowsayOptions>(() => {
   return {
@@ -67,7 +67,7 @@ const cowData = computed<CowsayOptions>(() => {
     tongue: tongue.value.padEnd(2, " "),
     file: file.value,
     wrap: wrap.value,
-    wrap_column: wrapColumn.value,
+    wrap_column: wrapColumn.value.toString(),
   };
 });
 const cow = computed<string>(() =>

@@ -14,7 +14,7 @@ export interface CowsayOptions {
 	eyes?: string;
 	tongue?: string;
 	wrap?: boolean;
-	wrap_column?: number;
+	wrap_column?: string;
 }
 
 export default function useCowsay() {
