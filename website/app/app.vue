@@ -1,5 +1,6 @@
 <template>
   <div class="font-display bg-background-light text-text-primary">
+    <!-- class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-text-primary-dark" -->
     <div
       class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden"
     >
