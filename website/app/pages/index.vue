@@ -2,7 +2,7 @@
   <div class="text-center">
     <IntroductionView />
     <AboutView class="my-6" />
-    <PlaygroundView />
+    <PlaygroundView id="playground-section" />
   </div>
 </template>
 
