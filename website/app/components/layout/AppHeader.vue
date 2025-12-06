@@ -13,11 +13,7 @@
         </a>
       </div>
       <div>
-        <h2
-          class="text-text-primary text-xl font-bold font-mono tracking-tight"
-        >
-          cowsay-rs
-        </h2>
+        <h2 class="text-xl font-bold font-mono tracking-tight">cowsay-rs</h2>
       </div>
     </nav>
   </header>
