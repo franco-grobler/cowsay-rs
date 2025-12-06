@@ -9,8 +9,12 @@
       support.
     </p>
     <div class="flex flex-row justify-center gap-5 my-4">
-      <DefaultBtn>Try it live</DefaultBtn>
-      <DefaultBtn>Get started</DefaultBtn>
+      <RouterLink to="#playground-section">
+        <DefaultBtn>Try it live</DefaultBtn>
+      </RouterLink>
+      <RouterLink to="#playground-section">
+        <DefaultBtn>Get started</DefaultBtn>
+      </RouterLink>
     </div>
   </section>
 </template>
