@@ -1,19 +1,21 @@
 <template>
   <div class="text-left">
     <label class="block">
-      <span>{{ props.label }}</span>
-      <input
-        v-model="model"
-        type="numeric"
-        :placeholder="props.placeholder"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-        :class="{
-          'border-red-600 focus:ring ring-red-300 ring-opacity-50':
-            computedErrs.state.value,
-          'focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50':
-            !computedErrs.state.value,
-        }"
-      />
+      <div class="flex flex-row">
+        <span class="grow">{{ props.label }}</span>
+        <input
+          v-model="model"
+          type="numeric"
+          :placeholder="props.placeholder"
+          class="rounded-md border-gray-300 shadow-sm grow-0 max-w-[50%] text-right px-2"
+          :class="{
+            'border-red-600 focus:ring ring-red-300 ring-opacity-50':
+              computedErrs.state.value,
+            'focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50':
+              !computedErrs.state.value,
+          }"
+        />
+      </div>
     </label>
     <ErrorList :errors="computedErrs.messages.value" />
   </div>
