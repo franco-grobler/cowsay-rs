@@ -29,7 +29,10 @@ export default function useCowsay() {
 		if (!initialised.value) {
 			return "Not ready...";
 		}
-		const options = new Options(data);
+		const options = new Options({
+			...data,
+			wrap_column: data.wrap ? data.wrap_column : undefined,
+		});
 		return options.say(text);
 	}
 
