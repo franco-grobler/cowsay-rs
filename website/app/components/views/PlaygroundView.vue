@@ -18,7 +18,7 @@
           placeholder="Tongue characters"
           :validation-rules="[twoLetterRule]"
         />
-        <TextField v-model="text" label="Text" placeholder="Hello, World!" />
+        <TextArea v-model="text" label="Text" rows="2" />
         <SelectField v-model="file" label="Cowfile" :items="availableCows" />
         <SwitchField v-model="wrap" label="Wrap" />
         <NumericField
@@ -27,11 +27,12 @@
           placeholder="Wrap column"
         />
       </form>
-      <div class="flex flex-col grow gap-3 min-w-[300px]">
+      <div class="flex flex-col grow gap-3 min-w-[300px] h-full">
         <TextArea
           v-model="cow"
           label="What the cow has to say:"
-          class="h-full w-full"
+          class="h-full w-full overflow-hidden"
+          textarea-class="overflow-hidden"
           readonly
           :rows="textRows"
           style="font-family: monospace; field-sizing: content"
