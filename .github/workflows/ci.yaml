@@ -24,6 +24,9 @@ env:
   PYTHON_VERSION: "3.13"
   NEXTEST_PROFILE: ci
 
+permissions:
+  contents: read
+
 jobs:
   cargo-fmt:
     name: "cargo fmt"
