@@ -3,7 +3,11 @@ name: Website CI
 on:
   push:
     branches: [main]
+    paths:
+      - "website/**"
   pull_request:
+    paths:
+      - "website/**"
   workflow_dispatch:
 
 concurrency:
