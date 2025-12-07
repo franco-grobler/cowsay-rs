@@ -8,26 +8,33 @@
   packages = [
     # Testing and coverage tools
     pkgs.cargo-audit
+    pkgs.cargo-dist
     pkgs.cargo-nextest
     # pkgs.cargo-llvm-cov
     pkgs.cargo-shear
 
+    # WASM tools
+    pkgs.wasm-pack
+
     # Utilities
     pkgs.pre-commit
-    pkgs.just
   ];
 
   # https://devenv.sh/languages/
-  languages.rust = {
-    enable = true;
-    channel = "stable";
-    components = [
-      "rustc"
-      "cargo"
-      "clippy"
-      "rustfmt"
-      "rust-analyzer"
-    ];
-    version = "1.91.0";
+  languages = {
+    javascript = {
+      enable = true;
+      bun = {
+        enable = true;
+      };
+    };
+    rust = {
+      enable = true;
+      toolchainFile = ./rust-toolchain.toml;
+    };
   };
+
+  enterShell = ''
+    unset DEVELOPER_DIR;
+  '';
 }
