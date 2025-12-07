@@ -27,10 +27,8 @@ pub struct CowsayArgs {
     /// Young appearance mode
     #[arg(short, long, action)]
     young: bool,
-    /// Selects an alternate cow picture. Cowfile may be either the name of a
-    /// cow defined in a cowdir on the cowpath (without the '.cow' file extension), or the
-    /// path to a cowfile (with the '.cow' file extension). `cowsay-rs -l` will list the
-    /// names of available cows.
+    /// Selects an alternate cow picture. The name of a cow defined in a cowdir
+    /// on the cowpath.`cowsay-rs -l` will list the names of available cows.
     #[arg(short, long)]
     file: Option<String>,
     /// Selects a random cow picture from the cowpath.
