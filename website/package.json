@@ -3,10 +3,11 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
+		"prebuild": "bun run build:wasm",
 		"build": "nuxt build",
+		"build:wasm": "wasm-pack build ../crates/cowsay-wasm --target web --out-dir ../../website/vendored/cowsay/",
 		"predev": "cp ./vendored/cowsay/cowsay_wasm_bg.wasm ./node_modules/.cache/vite/client/deps/",
 		"dev": "nuxt dev",
-		"build:wasm": "wasm-pack build ../crates/cowsay-wasm --target web --out-dir ../../website/vendored/cowsay/",
 		"dev:wasm": "wasm-pack build ../crates/cowsay-wasm --dev --target web --out-dir ../../website/vendored/cowsay/",
 		"predev:build": "npm run dev:wasm",
 		"dev:build": "vite build",
