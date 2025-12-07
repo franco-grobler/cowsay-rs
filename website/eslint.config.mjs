@@ -3,4 +3,6 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 
 import eslintConfigPrettier from "eslint-config-prettier";
 
-export default withNuxt().append(eslintConfigPrettier);
+export default withNuxt()
+	.prepend({ ignores: ["vendored/**"] })
+	.append(eslintConfigPrettier);
