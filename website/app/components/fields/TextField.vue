@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ValidationRule } from "@/composables/formValidation";
 import ErrorList from "@/components/fields/ErrorList.vue";
+import type { ValidationRule } from "@/composables/formValidation";
 import useComputedErrors from "~/composables/errors";
 
 const model = defineModel<string>({ default: "", required: true });

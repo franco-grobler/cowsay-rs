@@ -22,9 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { useHead, useSeoMeta } from "#app";
-import AppHeader from "@/components/layout/AppHeader.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
+import AppHeader from "@/components/layout/AppHeader.vue";
+import { useHead, useSeoMeta } from "#app";
 
 const logo = new URL("@/assets/logo.svg", import.meta.url).href;
 
