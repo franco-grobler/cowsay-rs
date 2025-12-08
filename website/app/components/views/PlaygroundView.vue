@@ -43,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import TextField from "@/components/fields/TextField.vue";
-import TextArea from "@/components/fields/TextArea.vue";
+import { computed, ref } from "vue";
+
+import NumericField from "@/components/fields/NumericField.vue";
 import SelectField from "@/components/fields/SelectField.vue";
 import SwitchField from "@/components/fields/SwitchField.vue";
-import NumericField from "@/components/fields/NumericField.vue";
+import TextArea from "@/components/fields/TextArea.vue";
+import TextField from "@/components/fields/TextField.vue";
 import SectionTitle from "@/components/titles/SectionTitle.vue";
-import { computed, ref } from "vue";
 import useCowsay, { type CowsayOptions } from "@/composables/cowsay";
 
 const eyes = ref<string>("oo");

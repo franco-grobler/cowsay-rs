@@ -1,5 +1,6 @@
-import type { ValidationRule } from "@/composables/formValidation";
 import { computed, type Ref } from "vue";
+
+import type { ValidationRule } from "@/composables/formValidation";
 
 const NO_MESSAGE = "__ERROR_STATE__";
 

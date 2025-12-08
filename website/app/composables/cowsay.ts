@@ -1,4 +1,4 @@
-import init, { Options, listCows } from "cowsay-wasm";
+import init, { listCows,Options } from "cowsay-wasm";
 import { ref } from "vue";
 
 export interface CowsayOptions {
