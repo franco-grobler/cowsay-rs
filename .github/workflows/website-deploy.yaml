@@ -8,13 +8,16 @@ on:
     paths:
       - "website/**"
 
-permissions:
-  contents: read
-
 defaults:
   run:
     shell: bash
     working-directory: website
+
+env:
+  NUXT_APP_BASE_URL: /cowsay-rs/
+
+permissions:
+  contents: read
 
 jobs:
   build:
