@@ -16,13 +16,13 @@ concurrency:
     ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 defaults:
   run:
     shell: bash
     working-directory: website
+
+permissions:
+  contents: read
 
 jobs:
   build:
