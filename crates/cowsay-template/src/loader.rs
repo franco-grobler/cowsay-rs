@@ -1,3 +1,5 @@
+//! Loading cowfiles.
+
 use std::{fs::File, io::Read, path::Path};
 
 use crate::{errors::ParseError, patterns};
