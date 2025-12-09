@@ -1,3 +1,5 @@
+//! Regular expressions used in template parsing.
+
 use std::sync::OnceLock;
 
 use regex::Regex;

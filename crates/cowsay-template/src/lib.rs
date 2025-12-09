@@ -7,8 +7,8 @@ use crate::errors::ParseError;
 use crate::loader::{load_cow, load_template};
 
 pub mod errors;
-mod loader;
-mod patterns;
+pub mod loader;
+pub mod patterns;
 
 /// Default cowfile template content.
 pub const DEFAULT_COW: &str = include_str!("../../../cows/default.cow");
