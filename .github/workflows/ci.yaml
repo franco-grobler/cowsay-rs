@@ -147,7 +147,7 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
-          cache-dependency-path: playground/package-lock.json
+          cache-dependency-path: website/bun.lock
       - uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa # v0.4.0
         with:
           version: v0.13.1
