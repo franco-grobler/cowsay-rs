@@ -19,6 +19,7 @@
     # Utilities
     pkgs.git-cliff
     pkgs.pre-commit
+    pkgs.typos
   ];
 
   # https://devenv.sh/languages/
