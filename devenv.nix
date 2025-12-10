@@ -17,6 +17,7 @@
     pkgs.wasm-pack
 
     # Utilities
+    pkgs.git-cliff
     pkgs.pre-commit
   ];
 
