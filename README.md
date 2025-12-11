@@ -1,6 +1,7 @@
 # Cowsay-rs
 
 [![CI](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml)
+[![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
 A Rust implementation of the classic cowsay program.
 
