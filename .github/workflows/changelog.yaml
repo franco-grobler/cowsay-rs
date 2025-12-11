@@ -1,4 +1,4 @@
-name: Release version
+name: Generate changelog
 
 on:
   push:
@@ -11,30 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      release_body: ${{ steps.changelog.outputs.content }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - uses: cargo-bins/cargo-binstall@b3f755e95653da9a2d25b99154edfdbd5b356d0a # v1.15.10
       - run: cargo binstall --no-confirm typos-cli --locked
 
-      - name: Generate changelog
+      - name: changelog
         uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
-          args: --verbose
+          args: --verbose --bump --unreleased
         env:
           GITHUB_REPO: ${{ github.repository }}
           OUTPUT: CHANGELOG.md
 
-      - name: Commit
+      - name: commit
         run: |
           git checkout main
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           set +e
           git add CHANGELOG.md
-          git commit -m "Update changelog"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git <branch>
+          git commit -m "chore: update changelog"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git main
