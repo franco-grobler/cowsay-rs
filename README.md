@@ -9,7 +9,7 @@ A Rust implementation of the classic cowsay program.
 
 ### From Source
 
-Alternatively, you can build it from the source code:
+You can build it from the source code:
 
 ```bash
 git clone https://github.com/franco-grobler/cowsay-rs.git
