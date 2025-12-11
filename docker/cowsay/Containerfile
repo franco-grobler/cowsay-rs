@@ -1,0 +1,17 @@
+ARG DEBIAN_DIST=trixie
+
+FROM rust:${DEBIAN_DIST} as builder
+
+WORKDIR /usr/src/cowsay-rs
+
+COPY cows /usr/src/cowsay-rs/cows
+COPY crates /usr/src/cowsay-rs/crates
+COPY Cargo.lock Cargo.toml rust-toolchain.toml /usr/src/cowsay-rs/
+RUN cargo install --path ./crates/cowsay-cli
+
+FROM debian:${DEBIAN_DIST}-slim
+
+COPY --from=builder /usr/local/cargo/bin/cowsay-rs /usr/local/bin/cowsay-rs
+
+ENTRYPOINT ["cowsay-rs"]
+CMD ["--help"]
