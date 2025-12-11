@@ -17,6 +17,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: cargo-bins/cargo-binstall@b3f755e95653da9a2d25b99154edfdbd5b356d0a # v1.15.10
+      - run: cargo binstall --no-confirm typos-cli --locked
+
       - name: Generate changelog
         uses: orhun/git-cliff-action@v4
         with:
