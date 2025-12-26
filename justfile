@@ -13,9 +13,8 @@ build-container:
 run-container:
     podman run -it --rm --entrypoint /bin/bash {{ container-tag }}
 
-
 # Create a new release
-[group("Release")]
 [confirm]
+[group("Release")]
 create-release:
     ./scripts/create-release.sh
