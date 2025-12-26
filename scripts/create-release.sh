@@ -18,8 +18,8 @@ git add "${root}/${changelog_file}"
 git add "${root}/Cargo.toml"
 
 git commit -m "${commit_msg}"
-git tag -s -a "v$version" -m "Release $version" -m "$(cat "${root}/${changelog_file}")"
-git tag -v "v${version}"
+git tag -s -a "$version" -m "Release $version" -m "$(cat "${root}/${changelog_file}")"
+git tag -v "${version}"
 
 git push
 git push --follow-tags
