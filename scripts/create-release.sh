@@ -22,4 +22,4 @@ git tag -s -a "v$version" -m "Release $version" -m "$(cat "${root}/${changelog_f
 git tag -v "v${version}"
 
 git push
-git push --tags
+git push --follow-tags
