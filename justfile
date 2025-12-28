@@ -18,3 +18,8 @@ run-container:
 [group("Release")]
 create-release:
     ./scripts/create-release.sh
+
+# Update github action job
+[group("CI")]
+update-ci-actions:
+    ./scripts/update-github-actions-checkout-version.sh
