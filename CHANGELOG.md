@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2025-12-28
+
+### 💼 Other
+
+- Use fixed action versions
+
+### ⚙️ Miscellaneous Tasks
+
+- Update lockfile
+- Add script to update ci jobs
+- Update checkout version
+- *(release)* Prepare release version v0.3.1
+
 ## [0.3.0] - 2025-12-26
 
 ### 🚀 Features
