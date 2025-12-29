@@ -207,7 +207,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "cowsay-parser",
  "cowsay-template",
@@ -219,7 +219,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-cli"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "assert_cmd",
  "clap",
@@ -230,7 +230,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-parser"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "cowsay-template",
  "pretty_assertions",
@@ -239,7 +239,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-template"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "pretty_assertions",
  "regex",
@@ -248,7 +248,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-wasm"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
@@ -962,6 +962,6 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "1.0.0"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6d6085d62852e35540689d1f97ad663e3971fc19cf5eceab364d62c646ea167"
+checksum = "0f4a4e8e9dc5c62d159f04fcdbe07f4c3fb710415aab4754bf11505501e3251d"
