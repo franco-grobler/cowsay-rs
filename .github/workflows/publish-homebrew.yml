@@ -13,9 +13,6 @@ on:
 env:
   PR_BRANCH: "feat/cowsay-rs"
 
-permissions:
-  contents: read
-
 jobs:
   publish-homebrew-formula:
     runs-on: "ubuntu-22.04"

@@ -17,7 +17,7 @@ git-cliff --bump \
 git add "${root}/${changelog_file}"
 git add "${root}/Cargo.toml"
 
-git commit -m "${commit_msg}"
+git commit -s -m "${commit_msg}"
 git tag -s -a "$version" -m "Release $version" -m "$(cat "${root}/${changelog_file}")"
 git tag -v "${version}"
 
