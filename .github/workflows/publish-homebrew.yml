@@ -64,4 +64,4 @@ jobs:
             git commit -m "${name} ${version}"
           done
           git push -u origin "${PR_BRANCH}"
-          gh pr create --base main --fill-verbose
+          gh pr create --base main --fill
