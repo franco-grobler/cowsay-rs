@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.13] - 2025-12-30
+
+### ⚙️ Miscellaneous Tasks
+
+- Permission on publish wasm workflow
+- *(release)* Prepare release version v0.3.13
+
 ## [0.3.12] - 2025-12-30
 
 ### 💼 Other
