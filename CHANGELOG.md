@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.17] - 2025-12-30
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix tag check for docker build
+- *(release)* Prepare release version v0.3.17
+
 ## [0.3.16] - 2025-12-30
 
 ### 🐛 Bug Fixes
