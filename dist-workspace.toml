@@ -26,7 +26,7 @@ github-attestations = true
 npm-scope = "@franco-grobler"
 
 # Publish jobs to run in CI
-publish-jobs = ["./publish-homebrew", "./publish-npm"]
+publish-jobs = ["./publish-homebrew", "./publish-npm", "./publish-wasm"]
 
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = [

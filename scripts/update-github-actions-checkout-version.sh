@@ -14,7 +14,7 @@ declare -a matrix=(
 	"actions\/checkout,8e8c483db84b4bee98b60c0593521ed34d9990e8,v6.0.1"
 	"actions\/download-artifact,018cc2cf5baa6db3ef3c5f8a56943fffe632ef53,v6.0.0"
 	"actions\/upload-artifact,330a01c490aca151604b8cf639adc76d48f6c5d4,v5.0.0"
-	"actions\/setup-node,2028fbc5c25fe9cf00d9f06a71cc4710d4507903,v6.0.0"
+	"actions\/setup-node,395ad3262231945c25e8478fd5baf05154b1d79f,v6.1.0"
 	"astral-sh\/setup-uv,85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41,v7.1.2"
 	"cargo-bins\/cargo-binstall,b3f755e95653da9a2d25b99154edfdbd5b356d0a,v1.15.10"
 	"dev-hanz-ops\/install-gh-cli-action,af38ce09b1ec248aeb08eea2b16bbecea9e059f8,v0.2.1"
