@@ -9,6 +9,8 @@ cargo-dist-version = "0.30.2"
 # CI backends to support
 ci = "github"
 
+# Add github attestations
+github-attestations = true
 # Whether to install an updater program
 install-updater = true
 # Path that installers should place binaries in
@@ -19,15 +21,13 @@ installers = ["shell", "npm", "homebrew"]
 windows-archive = ".zip"
 unix-archive = ".tar.gz"
 
-# Add github attestations
-github-attestations = true
-
-# A namespace to use when publishing this package to the npm registry
-npm-scope = "@franco-grobler"
-
+# Local artifacts jobs to run in CI
+local-artifacts-jobs = ["./build-docker"]
 # Publish jobs to run in CI
 publish-jobs = ["./publish-homebrew", "./publish-npm", "./publish-wasm"]
 
+# A namespace to use when publishing this package to the npm registry
+npm-scope = "@franco-grobler"
 # Homebrew tap 
 tap = "franco-grobler/tap"
 
@@ -42,6 +42,6 @@ targets = [
 
 [dist.github-action-commits]
 "actions/checkout" = "8e8c483db84b4bee98b60c0593521ed34d9990e8"                # v6.0.1
-"actions/upload-artifact" = "330a01c490aca151604b8cf639adc76d48f6c5d4"         # v5.0.0
-"actions/download-artifact" = "018cc2cf5baa6db3ef3c5f8a56943fffe632ef53"       # v6.0.0
+"actions/upload-artifact" = "b7c566a772e6b6bfb58ed0dc250532a479d7789f"         # v6.0.0
+"actions/download-artifact" = "37930b1c2abaa49bbe596cd826c3c89aef350131"       # v7.0.0
 "actions/attest-build-provenance" = "c074443f1aee8d4aeeae555aebba3282517141b2" # v2.2.3
