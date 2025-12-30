@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.6] - 2025-12-30
 
+### 💼 Other
+
+- Update release ci builds
+
 ### ⚙️ Miscellaneous Tasks
 
 - *(release)* Prepare release version v0.3.5
+- *(release)* Prepare release version v0.3.6
 
 ## [0.3.5] - 2025-12-30
 
