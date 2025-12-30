@@ -28,6 +28,9 @@ npm-scope = "@franco-grobler"
 # Publish jobs to run in CI
 publish-jobs = ["./publish-homebrew", "./publish-npm", "./publish-wasm"]
 
+# Homebrew tap 
+tap = "franco-grobler/tap"
+
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = [
   "aarch64-apple-darwin",
