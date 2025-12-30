@@ -26,10 +26,7 @@ github-attestations = true
 npm-scope = "@franco-grobler"
 
 # Publish jobs to run in CI
-publish-jobs = ["./homebrew", "./npm"]
-
-# A GitHub repo to push Homebrew formulas to
-tap = "franco-grobler/homebrew-tap"
+publish-jobs = ["./publish-homebrew", "./publish-npm"]
 
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = [

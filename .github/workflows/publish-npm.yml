@@ -13,14 +13,15 @@ on:
 env:
   PR_BRANCH: "feat/cowsay-rs"
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   publish-npm:
     runs-on: "ubuntu-22.04"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PLAN: ${{ needs.plan.outputs.val }}
+      PLAN: ${{ inputs.plan }}
     steps:
       - name: Fetch npm packages
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
