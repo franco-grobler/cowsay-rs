@@ -1,0 +1,67 @@
+name: "Update Homebrew Tap"
+
+on:
+  workflow_call:
+    inputs:
+      plan:
+        required: true
+        type: string
+  pull_request:
+    paths:
+      - .github/workflows/homebrew.yaml
+
+env:
+  PR_BRANCH: "feat/cowsay-rs"
+
+permissions: {}
+
+jobs:
+  publish-homebrew-formula:
+    runs-on: "ubuntu-22.04"
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PLAN: ${{ needs.plan.outputs.val }}
+      GITHUB_USER: "cowsay-rs bot"
+      GITHUB_EMAIL: "admin+bot@cowsay.rs"
+    steps:
+      - name: Install GH CLI
+        uses: dev-hanz-ops/install-gh-cli-action@v0.2.1
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        with:
+          persist-credentials: true
+          repository: "franco-grobler/homebrew-tap"
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      # So we have access to the formula
+      - name: Fetch homebrew formulae
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          pattern: artifacts-*
+          path: Formula/
+          merge-multiple: true
+
+      # This is extra complex because you can make your Formula name not match your app name
+      # so we need to find releases with a *.rb file, and publish with that filename.
+      - name: Commit formula files & Create PR
+        run: |
+          git config --global user.name "${GITHUB_USER}"
+          git config --global user.email "${GITHUB_EMAIL}"
+
+          git checkout -b "${PR_BRANCH}"
+
+          for release in $(echo "$PLAN" | jq --compact-output '.releases[] | select([.artifacts[] | endswith(".rb")] | any)'); do
+            filename=$(echo "$release" | jq '.artifacts[] | select(endswith(".rb"))' --raw-output)
+            name=$(echo "$filename" | sed "s/\.rb$//")
+            version=$(echo "$release" | jq .app_version --raw-output)
+
+            export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+            brew update
+            # We avoid reformatting user-provided data such as the app description and homepage.
+            brew style --except-cops FormulaAudit/Homepage,FormulaAudit/Desc,FormulaAuditStrict --fix "Formula/${filename}" || true
+
+            git add "Formula/${filename}"
+            git commit -m "${name} ${version}"
+          done
+          git push -u origin "${PR_BRANCH}"
+          gh pr create --base main --fill-verbose

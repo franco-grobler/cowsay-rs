@@ -17,6 +17,7 @@ declare -a matrix=(
 	"actions\/setup-node,2028fbc5c25fe9cf00d9f06a71cc4710d4507903,v6.0.0"
 	"astral-sh\/setup-uv,85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41,v7.1.2"
 	"cargo-bins\/cargo-binstall,b3f755e95653da9a2d25b99154edfdbd5b356d0a,v1.15.10"
+	"dev-hanz-ops\/install-gh-cli-action,af38ce09b1ec248aeb08eea2b16bbecea9e059f8,v0.2.1"
 	"jetli\/wasm-pack-action,0d096b08b4e5a7de8c28de67e11e945404e9eefa,v0.4.0"
 	"oven-sh\/setup-bun,735343b667d3e6f658f44d0eca948eb6282f2b76,v2.0.2"
 	"rustsec\/audit-check,69366f33c96575abad1ee0dba8212993eecbe998,v2.0.0"

@@ -23,10 +23,10 @@ unix-archive = ".tar.gz"
 github-attestations = true
 
 # A namespace to use when publishing this package to the npm registry
-npm-scope = "@cowsay"
+npm-scope = "@franco-grobler"
 
 # Publish jobs to run in CI
-publish-jobs = ["homebrew", "npm"]
+publish-jobs = ["./homebrew", "./npm"]
 
 # A GitHub repo to push Homebrew formulas to
 tap = "franco-grobler/homebrew-tap"
