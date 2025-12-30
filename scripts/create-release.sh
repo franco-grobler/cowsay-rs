@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 root="$(dirname "$0")/.."
 changelog_file='CHANGELOG.md'
@@ -18,8 +18,7 @@ git add "${root}/${changelog_file}"
 git add "${root}/Cargo.toml"
 
 git commit -s -m "${commit_msg}"
-git tag -s -a "$version" -m "Release $version" -m "$(cat "${root}/${changelog_file}")"
-git tag -v "${version}"
+git tag -s -a "${version}" -m "Release ${version}" -m "$(cat "${root}/${changelog_file}")"
 
 git push
 git push --follow-tags
