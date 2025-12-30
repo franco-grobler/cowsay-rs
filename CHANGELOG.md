@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(release)* Prepare release version v0.3.4
+- Use correct yaml extension
+- *(release)* Prepare release version v0.3.5
 
 ## [0.3.4] - 2025-12-30
 
