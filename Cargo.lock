@@ -207,7 +207,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay"
-version = "0.3.15"
+version = "0.3.16"
 dependencies = [
  "cowsay-parser",
  "cowsay-template",
@@ -219,7 +219,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-cli"
-version = "0.3.15"
+version = "0.3.16"
 dependencies = [
  "assert_cmd",
  "clap",
@@ -230,7 +230,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-parser"
-version = "0.3.15"
+version = "0.3.16"
 dependencies = [
  "cowsay-template",
  "pretty_assertions",
@@ -239,7 +239,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-template"
-version = "0.3.15"
+version = "0.3.16"
 dependencies = [
  "pretty_assertions",
  "regex",
@@ -248,7 +248,7 @@ dependencies = [
 
 [[package]]
 name = "cowsay-wasm"
-version = "0.3.15"
+version = "0.3.16"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
