@@ -25,6 +25,8 @@ unix-archive = ".tar.gz"
 local-artifacts-jobs = ["./build-docker"]
 # Publish jobs to run in CI
 publish-jobs = ["./publish-homebrew", "./publish-npm", "./publish-wasm"]
+# Custom permissions for GitHub Jobs
+github-custom-job-permissions = { "build-docker" = { packages = "write", contents = "read" }, "publish-wasm" = { contents = "read", id-token = "write", packages = "write" } }
 
 # A namespace to use when publishing this package to the npm registry
 npm-scope = "@franco-grobler"

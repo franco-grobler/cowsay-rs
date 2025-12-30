@@ -181,6 +181,9 @@ jobs:
     with:
       plan: ${{ needs.plan.outputs.val }}
     secrets: inherit
+    permissions:
+      "contents": "read"
+      "packages": "write"
 
   # Build and package all the platform-agnostic(ish) things
   build-global-artifacts:
@@ -336,6 +339,7 @@ jobs:
     secrets: inherit
     # publish jobs get escalated permissions
     permissions:
+      "contents": "read"
       "id-token": "write"
       "packages": "write"
 
