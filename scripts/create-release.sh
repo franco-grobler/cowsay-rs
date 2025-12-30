@@ -14,8 +14,11 @@ git-cliff --bump \
 	--with-commit "${commit_msg}" \
 	--output="${changelog_file}"
 
+cargo update --workspace
+
 git add "${root}/${changelog_file}"
 git add "${root}/Cargo.toml"
+git add "${root}/Cargo.lock"
 
 git commit -s -m "${commit_msg}"
 git tag -s -a "${version}" -m "Release ${version}" -m "$(cat "${root}/${changelog_file}")"
