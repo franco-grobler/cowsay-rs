@@ -21,9 +21,6 @@ env:
 jobs:
   cowsay-wasm:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     strategy:
       matrix:
         target: [web, bundler, nodejs]
