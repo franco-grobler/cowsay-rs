@@ -1,7 +1,7 @@
 # Cowsay-rs
 
-[![CI](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml)
 [![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
+[![CI](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml/badge.svg)](https://github.com/franco-grobler/cowsay-rs/actions/workflows/ci.yaml)
 
 A Rust implementation of the classic cowsay program.
 
@@ -30,6 +30,7 @@ cowsay-rs "Moo!"
 ```
 
 ```text
+   ______
   < Moo! >
    ------
           \   ^__^
@@ -56,6 +57,7 @@ cowsay-rs -f tux "Hello from Tux!"
 ```
 
 ```text
+   _________________
   < Hello from Tux! >
    -----------------
           \
@@ -79,6 +81,7 @@ cowsay-rs -g "I want more grass"
 ```
 
 ```text
+   ___________________
   < I want more grass >
    -------------------
           \   ^__^
