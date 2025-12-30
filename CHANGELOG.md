@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.15] - 2025-12-30
+
+### 💼 Other
+
+- Fix permissions
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Prepare release version v0.3.15
+
 ## [0.3.14] - 2025-12-30
 
 ### 💼 Other
