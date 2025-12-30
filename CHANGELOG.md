@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(release)* Prepare release version v0.3.3
+- Update release
+- Cleanup readme
+- *(release)* Prepare release version v0.3.4
 
 ## [0.3.3] - 2025-12-30
 
