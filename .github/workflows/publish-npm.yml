@@ -13,8 +13,7 @@ on:
 env:
   PR_BRANCH: "feat/cowsay-rs"
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   publish-npm:
