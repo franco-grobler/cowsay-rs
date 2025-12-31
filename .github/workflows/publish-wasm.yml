@@ -39,7 +39,7 @@ jobs:
         run: wasm-pack build --target ${{ matrix.target }} crates/cowsay-wasm
       - name: "Rename generated package"
         run: | # Replace the package name w/ jq
-          jq '.name="@astral-sh/ruff-wasm-${{ matrix.target }}"' crates/cowsay-wasm/pkg/package.json > /tmp/package.json
+          jq '.name="@franco-grobler/cowsay-wasm-${{ matrix.target }}"' crates/cowsay-wasm/pkg/package.json > /tmp/package.json
           mv /tmp/package.json crates/cowsay-wasm/pkg
       - run: cp LICENSE crates/cowsay-wasm/pkg # wasm-pack does not put the LICENSE file in the pkg
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
@@ -51,6 +51,7 @@ jobs:
           ${{ inputs.plan == '' ||
           fromJson(inputs.plan).announcement_tag_is_implicit }}
         run: npm publish --dry-run crates/cowsay-wasm/pkg
+
       - name: "Publish"
         if:
           ${{ inputs.plan != '' &&
