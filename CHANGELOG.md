@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.20] - 2025-12-31
+
+### ⚙️ Miscellaneous Tasks
+
+- Use unique branch name for homebrew tap pr
+- Fix npm publishing
+- *(release)* Prepare release version v0.3.20
+
 ## [0.3.19] - 2025-12-30
 
 ### ⚙️ Miscellaneous Tasks
