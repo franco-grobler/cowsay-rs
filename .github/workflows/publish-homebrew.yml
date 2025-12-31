@@ -11,7 +11,7 @@ on:
       - .github/workflows/homebrew.yaml
 
 env:
-  PR_BRANCH: "feat/cowsay-rs"
+  TAG: ${{ inputs.plan != '' && fromJson(inputs.plan).announcement_tag}}
 
 jobs:
   publish-homebrew-formula:
@@ -42,6 +42,8 @@ jobs:
       # This is extra complex because you can make your Formula name not match your app name
       # so we need to find releases with a *.rb file, and publish with that filename.
       - name: Commit formula files & Create PR
+        env:
+          PR_BRANCH: "feat/cowsay-rs-${{TAG}}"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
