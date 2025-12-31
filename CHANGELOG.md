@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.21] - 2025-12-31
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix homebrew branch name
+- *(release)* Prepare release version v0.3.21
+
 ## [0.3.20] - 2025-12-31
 
 ### ⚙️ Miscellaneous Tasks
