@@ -43,7 +43,7 @@ jobs:
       # so we need to find releases with a *.rb file, and publish with that filename.
       - name: Commit formula files & Create PR
         env:
-          PR_BRANCH: "feat/cowsay-rs-${{TAG}}"
+          PR_BRANCH: "feat/cowsay-rs-${TAG}"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
