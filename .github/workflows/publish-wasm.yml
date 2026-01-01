@@ -56,6 +56,6 @@ jobs:
         if:
           ${{ inputs.plan != '' &&
           !fromJson(inputs.plan).announcement_tag_is_implicit }}
-        run: npm publish --provenance --access public crates/cowsay-wasm/pkg
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public crates/cowsay-wasm/pkg
