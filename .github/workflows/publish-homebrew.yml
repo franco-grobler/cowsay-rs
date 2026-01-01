@@ -43,9 +43,10 @@ jobs:
       # so we need to find releases with a *.rb file, and publish with that filename.
       - name: Commit formula files & Create PR
         env:
-          PR_BRANCH: "feat/cowsay-rs-${TAG}"
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+          export PR_BRANCH="feat/cowsay-rs-${TAG}"
 
           git config --global user.name "${GITHUB_USER}"
           git config --global user.email "${GITHUB_EMAIL}"
