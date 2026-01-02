@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.23] - 2026-01-02
+
+### 🐛 Bug Fixes
+
+- *(cli)* Update package description
+
+### 💼 Other
+
+- Use root cargo toml file for all package version
+- Update descriptions
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Prepare release version v0.3.23
+
 ## [0.3.22] - 2026-01-01
 
 ### ⚙️ Miscellaneous Tasks
