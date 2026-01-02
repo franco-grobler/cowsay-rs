@@ -22,8 +22,8 @@ include_directory = { workspace = true }
 rand = { workspace = true }
 
 [dev-dependencies]
-glob = "0.3.3"
-pretty_assertions = "1.4.1"
+glob = { workspace = true }
+pretty_assertions = { workspace = true }
 
 [lints]
 workspace = true

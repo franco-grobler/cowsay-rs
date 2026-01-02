@@ -19,7 +19,7 @@ cowsay-template = { workspace = true }
 textwrap = { workspace = true }
 
 [dev-dependencies]
-pretty_assertions = "1.4.1"
+pretty_assertions = { workspace = true }
 
 [lints]
 workspace = true
