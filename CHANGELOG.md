@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.24] - 2026-01-02
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix all homebrew issues
+- *(release)* Prepare release version v0.3.24
+
 ## [0.3.23] - 2026-01-02
 
 ### 🐛 Bug Fixes
