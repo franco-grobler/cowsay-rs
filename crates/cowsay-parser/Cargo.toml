@@ -12,7 +12,7 @@ license = { workspace = true }
 categories.workspace = true
 keywords.workspace = true
 readme.workspace = true
-description = "A parser for cowsay templates"
+description = "Template parser for cowsay templates"
 
 [dependencies]
 cowsay-template = { workspace = true }
