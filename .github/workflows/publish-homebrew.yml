@@ -59,7 +59,7 @@ jobs:
             version=$(echo "$release" | jq .app_version --raw-output)
             brew update
             # We avoid reformatting user-provided data such as the app description and homepage.
-            brew style --except-cops FormulaAudit/Homepage,FormulaAudit/Desc,FormulaAuditStrict --fix "Formula/${filename}" || true
+            brew style --fix "Formula/${filename}" || true
 
             git add "Formula/${filename}"
             git commit -m "feat(${name}): update to ${version}"
