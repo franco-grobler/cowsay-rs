@@ -23,3 +23,10 @@ all cowfiles in the [Cowsay GitHub organisation](https://github.com/cowsay-org).
 - [ ] `-`
 - [ ] `x`
 - [ ] `.=`
+
+## Acknowledgement
+
+- [Crafting interpreters](https://craftinginterpreters.com/) for general
+  guidance and understanding.
+- [rlox](https://github.com/rodaine/rlox) for a Rust implementation example.
+- Google Gemini 3.1 Pro to roast my work.
