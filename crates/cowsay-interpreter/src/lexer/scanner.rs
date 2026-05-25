@@ -5,6 +5,8 @@ use crate::ast::token::Token;
 use crate::ast::token::Type;
 use std::{iter::Peekable, str::CharIndices};
 
+use crate::lexer::utils;
+
 // (Assuming your Token, Type, and Span structs are imported here)
 
 #[derive(Debug)]
@@ -22,7 +24,7 @@ pub struct Scanner<'a> {
 }
 
 impl<'a> Scanner<'a> {
-    /// Create a new scanner for the given source.
+    /// Create a new [`Scanner`].
     ///
     /// * `source`: Raw source code.
     pub fn new(source: &'a str) -> Self {
@@ -62,10 +64,13 @@ impl<'a> Scanner<'a> {
     }
 
     /// Scans a sequence of letters/numbers and checks if it is a keyword.
+    /// * `start_idx`: Identifier zero index ($).
     fn scan_identifier(&mut self, start_idx: usize) {
+        // Consume $
+        self.advance();
         // Consume characters.
         while let Some(c) = self.peek() {
-            if c.is_ascii_alphanumeric() || c == '_' {
+            if utils::is_valid_identifier(c) {
                 self.advance();
             } else {
                 break;
@@ -163,8 +168,7 @@ impl<'a> Scanner<'a> {
                             self.add_token(Type::Redirect, start_idx);
                         }
                     } else {
-                        // Just a regular LessThan token
-                        self.add_token(Type::LessThan, start_idx); // Assuming you add this
+                        self.add_token(Type::LessThan, start_idx);
                     }
                 }
                 '.' => {
@@ -179,10 +183,14 @@ impl<'a> Scanner<'a> {
                     self.scan_string(start_idx, '"');
                 }
 
-                // Ignore whitespace
-                ' ' | '\r' | '\t' | '\n' => {}
+                '\n' => {
+                    self.add_token(Type::NewLine, start_idx);
+                }
 
-                c if c.is_ascii_alphabetic() || c == '_' => {
+                // Ignore whitespace
+                ' ' | '\r' | '\t' => {}
+
+                '$' => {
                     self.scan_identifier(start_idx);
                 }
 
@@ -198,5 +206,44 @@ impl<'a> Scanner<'a> {
 
         // Always append EOF at the very end
         self.add_token(Type::EndOfFile, self.current_idx);
+    }
+
+    /// Get tokens.
+    pub fn tokens(&self) -> &[Token] {
+        &self.tokens
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        ast::token::{Span, Token, Type},
+        lexer::scanner::Scanner,
+    };
+
+    #[test]
+    fn can_read_direct_identifier() {
+        let mut scanner = Scanner::new("$hello");
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Identifier, Span::new(0, 6)),
+            Token::new(Type::EndOfFile, Span::new(6, 6)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
+    fn can_read_simple_assignment() {
+        let mut scanner = Scanner::new("$var = \"hello\"");
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Identifier, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(5, 6)),
+            Token::new(Type::LiteralString, Span::new(7, 14)),
+            Token::new(Type::EndOfFile, Span::new(14, 14)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
     }
 }
