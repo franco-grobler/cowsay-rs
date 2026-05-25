@@ -2,8 +2,8 @@
 
 /// Abstract Syntax Tree (AST) module
 pub mod ast;
-/// Scanner
-pub mod scanner;
+/// Lexer
+pub mod lexer;
 /// Standard Library
 pub mod stdlib;
 
