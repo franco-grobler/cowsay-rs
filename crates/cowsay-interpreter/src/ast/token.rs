@@ -70,8 +70,8 @@ pub enum Type {
     RedirectStrip,
     /// =
     Equal,
-    /// .=
-    EqualDot,
+    /// =
+    EqualEqual,
     /// -
     Minus,
     /// x
@@ -82,6 +82,12 @@ pub enum Type {
     ParenthesisRight,
     /// +
     Plus,
+    /// .=
+    DotEqual,
+    /// <
+    LessThan,
+    /// >
+    MoreThan,
 
     // Keywords
     /// ne
