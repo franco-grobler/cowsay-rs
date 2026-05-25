@@ -2,11 +2,11 @@
 
 use std::hash::Hash;
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 /// Byte index of a lexeme.
 ///
 /// * `start`: Index of first character.
 /// * `end`: Index of final character.
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Span {
     /// Index of first character.
     pub start: usize,
@@ -64,6 +64,8 @@ pub enum Type {
     // Operators
     /// EOF
     EndOfFile,
+    /// \n
+    NewLine,
     /// <<
     Redirect,
     /// <<-
