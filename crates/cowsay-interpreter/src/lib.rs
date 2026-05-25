@@ -4,6 +4,10 @@
 pub mod ast;
 /// Lexer
 pub mod lexer;
+/// Parser
+pub mod parser;
+/// Runtime values and errors.
+pub mod result;
 /// Standard Library
 pub mod stdlib;
 
