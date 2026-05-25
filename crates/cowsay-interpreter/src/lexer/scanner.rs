@@ -246,4 +246,18 @@ mod tests {
 
         assert_eq!(scanner.tokens(), expected);
     }
+
+    #[test]
+    fn can_read_comparison() {
+        let mut scanner = Scanner::new("1 < 2");
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::LiteralNumber, Span::new(0, 1)),
+            Token::new(Type::LessThan, Span::new(2, 3)),
+            Token::new(Type::LiteralNumber, Span::new(4, 5)),
+            Token::new(Type::EndOfFile, Span::new(5, 5)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
 }
