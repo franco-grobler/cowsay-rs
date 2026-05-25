@@ -1,34 +1,36 @@
 //! Expressions
 
-use crate::ast::token::{Literal, Token};
+use crate::ast::token::Token;
 
 /// Expressions.
 #[derive(Debug, PartialEq, Clone)]
-pub enum Expr<'a> {
+pub enum Expr {
     /// Binary expression.
     Binary {
         /// Left operand.
-        left: Box<Expr<'a>>,
-        /// Binary operator.
+        left: Box<Expr>,
+        /// Operator to apply.
         operator: Token,
         /// Right operand.
-        right: Box<Expr<'a>>,
+        right: Box<Expr>,
     },
     /// Grouping expression.
-    Grouping {
-        /// Inside expression.
-        expression: Box<Expr<'a>>,
-    },
+    Grouping(Box<Expr>),
     /// Literal expression.
-    Literal {
-        /// Raw value.
-        value: Literal<'a>,
-    },
+    Literal(Literal),
     /// Unary expression.
-    Unary {
-        /// Unary operator.
-        operator: Token,
-        /// Right operand.
-        right: Box<Expr<'a>>,
-    },
+    Unary(Token, Box<Expr>),
+}
+
+/// The AST-specific Literal
+#[derive(Debug, PartialEq, Clone)]
+pub enum Literal {
+    /// Numeric literal
+    Number(f64),
+    /// String literal
+    String(String),
+    /// Boolean literal
+    Boolean(bool),
+    /// None/Nil/undef literal.
+    Nil,
 }

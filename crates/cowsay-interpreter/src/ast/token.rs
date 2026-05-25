@@ -3,12 +3,9 @@
 use std::hash::Hash;
 
 /// Byte index of a lexeme.
-///
-/// * `start`: Index of first character.
-/// * `end`: Index of final character.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Span {
-    /// Index of first character.
+    ///  Index of first character.
     pub start: usize,
     /// Index of final character.
     pub end: usize,
@@ -26,12 +23,11 @@ impl Span {
 
 /// A Token read from source.
 ///
-/// A Token describes the lexeme read from a source.
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Token {
-    /// This token's type
+    /// Token's type.
     pub typ: Type,
-    /// The raw lexeme location read from source
+    /// Raw lexeme location read from source
     pub span: Span,
 }
 
@@ -40,19 +36,6 @@ impl Token {
     pub const fn new(typ: Type, span: Span) -> Self {
         Self { typ, span }
     }
-}
-
-/// Describes a literal string or number value
-#[derive(Debug, Clone, PartialEq)]
-pub enum Literal<'a> {
-    /// No value literal.
-    Nil,
-    /// Boolean literal.
-    Boolean(bool),
-    /// Floating point literal.
-    Number(f64),
-    /// String literal. Use clone-on-write (cow) for escape sequences.
-    String(std::borrow::Cow<'a, str>),
 }
 
 /// Describes the type of a Token
@@ -90,6 +73,10 @@ pub enum Type {
     LessThan,
     /// >
     MoreThan,
+    /// /
+    SlashForward,
+    /// \
+    SlashBackward,
 
     // Keywords
     /// ne
@@ -100,6 +87,8 @@ pub enum Type {
     KeywordTrue,
     /// False
     KeywordFalse,
+    /// undef
+    KeywordNil,
 
     // Literals
     /// Boolean
