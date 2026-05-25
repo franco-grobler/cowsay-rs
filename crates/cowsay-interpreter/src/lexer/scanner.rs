@@ -75,6 +75,7 @@ impl<'a> Scanner<'a> {
         // Match keywords, otherwise identifier.
         let text = &self.source[start_idx..self.current_idx];
         let typ = match text {
+            "true" | "false" => Type::LiteralBoolean,
             "unless" => Type::KeywordUnless,
             "ne" => Type::KeywordNotEqual,
             _ => Type::Identifier,
@@ -166,6 +167,13 @@ impl<'a> Scanner<'a> {
                         self.add_token(Type::LessThan, start_idx); // Assuming you add this
                     }
                 }
+                '.' => {
+                    if self.match_char('=') {
+                        self.add_token(Type::DotEqual, start_idx);
+                    } else {
+                        self.add_token(Type::Error, start_idx);
+                    }
+                }
 
                 '"' => {
                     self.scan_string(start_idx, '"');
@@ -183,7 +191,6 @@ impl<'a> Scanner<'a> {
                 }
 
                 _ => {
-                    // LSP-friendly error token instead of panicking
                     self.add_token(Type::Error, start_idx);
                 }
             }
