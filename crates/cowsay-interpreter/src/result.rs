@@ -5,7 +5,7 @@ use std::result;
 use crate::ast::token::Span;
 
 /// Possible runtime results.
-pub type Result = result::Result<Value, RuntimeError>;
+pub type Result<T> = result::Result<T, RuntimeError>;
 
 /// Runtime values.
 #[derive(Debug, Clone, PartialEq)]
@@ -33,8 +33,15 @@ impl std::fmt::Display for Value {
 }
 
 /// Errors encountered during runtime.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum RuntimeError {
+    /// Error during parsing
+    ParsingError {
+        /// Parsing message.
+        message: &'static str,
+        /// Location
+        span: Span,
+    },
     /// Mixing types during evaluation.
     TypeMismatch {
         /// Expected type.
@@ -63,25 +70,36 @@ pub enum RuntimeError {
         /// Location
         span: Span,
     },
+    /// Unknown sequence of characters.
+    UndefinedControlSequence {
+        /// Location
+        span: Span,
+    },
 }
 
 // To make it integrate perfectly with Rust, implement std::error::Error
 impl std::fmt::Display for RuntimeError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::DivisionByZero { .. } => {
+                write!(f, "Math Error: Division by zero")
+            }
+            Self::ParsingError { message, .. } => {
+                write!(f, "Parsing Error: {message}")
+            }
             Self::TypeMismatch {
                 expected, found, ..
             } => {
                 write!(f, "Type Error: Expected {expected}, found {found}")
-            }
-            Self::DivisionByZero { .. } => {
-                write!(f, "Math Error: Division by zero")
             }
             Self::UndefinedFunction { name, .. } => {
                 write!(f, "Reference Error: Undefined function '{name}'")
             }
             Self::UndefinedVariable { name, .. } => {
                 write!(f, "Reference Error: Undefined variable '{name}'")
+            }
+            Self::UndefinedControlSequence { .. } => {
+                write!(f, "Undefined control sequence")
             }
         }
     }
