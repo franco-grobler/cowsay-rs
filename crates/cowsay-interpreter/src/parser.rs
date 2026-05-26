@@ -1,12 +1,14 @@
 //! Parser implementation.
-//! TODO: Split this into a module, with a sub-module for the syntax errors.
 
-use crate::ast::{
-    expr::{Expr, Literal},
-    token::{Token, Type},
+use crate::{
+    ast::{
+        expr::{Expr, Literal},
+        token::{Span, Token, Type},
+    },
+    result::{self, RuntimeError},
 };
 
-/// Construct grammar.
+/// Construct grammar from the lexer.
 ///
 /// * `tokens`: Lexer tokens.
 /// * `source`: Raw source code to extract identifiers/numbers.
@@ -17,7 +19,7 @@ pub struct Parser<'a> {
     tokens: Vec<Token>,
     source: &'a str,
     current: usize,
-    errors: Vec<String>,
+    errors: Vec<result::RuntimeError>,
 }
 
 impl<'a> Parser<'a> {
@@ -84,20 +86,39 @@ impl<'a> Parser<'a> {
     }
 
     /// Get collected errors.
-    pub fn errors(&self) -> &[String] {
+    pub fn errors(&self) -> &[RuntimeError] {
         &self.errors
     }
 
+    /// Add errors to tracked errors.
+    ///
+    /// * `message`: Error description.
+    /// * `span`: Error location.
+    pub fn add_error(
+        &mut self,
+        message: &'static str,
+        span: Span,
+    ) -> result::RuntimeError {
+        let err = result::RuntimeError::ParsingError { message, span };
+        self.errors.push(err.clone());
+        err
+    }
+
     /// The entry point for parsing an expression
-    pub fn parse_expression(&mut self) -> Result<Expr, String> {
+    pub fn parse_expression(&mut self) -> Result<Expr, result::RuntimeError> {
         self.equality()
     }
 
     /// Express equalities.
-    fn equality(&mut self) -> Result<Expr, String> {
+    fn equality(&mut self) -> Result<Expr, result::RuntimeError> {
         let mut expr = self.term()?;
 
-        while self.match_token(&[Type::EqualEqual, Type::KeywordNotEqual]) {
+        while self.match_token(&[
+            Type::EqualEqual,
+            Type::KeywordNotEqual,
+            Type::LessThan,
+            Type::MoreThan,
+        ]) {
             let operator = self.previous();
             let right = self.term()?;
 
@@ -112,7 +133,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express terms.
-    fn term(&mut self) -> Result<Expr, String> {
+    fn term(&mut self) -> Result<Expr, result::RuntimeError> {
         let mut expr = self.factor()?;
 
         while self.match_token(&[Type::Plus, Type::Minus]) {
@@ -130,7 +151,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express factors (multiplication)
-    fn factor(&mut self) -> Result<Expr, String> {
+    fn factor(&mut self) -> Result<Expr, result::RuntimeError> {
         let mut expr = self.primary()?;
 
         while self.match_token(&[Type::Multiply, Type::SlashForward]) {
@@ -149,7 +170,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express literals and groupings.
-    fn primary(&mut self) -> Result<Expr, String> {
+    fn primary(&mut self) -> Result<Expr, result::RuntimeError> {
         if self.match_token(&[Type::KeywordTrue]) {
             return Ok(Expr::Literal(Literal::Boolean(true)));
         }
@@ -165,7 +186,15 @@ impl<'a> Parser<'a> {
             let raw_text = &self.source[token.span.start..token.span.end];
 
             if token.typ == Type::LiteralNumber {
-                let val: f64 = raw_text.parse().unwrap();
+                let val: f64 = if let Ok(x) = raw_text.parse() {
+                    x
+                } else {
+                    let err = self.add_error(
+                        "Could not parse numeric value.",
+                        token.span,
+                    );
+                    return Err(err);
+                };
                 return Ok(Expr::Literal(Literal::Number(val)));
             }
 
@@ -179,14 +208,71 @@ impl<'a> Parser<'a> {
             if self.check(Type::ParenthesisRight) {
                 self.advance();
             } else {
-                return Err(
-                    "Syntax Error: Expected ')' after expression.".to_string()
+                let err = self.add_error(
+                    "Expected ')' after expression.",
+                    self.peek().span,
                 );
+                return Err(err);
             }
             return Ok(Expr::Grouping(Box::new(expr)));
         }
 
-        let token = self.peek();
-        Err(format!("Syntax Error: Unexpected token '{:?}'", token.typ))
+        let err =
+            self.add_error("Syntax Error: Unexpected token ", self.peek().span);
+        Err(err)
+    }
+
+    /// Skip until end of statement.
+    /// Used to recover from errors.
+    fn synchronize(&mut self) {
+        self.advance();
+
+        while !self.is_at_end() {
+            if self.previous().typ == Type::NewLine {
+                return;
+            }
+            match self.peek().typ {
+                Type::StatementPrint
+                | Type::LoopWhile
+                | Type::LoopFor
+                | Type::Return
+                | Type::Function => return,
+                _ => {}
+            }
+
+            self.advance();
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        ast::{
+            expr::{Expr, Literal},
+            token::{Span, Token, Type},
+        },
+        parser::Parser,
+    };
+
+    #[test]
+    fn can_read_comparison() {
+        let source = "1 < 2";
+        let tokens = vec![
+            Token::new(Type::LiteralNumber, Span::new(0, 1)),
+            Token::new(Type::LessThan, Span::new(2, 3)),
+            Token::new(Type::LiteralNumber, Span::new(4, 5)),
+            Token::new(Type::EndOfFile, Span::new(5, 5)),
+        ];
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse_expression().unwrap(),
+            Expr::Binary {
+                left: Box::new(Expr::Literal(Literal::Number(1.0))),
+                operator: Token::new(Type::LessThan, Span::new(2, 3)),
+                right: Box::new(Expr::Literal(Literal::Number(2.0))),
+            }
+        );
     }
 }
