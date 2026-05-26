@@ -89,6 +89,16 @@ pub enum Type {
     KeywordFalse,
     /// undef
     KeywordNil,
+    /// While loop
+    LoopWhile,
+    /// For loop
+    LoopFor,
+    /// print
+    StatementPrint,
+    /// function
+    Function,
+    /// Return
+    Return,
 
     // Literals
     /// Boolean
