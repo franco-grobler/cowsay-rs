@@ -1,5 +1,6 @@
 [package]
 name = "cowsay"
+description = "A Rust implementation of the classic cowsay program"
 publish = true
 version.workspace = true
 edition.workspace = true
@@ -12,7 +13,6 @@ license.workspace = true
 categories.workspace = true
 keywords.workspace = true
 readme.workspace = true
-description = "A Rust implementation of the classic cowsay program"
 
 [dependencies]
 cowsay-parser = { workspace = true }
