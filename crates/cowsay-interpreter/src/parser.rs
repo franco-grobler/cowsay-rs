@@ -2,7 +2,7 @@
 
 use crate::{
     ast::{
-        expr::{Expr, Literal},
+        expressions::{Expression, Literal},
         token::{Span, Token, Type},
     },
     result::RuntimeError,
@@ -94,19 +94,19 @@ impl<'a> Parser<'a> {
     ///
     /// * `message`: Error description.
     /// * `span`: Error location.
-    fn add_error(&mut self, message: &'static str, span: Span) -> RuntimeError {
+    fn add_error(&mut self, message: String, span: Span) -> RuntimeError {
         let err = RuntimeError::ParsingError { message, span };
         self.errors.push(err.clone());
         err
     }
 
     /// The entry point for parsing an expression
-    pub fn parse_expression(&mut self) -> Result<Expr, RuntimeError> {
+    pub fn parse_expression(&mut self) -> Result<Expression, RuntimeError> {
         self.equality()
     }
 
     /// Express equalities.
-    fn equality(&mut self) -> Result<Expr, RuntimeError> {
+    fn equality(&mut self) -> Result<Expression, RuntimeError> {
         let mut expr = self.term()?;
 
         while self.match_token(&[
@@ -118,7 +118,7 @@ impl<'a> Parser<'a> {
             let operator = self.previous();
             let right = self.term()?;
 
-            expr = Expr::Binary {
+            expr = Expression::Binary {
                 left: Box::new(expr),
                 operator,
                 right: Box::new(right),
@@ -129,14 +129,14 @@ impl<'a> Parser<'a> {
     }
 
     /// Express terms.
-    fn term(&mut self) -> Result<Expr, RuntimeError> {
+    fn term(&mut self) -> Result<Expression, RuntimeError> {
         let mut expr = self.factor()?;
 
         while self.match_token(&[Type::Plus, Type::Minus]) {
             let operator = self.previous();
             let right = self.factor()?;
 
-            expr = Expr::Binary {
+            expr = Expression::Binary {
                 left: Box::new(expr),
                 operator,
                 right: Box::new(right),
@@ -147,7 +147,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express factors (multiplication)
-    fn factor(&mut self) -> Result<Expr, RuntimeError> {
+    fn factor(&mut self) -> Result<Expression, RuntimeError> {
         let mut expr = self.primary()?;
 
         while self.match_token(&[Type::Multiply, Type::SlashForward]) {
@@ -155,7 +155,7 @@ impl<'a> Parser<'a> {
             let operator = self.previous();
             let right = self.primary()?;
 
-            expr = Expr::Binary {
+            expr = Expression::Binary {
                 left: Box::new(expr),
                 operator,
                 right: Box::new(right),
@@ -166,15 +166,15 @@ impl<'a> Parser<'a> {
     }
 
     /// Express literals and groupings.
-    fn primary(&mut self) -> Result<Expr, RuntimeError> {
+    fn primary(&mut self) -> Result<Expression, RuntimeError> {
         if self.match_token(&[Type::KeywordTrue]) {
-            return Ok(Expr::Literal(Literal::Boolean(true)));
+            return Ok(Expression::Literal(Literal::Boolean(true)));
         }
         if self.match_token(&[Type::KeywordFalse]) {
-            return Ok(Expr::Literal(Literal::Boolean(false)));
+            return Ok(Expression::Literal(Literal::Boolean(false)));
         }
         if self.match_token(&[Type::KeywordNil]) {
-            return Ok(Expr::Literal(Literal::Nil));
+            return Ok(Expression::Literal(Literal::Nil));
         }
 
         if self.match_token(&[Type::LiteralNumber, Type::LiteralString]) {
@@ -186,15 +186,19 @@ impl<'a> Parser<'a> {
                     x
                 } else {
                     let err = self.add_error(
-                        "Could not parse numeric value.",
+                        format!(
+                            "Could not parse as numeric value: {raw_text}."
+                        ),
                         token.span,
                     );
                     return Err(err);
                 };
-                return Ok(Expr::Literal(Literal::Number(val)));
+                return Ok(Expression::Literal(Literal::Number(val)));
             }
 
-            return Ok(Expr::Literal(Literal::String(raw_text.to_string())));
+            return Ok(Expression::Literal(Literal::String(
+                raw_text.to_string(),
+            )));
         }
 
         if self.match_token(&[Type::ParenthesisLeft]) {
@@ -205,16 +209,20 @@ impl<'a> Parser<'a> {
                 self.advance();
             } else {
                 let err = self.add_error(
-                    "Expected ')' after expression.",
+                    "Expected ')' after expression.".to_string(),
                     self.peek().span,
                 );
                 return Err(err);
             }
-            return Ok(Expr::Grouping(Box::new(expr)));
+            return Ok(Expression::Grouping(Box::new(expr)));
         }
 
-        let err =
-            self.add_error("Syntax Error: Unexpected token ", self.peek().span);
+        let token = self.peek();
+        let raw_text = &self.source[token.span.start..token.span.end];
+        let err = self.add_error(
+            format!("Syntax Error: Unexpected token {raw_text}"),
+            token.span,
+        );
         self.synchronize();
         Err(err)
     }
@@ -225,7 +233,7 @@ impl<'a> Parser<'a> {
         self.advance();
 
         while !self.is_at_end() {
-            if self.previous().typ == Type::NewLine {
+            if self.previous().typ == Type::SemiColon {
                 return;
             }
             match self.peek().typ {
@@ -246,7 +254,7 @@ impl<'a> Parser<'a> {
 mod tests {
     use crate::{
         ast::{
-            expr::{Expr, Literal},
+            expressions::{Expression, Literal},
             token::{Span, Token, Type},
         },
         parser::Parser,
@@ -265,10 +273,10 @@ mod tests {
 
         assert_eq!(
             parser.parse_expression().unwrap(),
-            Expr::Binary {
-                left: Box::new(Expr::Literal(Literal::Number(1.0))),
+            Expression::Binary {
+                left: Box::new(Expression::Literal(Literal::Number(1.0))),
                 operator: Token::new(Type::LessThan, Span::new(2, 3)),
-                right: Box::new(Expr::Literal(Literal::Number(2.0))),
+                right: Box::new(Expression::Literal(Literal::Number(2.0))),
             }
         );
     }
