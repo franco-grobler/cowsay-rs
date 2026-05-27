@@ -80,9 +80,13 @@ pub enum Type {
     /// !
     Bang,
     /// ;
-    SemiColon,
+    Semicolon,
+    /// $
+    DollarSign,
 
     // Keywords
+    /// print
+    KeywordPrint, // TODO: remove this
     /// ne
     KeywordNotEqual,
     /// unless
