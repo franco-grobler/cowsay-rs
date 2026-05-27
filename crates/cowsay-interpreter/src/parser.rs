@@ -5,7 +5,7 @@ use crate::{
         expr::{Expr, Literal},
         token::{Span, Token, Type},
     },
-    result::{self, RuntimeError},
+    result::RuntimeError,
 };
 
 /// Construct grammar from the lexer.
@@ -19,7 +19,7 @@ pub struct Parser<'a> {
     tokens: Vec<Token>,
     source: &'a str,
     current: usize,
-    errors: Vec<result::RuntimeError>,
+    errors: Vec<RuntimeError>,
 }
 
 impl<'a> Parser<'a> {
@@ -94,23 +94,19 @@ impl<'a> Parser<'a> {
     ///
     /// * `message`: Error description.
     /// * `span`: Error location.
-    pub fn add_error(
-        &mut self,
-        message: &'static str,
-        span: Span,
-    ) -> result::RuntimeError {
-        let err = result::RuntimeError::ParsingError { message, span };
+    fn add_error(&mut self, message: &'static str, span: Span) -> RuntimeError {
+        let err = RuntimeError::ParsingError { message, span };
         self.errors.push(err.clone());
         err
     }
 
     /// The entry point for parsing an expression
-    pub fn parse_expression(&mut self) -> Result<Expr, result::RuntimeError> {
+    pub fn parse_expression(&mut self) -> Result<Expr, RuntimeError> {
         self.equality()
     }
 
     /// Express equalities.
-    fn equality(&mut self) -> Result<Expr, result::RuntimeError> {
+    fn equality(&mut self) -> Result<Expr, RuntimeError> {
         let mut expr = self.term()?;
 
         while self.match_token(&[
@@ -133,7 +129,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express terms.
-    fn term(&mut self) -> Result<Expr, result::RuntimeError> {
+    fn term(&mut self) -> Result<Expr, RuntimeError> {
         let mut expr = self.factor()?;
 
         while self.match_token(&[Type::Plus, Type::Minus]) {
@@ -151,7 +147,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express factors (multiplication)
-    fn factor(&mut self) -> Result<Expr, result::RuntimeError> {
+    fn factor(&mut self) -> Result<Expr, RuntimeError> {
         let mut expr = self.primary()?;
 
         while self.match_token(&[Type::Multiply, Type::SlashForward]) {
@@ -170,7 +166,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Express literals and groupings.
-    fn primary(&mut self) -> Result<Expr, result::RuntimeError> {
+    fn primary(&mut self) -> Result<Expr, RuntimeError> {
         if self.match_token(&[Type::KeywordTrue]) {
             return Ok(Expr::Literal(Literal::Boolean(true)));
         }
@@ -219,6 +215,7 @@ impl<'a> Parser<'a> {
 
         let err =
             self.add_error("Syntax Error: Unexpected token ", self.peek().span);
+        self.synchronize();
         Err(err)
     }
 
