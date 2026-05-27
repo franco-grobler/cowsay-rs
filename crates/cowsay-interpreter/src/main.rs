@@ -4,6 +4,7 @@ use std::env;
 use std::fs;
 use std::process;
 
+use cowsay_interpreter::evaluator::eval::Evaluator;
 use cowsay_interpreter::lexer::scanner::Scanner;
 use cowsay_interpreter::parser;
 
@@ -56,12 +57,15 @@ fn run(source: &str) {
 
     let tokens = scanner.tokens();
     let mut parser = parser::Parser::new(tokens.to_vec(), source);
-    let expr = match parser.parse_expression() {
-        Ok(x) => x,
-        Err(e) => {
-            eprintln!("Parsing error: {e}");
-            process::exit(74);
+    match parser.parse_expression() {
+        Ok(ast) => {
+            // 3. Evaluate
+            let mut evaluator = Evaluator::new();
+            match evaluator.evaluate(&ast) {
+                Ok(result) => println!("Result: {result}"),
+                Err(e) => eprintln!("{e}"),
+            }
         }
-    };
-    println!("Got expression: {expr:?}");
+        Err(e) => eprintln!("Syntax Error: {e}"),
+    }
 }
