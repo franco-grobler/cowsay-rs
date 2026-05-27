@@ -1,4 +1,4 @@
 //! Abstract Syntax Tree (AST) module
 
-pub mod expr;
+pub mod expressions;
 pub mod token;
