@@ -2,6 +2,8 @@
 
 /// Abstract Syntax Tree (AST) module
 pub mod ast;
+/// Evaluate expression
+pub mod evaluator;
 /// Lexer
 pub mod lexer;
 /// Parser
