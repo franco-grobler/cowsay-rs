@@ -35,10 +35,17 @@ impl std::fmt::Display for Value {
 /// Errors encountered during runtime.
 #[derive(Debug, Clone)]
 pub enum RuntimeError {
+    /// Error during execution
+    ExecutionError {
+        /// Execution message.
+        message: String,
+        /// Location
+        span: Span,
+    },
     /// Error during parsing
     ParsingError {
         /// Parsing message.
-        message: &'static str,
+        message: String,
         /// Location
         span: Span,
     },
@@ -47,7 +54,7 @@ pub enum RuntimeError {
         /// Expected type.
         expected: &'static str,
         /// Evaluated type.
-        found: Value,
+        found: [Value; 2],
         /// Location
         span: Span,
     },
@@ -84,13 +91,20 @@ impl std::fmt::Display for RuntimeError {
             Self::DivisionByZero { .. } => {
                 write!(f, "Math Error: Division by zero")
             }
+            Self::ExecutionError { message, .. } => {
+                write!(f, "Execution Error: {message}")
+            }
             Self::ParsingError { message, .. } => {
                 write!(f, "Parsing Error: {message}")
             }
             Self::TypeMismatch {
                 expected, found, ..
             } => {
-                write!(f, "Type Error: Expected {expected}, found {found}")
+                write!(
+                    f,
+                    "Type Error: Expected {expected}, found {} and {}",
+                    found[0], found[1],
+                )
             }
             Self::UndefinedFunction { name, .. } => {
                 write!(f, "Reference Error: Undefined function '{name}'")
