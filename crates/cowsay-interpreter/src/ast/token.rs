@@ -77,6 +77,10 @@ pub enum Type {
     SlashForward,
     /// \
     SlashBackward,
+    /// !
+    Bang,
+    /// ;
+    SemiColon,
 
     // Keywords
     /// ne
