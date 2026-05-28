@@ -1,4 +1,5 @@
 use crate::ast::expressions::{Expression, Literal as AstLiteral};
+use crate::ast::statements::Statement;
 use crate::ast::token::Type;
 use crate::evaluator::utils::{evaluate_binary, is_truthy};
 use crate::result::{RuntimeError, Value};
@@ -11,6 +12,34 @@ impl Evaluator {
     /// Create a new [`Evaluator`].
     pub const fn new() -> Self {
         Self
+    }
+    /// Executes a statement. Notice it returns () on success.
+    #[allow(unused_variables)]
+    pub fn execute(&mut self, stmt: &Statement) -> Result<(), RuntimeError> {
+        match stmt {
+            Statement::Expression(expr) => {
+                // We evaluate it, but throw the resulting Value away!
+                self.evaluate(expr)?;
+                Ok(())
+            }
+            Statement::Print(expr) => {
+                // Evaluate the inner expression, then print it
+                let value = self.evaluate(expr)?;
+                println!("{value}");
+                Ok(())
+            }
+            Statement::Variable { name, initializer } => {
+                // We will handle this when we build the Environment
+                let value = if let Some(expr) = initializer {
+                    self.evaluate(expr)?
+                } else {
+                    Value::Nil
+                };
+                // self.environment.define(name, value);
+                // println!("{}={}", name.typ, value);
+                Ok(())
+            }
+        }
     }
 
     /// The core evaluation method. It takes an AST node and reduces it to a runtime Value.
