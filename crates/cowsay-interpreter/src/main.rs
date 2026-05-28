@@ -56,16 +56,10 @@ fn run(source: &str) {
     scanner.scan_tokens();
 
     let tokens = scanner.tokens();
-    let mut parser = parser::Parser::new(tokens.to_vec(), source);
-    match parser.parse_expression() {
-        Ok(ast) => {
-            // 3. Evaluate
-            let mut evaluator = Evaluator::new();
-            match evaluator.evaluate(&ast) {
-                Ok(result) => println!("Result: {result}"),
-                Err(e) => eprintln!("{e}"),
-            }
-        }
-        Err(e) => eprintln!("Syntax Error: {e}"),
+    let mut parser = parser::core::Parser::new(tokens.to_vec(), source);
+    let statements = parser.parse();
+    let mut evaluator = Evaluator::new();
+    for statement in statements {
+        let _ = evaluator.execute(&statement);
     }
 }

@@ -47,8 +47,6 @@ pub enum Type {
     // Operators
     /// EOF
     EndOfFile,
-    /// \n
-    NewLine,
     /// <<
     Redirect,
     /// <<-
@@ -81,8 +79,6 @@ pub enum Type {
     Bang,
     /// ;
     Semicolon,
-    /// $
-    DollarSign,
 
     // Keywords
     /// print
@@ -107,6 +103,8 @@ pub enum Type {
     Function,
     /// Return
     Return,
+    /// ^$[a..zA..Z1..9]+
+    Variable,
 
     // Literals
     /// Boolean

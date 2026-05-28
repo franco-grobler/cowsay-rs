@@ -6,35 +6,32 @@ use crate::{
 use super::core::Parser;
 
 impl Parser<'_> {
-    /// Checks if we are declaring a variable, otherwise parses a normal statement
-    fn declaration(&mut self) -> Result<Statement, RuntimeError> {
-        if self.match_token(&[Type::DollarSign]) {
+    /// Check for variable declaring, otherwise parse a normal statement
+    pub(super) fn declaration(&mut self) -> Result<Statement, RuntimeError> {
+        if self.match_token(&[Type::Variable]) {
             return self.let_declaration();
         }
         self.statement()
     }
 
-    /// Parses variables: `let x = 5;`
+    /// Parse variables
     fn let_declaration(&mut self) -> Result<Statement, RuntimeError> {
-        // 1. We must find an identifier (variable name) next
-        let name = if self.match_token(&[Type::Identifier]) {
-            self.previous()
+        let name = if self.match_token(&[Type::Variable]) {
+            *self.peek()
         } else {
             return Err(self.add_error(
-                "Syntax Error: Expected variable name after 'let'.".to_string(),
+                "Syntax Error: Expected variable name after '$'.".to_string(),
                 self.peek().span,
             ));
         };
 
-        // 2. Check if there is an '=' sign
         let initializer: Option<Expression> =
             if self.match_token(&[Type::Equal]) {
-                Some(self.parse_expression()?)
+                Some(self.equality()?)
             } else {
                 None
             };
 
-        // 3. We MUST find a semicolon at the end
         self.consume(
             Type::Semicolon,
             "Expected ';' after variable declaration.".to_string(),
@@ -52,13 +49,13 @@ impl Parser<'_> {
     }
 
     fn print_statement(&mut self) -> Result<Statement, RuntimeError> {
-        let value = self.parse_expression()?;
+        let value = self.equality()?;
         self.consume(Type::Semicolon, "Expected ';' after value.".to_string())?;
         Ok(Statement::Print(value))
     }
 
     fn expression_statement(&mut self) -> Result<Statement, RuntimeError> {
-        let expr = self.parse_expression()?;
+        let expr = self.equality()?;
         self.consume(
             Type::Semicolon,
             "Expected ';' after expression.".to_string(),

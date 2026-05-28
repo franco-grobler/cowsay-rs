@@ -1,5 +1,6 @@
 //! Parser implementation.
 
+use crate::ast::statements::Statement;
 use crate::ast::token::{Span, Token, Type};
 use crate::result::RuntimeError;
 
@@ -26,6 +27,21 @@ impl<'a> Parser<'a> {
             current: 0,
             errors: Vec::new(),
         }
+    }
+
+    /// The entry point for parsing an AST.
+    pub fn parse(&mut self) -> Vec<Statement> {
+        let mut statements = Vec::new();
+
+        while !self.is_at_end() {
+            if let Ok(stmt) = self.declaration() {
+                statements.push(stmt);
+            } else {
+                self.synchronize();
+            }
+        }
+
+        statements
     }
 
     /// Look at the current token without consuming it.
@@ -139,8 +155,10 @@ mod tests {
     use crate::{
         ast::{
             expressions::{Expression, Literal},
+            statements::Statement,
             token::{Span, Token, Type},
         },
+        number::Number,
         parser::core::Parser,
     };
 
@@ -156,12 +174,16 @@ mod tests {
         let mut parser = Parser::new(tokens, source);
 
         assert_eq!(
-            parser.parse_expression().unwrap(),
-            Expression::Binary {
-                left: Box::new(Expression::Literal(Literal::Number(1.0))),
+            parser.parse(),
+            vec![Statement::Expression(Expression::Binary {
+                left: Box::new(Expression::Literal(Literal::Number(Number(
+                    1.0
+                )))),
                 operator: Token::new(Type::LessThan, Span::new(2, 3)),
-                right: Box::new(Expression::Literal(Literal::Number(2.0))),
-            }
+                right: Box::new(Expression::Literal(Literal::Number(Number(
+                    2.0
+                )))),
+            })]
         );
     }
 }
