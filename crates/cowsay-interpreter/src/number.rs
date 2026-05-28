@@ -1,15 +1,18 @@
+//! Numeric value handling
 use std::{
     cmp::Ordering,
     fmt::Display,
     ops::{Add, Div, Mul, Neg, Sub},
 };
 
+/// Shadow float 64.
 #[derive(Debug, Clone, Copy)]
 pub struct Number(pub f64);
 
 impl From<i64> for Number {
+    #[allow(clippy::cast_precision_loss)]
     fn from(value: i64) -> Self {
-        Number(value as f64)
+        Self(value as f64)
     }
 }
 
@@ -25,7 +28,7 @@ impl Add for Number {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Number(self.0 + rhs.0)
+        Self(self.0 + rhs.0)
     }
 }
 
@@ -33,7 +36,7 @@ impl Add<f64> for Number {
     type Output = Self;
 
     fn add(self, rhs: f64) -> Self::Output {
-        Number(self.0 + rhs)
+        Self(self.0 + rhs)
     }
 }
 
@@ -41,7 +44,7 @@ impl Add<i64> for Number {
     type Output = Self;
 
     fn add(self, rhs: i64) -> Self::Output {
-        Number(self.0) + Number::from(rhs)
+        Self(self.0) + Self::from(rhs)
     }
 }
 
@@ -49,7 +52,7 @@ impl Neg for Number {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Number(-self.0)
+        Self(-self.0)
     }
 }
 
@@ -57,7 +60,7 @@ impl Sub for Number {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Number(self.0 - rhs.0)
+        Self(self.0 - rhs.0)
     }
 }
 
@@ -65,7 +68,7 @@ impl Mul for Number {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        Number(self.0 * rhs.0)
+        Self(self.0 * rhs.0)
     }
 }
 
@@ -73,12 +76,12 @@ impl Div for Number {
     type Output = Self;
 
     fn div(self, rhs: Self) -> Self::Output {
-        Number(self.0 / rhs.0)
+        Self(self.0 / rhs.0)
     }
 }
 
 impl Display for Number {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self}")
+        write!(f, "{}", self.0)
     }
 }

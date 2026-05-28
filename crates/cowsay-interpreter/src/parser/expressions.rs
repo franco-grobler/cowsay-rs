@@ -4,6 +4,7 @@ use crate::{
         expressions::{Expression, Literal},
         token::Type,
     },
+    number::Number,
     result::RuntimeError,
 };
 
@@ -101,7 +102,7 @@ impl Parser<'_> {
                     );
                     return Err(err);
                 };
-                return Ok(Expression::Literal(Literal::Number(val)));
+                return Ok(Expression::Literal(Literal::Number(Number(val))));
             }
 
             return Ok(Expression::Literal(Literal::String(
