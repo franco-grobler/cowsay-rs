@@ -9,13 +9,8 @@ use crate::{
 };
 
 impl Parser<'_> {
-    /// The entry point for parsing an expression
-    pub fn parse_expression(&mut self) -> Result<Expression, RuntimeError> {
-        self.equality()
-    }
-
     /// Express equalities.
-    fn equality(&mut self) -> Result<Expression, RuntimeError> {
+    pub(super) fn equality(&mut self) -> Result<Expression, RuntimeError> {
         let mut expr = self.term()?;
 
         while self.match_token(&[
@@ -111,7 +106,7 @@ impl Parser<'_> {
         }
 
         if self.match_token(&[Type::ParenthesisLeft]) {
-            let expr = self.parse_expression()?;
+            let expr = self.equality()?;
 
             self.consume(
                 Type::ParenthesisRight,
