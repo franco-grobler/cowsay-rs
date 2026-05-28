@@ -4,7 +4,7 @@ use crate::ast::expressions::Expression;
 use crate::ast::token::Token;
 
 /// Statements
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub enum Statement {
     /// An expression followed by a semicolon (e.g., `5 + 5;`)
     Expression(Expression),

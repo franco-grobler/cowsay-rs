@@ -2,20 +2,20 @@
 
 use std::result;
 
-use crate::ast::token::Span;
+use crate::{ast::token::Span, number::Number};
 
 /// Possible runtime results.
 pub type Result<T> = result::Result<T, RuntimeError>;
 
 /// Runtime values.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Value {
     /// Nil/None/undef
     Nil,
     /// Literal boolean.
     Boolean(bool),
     /// Literal number.
-    Number(f64),
+    Number(Number),
     /// Literal string.
     String(String),
 }

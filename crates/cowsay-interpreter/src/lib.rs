@@ -6,6 +6,8 @@ pub mod ast;
 pub mod evaluator;
 /// Lexer
 pub mod lexer;
+// Helper module for handling numbers
+pub mod number;
 /// Parser
 pub mod parser;
 /// Runtime values and errors.

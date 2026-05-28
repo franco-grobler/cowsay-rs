@@ -1,9 +1,9 @@
 //! Expressions
 
-use crate::ast::token::Token;
+use crate::{ast::token::Token, number::Number};
 
 /// Expressions.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub enum Expression {
     /// Binary expression.
     Binary {
@@ -28,10 +28,10 @@ pub enum Expression {
 }
 
 /// The AST-specific Literal
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub enum Literal {
     /// Numeric literal
-    Number(f64),
+    Number(Number),
     /// String literal
     String(String),
     /// Boolean literal
