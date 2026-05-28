@@ -3,6 +3,7 @@
 use crate::ast::token::Span;
 use crate::ast::token::Token;
 use crate::ast::token::Type;
+use crate::lexer::utils::is_valid_identifier;
 use std::{iter::Peekable, str::CharIndices};
 
 use crate::lexer::utils;
@@ -63,11 +64,17 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Scans for a variable.
+    /// Consume $, then treat as identifier
+    fn scan_variable(&mut self, start_idx: usize) {
+        // Consume $
+        self.advance();
+        self.scan_identifier(start_idx);
+    }
+
     /// Scans a sequence of letters/numbers and checks if it is a keyword.
     /// * `start_idx`: Identifier zero index ($).
     fn scan_identifier(&mut self, start_idx: usize) {
-        // Consume $
-        self.advance();
         // Consume characters.
         while let Some(c) = self.peek() {
             if utils::is_valid_identifier(c) {
@@ -83,6 +90,7 @@ impl<'a> Scanner<'a> {
             "true" | "false" => Type::LiteralBoolean,
             "unless" => Type::KeywordUnless,
             "ne" => Type::KeywordNotEqual,
+            text if text.starts_with('$') => Type::Variable,
             _ => Type::Identifier,
         };
 
@@ -178,19 +186,17 @@ impl<'a> Scanner<'a> {
                         self.add_token(Type::Error, start_idx);
                     }
                 }
-
                 '"' => {
                     self.scan_string(start_idx, '"');
                 }
-
-                '\n' => {
-                    self.add_token(Type::NewLine, start_idx);
+                '$' => {
+                    self.scan_variable(start_idx);
                 }
 
                 // Ignore whitespace
-                ' ' | '\r' | '\t' => {}
+                ' ' | '\r' | '\t' | '\n' => {}
 
-                '$' => {
+                c if is_valid_identifier(c) => {
                     self.scan_identifier(start_idx);
                 }
 
@@ -226,7 +232,7 @@ mod tests {
         let mut scanner = Scanner::new("$hello");
         scanner.scan_tokens();
         let expected = vec![
-            Token::new(Type::Identifier, Span::new(0, 6)),
+            Token::new(Type::Variable, Span::new(0, 6)),
             Token::new(Type::EndOfFile, Span::new(6, 6)),
         ];
 
@@ -238,7 +244,7 @@ mod tests {
         let mut scanner = Scanner::new("$var = \"hello\"");
         scanner.scan_tokens();
         let expected = vec![
-            Token::new(Type::Identifier, Span::new(0, 4)),
+            Token::new(Type::Variable, Span::new(0, 4)),
             Token::new(Type::Equal, Span::new(5, 6)),
             Token::new(Type::LiteralString, Span::new(7, 14)),
             Token::new(Type::EndOfFile, Span::new(14, 14)),
