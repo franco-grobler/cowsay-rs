@@ -90,6 +90,7 @@ impl<'a> Scanner<'a> {
             "true" | "false" => Type::LiteralBoolean,
             "unless" => Type::KeywordUnless,
             "ne" => Type::KeywordNotEqual,
+            "print" => Type::KeywordPrint,
             text if text.starts_with('$') => Type::Variable,
             _ => Type::Identifier,
         };
@@ -192,6 +193,9 @@ impl<'a> Scanner<'a> {
                 '$' => {
                     self.scan_variable(start_idx);
                 }
+                ';' => {
+                    self.add_token(Type::Semicolon, start_idx);
+                }
 
                 // Ignore whitespace
                 ' ' | '\r' | '\t' | '\n' => {}
@@ -262,6 +266,21 @@ mod tests {
             Token::new(Type::LessThan, Span::new(2, 3)),
             Token::new(Type::LiteralNumber, Span::new(4, 5)),
             Token::new(Type::EndOfFile, Span::new(5, 5)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
+    fn can_read_basic_declaration() {
+        let source = r#"print "hello";"#;
+        let mut scanner = Scanner::new(source);
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::KeywordPrint, Span::new(0, 5)),
+            Token::new(Type::LiteralString, Span::new(6, 13)),
+            Token::new(Type::Semicolon, Span::new(13, 14)),
+            Token::new(Type::EndOfFile, Span::new(14, 14)),
         ];
 
         assert_eq!(scanner.tokens(), expected);
