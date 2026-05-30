@@ -272,7 +272,7 @@ mod tests {
     }
 
     #[test]
-    fn can_read_basic_declaration() {
+    fn can_read_print_declaration() {
         let source = r#"print "hello";"#;
         let mut scanner = Scanner::new(source);
         scanner.scan_tokens();
@@ -281,6 +281,22 @@ mod tests {
             Token::new(Type::LiteralString, Span::new(6, 13)),
             Token::new(Type::Semicolon, Span::new(13, 14)),
             Token::new(Type::EndOfFile, Span::new(14, 14)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
+    fn can_read_variable_declaration() {
+        let source = r#"$var="hello";"#;
+        let mut scanner = Scanner::new(source);
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Variable, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(4, 5)),
+            Token::new(Type::LiteralString, Span::new(5, 12)),
+            Token::new(Type::Semicolon, Span::new(12, 13)),
+            Token::new(Type::EndOfFile, Span::new(13, 13)),
         ];
 
         assert_eq!(scanner.tokens(), expected);

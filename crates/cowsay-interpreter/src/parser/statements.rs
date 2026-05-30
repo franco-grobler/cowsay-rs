@@ -9,21 +9,16 @@ impl Parser<'_> {
     /// Check for variable declaring, otherwise parse a normal statement
     pub(super) fn declaration(&mut self) -> Result<Statement, RuntimeError> {
         if self.match_token(&[Type::Variable]) {
-            return self.let_declaration();
+            return self.variable_declaration();
         }
         self.statement()
     }
 
     /// Parse variables
-    fn let_declaration(&mut self) -> Result<Statement, RuntimeError> {
-        let name_token = if self.match_token(&[Type::Variable]) {
-            *self.peek()
-        } else {
-            return Err(self.add_error(
-                "Syntax Error: Expected variable name after '$'.".to_string(),
-                self.peek().span,
-            ));
-        };
+    fn variable_declaration(&mut self) -> Result<Statement, RuntimeError> {
+        let name_token = self.previous();
+        let name = &self.source[name_token.span.start + 1..name_token.span.end]
+            .to_string();
 
         let initializer: Option<Expression> =
             if self.match_token(&[Type::Equal]) {
@@ -36,8 +31,6 @@ impl Parser<'_> {
             Type::Semicolon,
             "Expected ';' after variable declaration.".to_string(),
         )?;
-        let name = &self.source[name_token.span.start + 1..name_token.span.end]
-            .to_string();
 
         Ok(Statement::Variable {
             name: name.clone(),

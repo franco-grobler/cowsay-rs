@@ -109,6 +109,7 @@ impl<'a> Parser<'a> {
         message: String,
         span: Span,
     ) -> RuntimeError {
+        println!("Error encountered: {message}");
         let err = RuntimeError::ParsingError { message, span };
         self.errors.push(err.clone());
         err
@@ -203,6 +204,30 @@ mod tests {
             vec![Statement::Print(Expression::Literal(Literal::String(
                 "\"hello\"".to_string()
             )))]
+        );
+    }
+
+    #[test]
+    fn can_read_variable_devlaration() {
+        let source = r#"$var="hello";"#;
+        let tokens = vec![
+            Token::new(Type::Variable, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(4, 5)),
+            Token::new(Type::LiteralString, Span::new(5, 12)),
+            Token::new(Type::Semicolon, Span::new(12, 13)),
+            Token::new(Type::EndOfFile, Span::new(13, 13)),
+        ];
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse(),
+            vec![Statement::Variable {
+                name: "var".to_string(),
+                name_token: Token::new(Type::Variable, Span::new(0, 4)),
+                initializer: Some(Expression::Literal(Literal::String(
+                    "\"hello\"".to_string()
+                )))
+            }]
         );
     }
 }
