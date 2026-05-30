@@ -40,7 +40,6 @@ impl<'a> Parser<'a> {
                 self.synchronize();
             }
         }
-
         statements
     }
 
@@ -164,12 +163,13 @@ mod tests {
 
     #[test]
     fn can_read_comparison() {
-        let source = "1 < 2";
+        let source = "1 < 2;";
         let tokens = vec![
             Token::new(Type::LiteralNumber, Span::new(0, 1)),
             Token::new(Type::LessThan, Span::new(2, 3)),
             Token::new(Type::LiteralNumber, Span::new(4, 5)),
-            Token::new(Type::EndOfFile, Span::new(5, 5)),
+            Token::new(Type::Semicolon, Span::new(6, 7)),
+            Token::new(Type::EndOfFile, Span::new(7, 7)),
         ];
         let mut parser = Parser::new(tokens, source);
 
@@ -184,6 +184,25 @@ mod tests {
                     2.0
                 )))),
             })]
+        );
+    }
+
+    #[test]
+    fn can_read_print_statements() {
+        let source = r#"print "hello";"#;
+        let tokens = vec![
+            Token::new(Type::KeywordPrint, Span::new(0, 5)),
+            Token::new(Type::LiteralString, Span::new(6, 13)),
+            Token::new(Type::Semicolon, Span::new(13, 14)),
+            Token::new(Type::EndOfFile, Span::new(14, 14)),
+        ];
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse(),
+            vec![Statement::Print(Expression::Literal(Literal::String(
+                "\"hello\"".to_string()
+            )))]
         );
     }
 }
