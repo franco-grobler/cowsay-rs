@@ -1,6 +1,6 @@
 //! Handling Cowfile tokens
 
-use std::hash::Hash;
+use std::{fmt::Display, hash::Hash};
 
 /// Byte index of a lexeme.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
@@ -35,6 +35,12 @@ impl Token {
     /// Creates a new [`Token`].
     pub const fn new(typ: Type, span: Span) -> Self {
         Self { typ, span }
+    }
+}
+
+impl Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Token -> ({}, {})", self.span.start, self.span.end)
     }
 }
 
