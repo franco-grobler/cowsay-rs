@@ -14,10 +14,12 @@ pub enum Statement {
     /// A print statement (e.g., `print "Hello";`)
     Print(Expression),
 
-    /// Variable declaration.
+    /// Variable
     Variable {
+        /// Parsed name
+        name: String,
         /// Identifier token.
-        name: Token,
+        name_token: Token,
         /// Initial value.
         initializer: Option<Expression>,
     },
@@ -28,8 +30,12 @@ impl Display for Statement {
         match self {
             Self::Expression(e) => write!(f, "expression: {e}"),
             Self::Print(b) => write!(f, "print {b}"),
-            Self::Variable { name, initializer } => {
-                write!(f, "var {name} = {initializer:?}")
+            Self::Variable {
+                name,
+                name_token,
+                initializer,
+            } => {
+                write!(f, "var {name} = {initializer:?} at {name_token}")
             }
         }
     }
