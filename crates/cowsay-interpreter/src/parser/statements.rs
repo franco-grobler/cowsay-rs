@@ -16,7 +16,7 @@ impl Parser<'_> {
 
     /// Parse variables
     fn let_declaration(&mut self) -> Result<Statement, RuntimeError> {
-        let name = if self.match_token(&[Type::Variable]) {
+        let name_token = if self.match_token(&[Type::Variable]) {
             *self.peek()
         } else {
             return Err(self.add_error(
@@ -36,8 +36,14 @@ impl Parser<'_> {
             Type::Semicolon,
             "Expected ';' after variable declaration.".to_string(),
         )?;
+        let name = &self.source[name_token.span.start + 1..name_token.span.end]
+            .to_string();
 
-        Ok(Statement::Variable { name, initializer })
+        Ok(Statement::Variable {
+            name: name.clone(),
+            name_token,
+            initializer,
+        })
     }
 
     /// Parses normal statements (print, blocks, or expression statements)

@@ -1,17 +1,26 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::ast::expressions::{Expression, Literal as AstLiteral};
 use crate::ast::statements::Statement;
 use crate::ast::token::Type;
+use crate::evaluator::environment::Environment;
 use crate::evaluator::utils::{evaluate_binary, is_truthy};
 use crate::result::{RuntimeError, Value};
 
 /// Expression evaluator.
 #[derive(Debug)]
-pub struct Evaluator;
+pub struct Evaluator {
+    /// Scoped variables
+    pub environment: Rc<RefCell<Environment>>,
+}
 
 impl Evaluator {
     /// Create a new [`Evaluator`].
-    pub const fn new() -> Self {
-        Self
+    pub fn new() -> Self {
+        Self {
+            environment: Rc::new(RefCell::new(Environment::new())),
+        }
     }
     /// Executes a statement. Notice it returns () on success.
     #[allow(unused_variables)]
@@ -28,15 +37,16 @@ impl Evaluator {
                 println!("{value}");
                 Ok(())
             }
-            Statement::Variable { name, initializer } => {
-                // We will handle this when we build the Environment
-                let value = if let Some(expr) = initializer {
-                    self.evaluate(expr)?
-                } else {
-                    Value::Nil
+            Statement::Variable {
+                name,
+                name_token,
+                initializer,
+            } => {
+                let value = match initializer {
+                    Some(expr) => self.evaluate(expr)?,
+                    None => Value::Nil,
                 };
-                // self.environment.define(name, value);
-                // println!("{}={}", name.typ, value);
+                self.environment.borrow_mut().define(name.clone(), value);
                 Ok(())
             }
         }
@@ -49,7 +59,6 @@ impl Evaluator {
         expr: &Expression,
     ) -> Result<Value, RuntimeError> {
         match expr {
-            // 1. Literals: Convert the compile-time AST literal into a runtime Value
             Expression::Literal(ast_literal) => {
                 let value = match ast_literal {
                     AstLiteral::Number(f) => Value::Number(*f),
@@ -60,10 +69,8 @@ impl Evaluator {
                 Ok(value)
             }
 
-            // 2. Grouping: Simply unwrap the parentheses and evaluate what's inside
             Expression::Grouping(inner_expr) => self.evaluate(inner_expr),
 
-            // 3. Unary: Evaluate the right side first, then apply the operator (- or !)
             Expression::Unary {
                 operator,
                 expression,
@@ -94,7 +101,6 @@ impl Evaluator {
                 }
             }
 
-            // 4. Binary: Evaluate left and right, then apply the math/logic
             Expression::Binary {
                 left,
                 operator,
