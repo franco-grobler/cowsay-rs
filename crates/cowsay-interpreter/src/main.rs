@@ -2,6 +2,8 @@
 
 use std::env;
 use std::fs;
+use std::io;
+use std::io::Write;
 use std::process;
 
 use cowsay_interpreter::evaluator::eval::Evaluator;
@@ -40,15 +42,46 @@ fn run_file(path: &str) {
         }
     };
 
-    run(&source);
+    let mut evaluator = Evaluator::new();
+    run(&source, &mut evaluator);
 }
 
 fn run_prompt() {
-    println!("Starting REPL...");
-    // REPL loop logic goes here
+    let stdin = io::stdin();
+    let mut stdout = io::stdout();
+
+    let mut evaluator = Evaluator::new();
+    let mut buffer = String::new();
+
+    println!("Starting Lox REPL. Type Ctrl+D to exit.");
+
+    loop {
+        print!("> ");
+
+        if let Err(e) = stdout.flush() {
+            eprintln!("Failed to flush stdout: {e}");
+            break;
+        }
+
+        buffer.clear();
+
+        match stdin.read_line(&mut buffer) {
+            Ok(0) => {
+                println!("\nExiting REPL...");
+                break;
+            }
+            Ok(_) => {
+                run(buffer.trim(), &mut evaluator);
+            }
+            Err(e) => {
+                eprintln!("Error reading input: {e}");
+                break;
+            }
+        }
+    }
 }
 
-fn run(source: &str) {
+fn run(source: &str, evaluator: &mut Evaluator) {
     // Initialize the scanner with the source code
     let mut scanner = Scanner::new(source);
 
@@ -58,8 +91,8 @@ fn run(source: &str) {
     let tokens = scanner.tokens();
     let mut parser = parser::core::Parser::new(tokens.to_vec(), source);
     let statements = parser.parse();
-    let mut evaluator = Evaluator::new();
     for statement in statements {
         let _ = evaluator.execute(&statement);
     }
+    println!("Environment: {}", evaluator.environment.borrow());
 }
