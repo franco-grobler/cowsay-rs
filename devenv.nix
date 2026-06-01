@@ -33,8 +33,4 @@
       toolchainFile = ./rust-toolchain.toml;
     };
   };
-
-  enterShell = ''
-    unset DEVELOPER_DIR;
-  '';
 }
