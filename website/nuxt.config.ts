@@ -4,34 +4,34 @@ const debugSettings = import.meta.env.NODE_ENV === "local";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	app: {
-		head: {
-			title: "cowsay-rs", // fallback title
-			htmlAttrs: {
-				lang: "en",
-			},
-			link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-		},
-	},
+  app: {
+    head: {
+      title: "cowsay-rs", // fallback title
+      htmlAttrs: {
+        lang: "en",
+      },
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    },
+  },
 
-	compatibilityDate: "2025-07-15",
+  compatibilityDate: "2025-07-15",
 
-	css: ["./app/assets/css/main.css"],
+  css: ["./app/assets/css/main.css"],
 
-	imports: {
-		autoImport: false,
-	},
+  imports: {
+    autoImport: false,
+  },
 
-	devtools: {
-		enabled: debugSettings,
-	},
-	debug: debugSettings,
+  devtools: {
+    enabled: debugSettings,
+  },
+  debug: debugSettings,
 
-	modules: ["@nuxt/eslint"],
+  modules: ["@nuxt/eslint"],
 
-	ssr: false,
+  ssr: false,
 
-	vite: {
-		plugins: [tailwindcss()],
-	},
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
