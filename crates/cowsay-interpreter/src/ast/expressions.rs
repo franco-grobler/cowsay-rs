@@ -27,6 +27,18 @@ pub enum Expression {
         /// Expression receiving operator
         expression: Box<Expression>,
     },
+    /// Variable lookup expression
+    Variable {
+        /// Variable name
+        name: String,
+        ///  Error reporting
+        token: Token,
+    },
+    /// Interpolated string
+    InterpolatedString {
+        /// Parts of the string as expressions
+        parts: Vec<Expression>,
+    },
 }
 
 impl Display for Expression {
@@ -50,6 +62,12 @@ impl Display for Expression {
                 expression,
             } => {
                 write!(f, "Expression::Unary -> {operator}, {expression}")
+            }
+            Self::Variable { name, token } => {
+                write!(f, "Expression::Variable -> {name}={token}")
+            }
+            Self::InterpolatedString { parts } => {
+                write!(f, "Expression::InterpolatedString -> {parts:?}")
             }
         }
     }
