@@ -38,6 +38,8 @@ pub enum Expression {
     InterpolatedString {
         /// Parts of the string as expressions
         parts: Vec<Expression>,
+        /// True if heredoc
+        is_heredoc: bool,
     },
 }
 
@@ -66,8 +68,12 @@ impl Display for Expression {
             Self::Variable { name, token } => {
                 write!(f, "Expression::Variable -> {name}={token}")
             }
-            Self::InterpolatedString { parts } => {
-                write!(f, "Expression::InterpolatedString -> {parts:?}")
+            Self::InterpolatedString { parts, is_heredoc } => {
+                write!(
+                    f,
+                    "Expression::InterpolatedString -> {parts:?}{}",
+                    if *is_heredoc { " as heredoc" } else { "" }
+                )
             }
         }
     }
