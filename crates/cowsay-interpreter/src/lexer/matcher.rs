@@ -141,10 +141,10 @@ impl Scanner<'_> {
         let search_target = format!("\n{delimiter}");
         let delim_end_idx = remaining_source.find(&search_target);
         if let Some(idx) = delim_end_idx {
-            let interpolation_start_idx = self.current_idx;
+            let interpolation_start_idx = self.current_idx - 1;
             self.extract_interpolation_string_tokens(
                 interpolation_start_idx,
-                |_, i| i >= idx + interpolation_start_idx,
+                |_, i| i > idx + interpolation_start_idx,
             );
         } else {
             self.add_token(Type::Error, self.current_idx);

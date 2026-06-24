@@ -283,7 +283,7 @@ mod tests {
             Token::new(Type::Redirect, Span::new(7, 9)),
             Token::new(Type::Identifier, Span::new(9, 12)),
             Token::new(Type::Semicolon, Span::new(12, 13)),
-            Token::new(Type::LiteralString, Span::new(15, 44)),
+            Token::new(Type::LiteralString, Span::new(14, 44)),
             Token::new(Type::Identifier, Span::new(46, 49)),
             Token::new(Type::RedirectEnd, Span::new(49, 49)),
             Token::new(Type::EndOfFile, Span::new(49, 49)),
