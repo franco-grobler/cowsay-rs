@@ -62,7 +62,7 @@ impl Evaluator {
             Expression::Literal(ast_literal) => {
                 let value = match ast_literal {
                     AstLiteral::Number(f) => Value::Number(*f),
-                    AstLiteral::String(s) => Value::String(s.clone()), // Or Rc::clone if using Rc
+                    AstLiteral::String(s) => Value::String(s.clone()),
                     AstLiteral::Boolean(b) => Value::Boolean(*b),
                     AstLiteral::Nil => Value::Nil,
                 };
@@ -110,6 +110,20 @@ impl Evaluator {
                 let right_val = self.evaluate(right)?;
 
                 evaluate_binary(left_val, operator, right_val)
+            }
+
+            Expression::Variable { name, token } => {
+                let value = self.environment.borrow().get(name, token)?;
+                Ok(value)
+            }
+
+            Expression::InterpolatedString { parts } => {
+                let mut string_builder = String::new();
+                for part in parts {
+                    let value = self.evaluate(part)?;
+                    string_builder.push_str(&value.to_string());
+                }
+                Ok(Value::String(string_builder))
             }
         }
     }
