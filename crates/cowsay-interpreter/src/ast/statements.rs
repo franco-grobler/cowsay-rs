@@ -8,10 +8,10 @@ use crate::ast::token::Token;
 /// Statements
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub enum Statement {
-    /// An expression followed by a semicolon (e.g., `5 + 5;`)
+    /// An expression followed by a semicolon
     Expression(Expression),
 
-    /// A print statement (e.g., `print "Hello";`)
+    /// A print statement
     Print(Expression),
 
     /// Variable
