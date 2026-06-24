@@ -6,10 +6,6 @@ use crate::ast::token::Type;
 use crate::lexer::utils::is_valid_identifier;
 use std::{iter::Peekable, str::CharIndices};
 
-use crate::lexer::utils;
-
-// (Assuming your Token, Type, and Span structs are imported here)
-
 #[derive(Debug)]
 /// Lexical scanner.
 ///
@@ -18,10 +14,10 @@ use crate::lexer::utils;
 /// * `tokens`: Token vector.
 /// * `current_idx`: Current scanning index
 pub struct Scanner<'a> {
-    source: &'a str,
+    pub(crate) source: &'a str,
     chars: Peekable<CharIndices<'a>>,
     tokens: Vec<Token>,
-    current_idx: usize,
+    pub(crate) current_idx: usize,
 }
 
 impl<'a> Scanner<'a> {
@@ -38,8 +34,18 @@ impl<'a> Scanner<'a> {
     }
 
     /// Consumes and returns the next character, advancing the byte index.
-    fn advance(&mut self) -> Option<char> {
+    pub(crate) fn advance(&mut self) -> Option<char> {
         if let Some((idx, c)) = self.chars.next() {
+            // Update the index to point to the byte after this character
+            self.current_idx = idx + c.len_utf8();
+            Some(c)
+        } else {
+            None
+        }
+    }
+    /// Consumes and returns the nth character, advancing the byte index.
+    pub(crate) fn advance_nth(&mut self, n: usize) -> Option<char> {
+        if let Some((idx, c)) = self.chars.nth(n) {
             // Update the index to point to the byte after this character
             self.current_idx = idx + c.len_utf8();
             Some(c)
@@ -49,7 +55,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Looks at the next character without consuming it.
-    fn peek(&mut self) -> Option<char> {
+    pub(crate) fn peek(&mut self) -> Option<char> {
         self.chars.peek().map(|&(_, c)| c)
     }
 
@@ -64,86 +70,27 @@ impl<'a> Scanner<'a> {
         }
     }
 
-    /// Scans for a variable.
-    /// Consume $, then treat as identifier
-    fn scan_variable(&mut self, start_idx: usize) {
-        // Consume $
-        self.advance();
-        self.scan_identifier(start_idx);
-    }
-
-    /// Scans a sequence of letters/numbers and checks if it is a keyword.
-    /// * `start_idx`: Identifier zero index ($).
-    fn scan_identifier(&mut self, start_idx: usize) {
-        // Consume characters.
-        while let Some(c) = self.peek() {
-            if utils::is_valid_identifier(c) {
-                self.advance();
-            } else {
-                break;
-            }
-        }
-
-        // Match keywords, otherwise identifier.
-        let text = &self.source[start_idx..self.current_idx];
-        let typ = match text {
-            "true" | "false" => Type::LiteralBoolean,
-            "unless" => Type::KeywordUnless,
-            "ne" => Type::KeywordNotEqual,
-            "print" => Type::KeywordPrint,
-            text if text.starts_with('$') => Type::Variable,
-            _ => Type::Identifier,
-        };
-
-        self.add_token(typ, start_idx);
-    }
-
-    /// Scans a sequence of digits
-    fn scan_number(&mut self, start_idx: usize) {
-        // Consume digits
-        while let Some(c) = self.peek() {
-            if c.is_ascii_digit() {
-                self.advance();
-            } else {
-                break;
-            }
-        }
-
-        // Read floating point numbers
-        if self.peek() == Some('.') {
-            // Consume the '.'
-            self.advance();
-            // Consume the fractional digits
-            while let Some(c) = self.peek() {
-                if c.is_ascii_digit() {
-                    self.advance();
-                } else {
-                    break;
-                }
-            }
-        }
-
-        self.add_token(Type::LiteralNumber, start_idx);
-    }
-
-    /// Scans a sequence of letters/numbers and checks if it is a keyword.
-    fn scan_string(&mut self, start_idx: usize, termination_char: char) {
-        // Consume characters.
-        while let Some(c) = self.peek() {
-            self.advance();
-            if c != termination_char {
-                continue;
-            }
-            break;
-        }
-
-        self.add_token(Type::LiteralString, start_idx);
-    }
-
     /// Helper to create and store a token
-    fn add_token(&mut self, typ: Type, start_idx: usize) {
+    pub(crate) fn add_token(&mut self, typ: Type, start_idx: usize) {
         let span = Span::new(start_idx, self.current_idx);
         self.tokens.push(Token::new(typ, span));
+    }
+
+    /// Advance until a line break is found.
+    /// Consumes the new-line character.
+    pub(crate) fn advance_line(&mut self) {
+        loop {
+            if let Some(c) = self.peek() {
+                if c == '\n' {
+                    self.advance();
+                    break;
+                }
+            } else {
+                self.add_token(Type::Error, self.current_idx);
+                break;
+            }
+            self.advance();
+        }
     }
 
     /// Main loop to scan all tokens
@@ -176,6 +123,7 @@ impl<'a> Scanner<'a> {
                         } else {
                             self.add_token(Type::Redirect, start_idx);
                         }
+                        self.scan_here_doc(start_idx);
                     } else {
                         self.add_token(Type::LessThan, start_idx);
                     }
@@ -188,7 +136,10 @@ impl<'a> Scanner<'a> {
                     }
                 }
                 '"' => {
-                    self.scan_string(start_idx, '"');
+                    self.scan_interpolation_string(start_idx);
+                }
+                '\'' => {
+                    self.scan_string(start_idx);
                 }
                 '$' => {
                     self.scan_variable(start_idx);
@@ -230,6 +181,7 @@ mod tests {
         ast::token::{Span, Token, Type},
         lexer::scanner::Scanner,
     };
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn can_read_direct_identifier() {
@@ -245,7 +197,7 @@ mod tests {
 
     #[test]
     fn can_read_simple_assignment() {
-        let mut scanner = Scanner::new("$var = \"hello\"");
+        let mut scanner = Scanner::new("$var = 'hello'");
         scanner.scan_tokens();
         let expected = vec![
             Token::new(Type::Variable, Span::new(0, 4)),
@@ -273,7 +225,7 @@ mod tests {
 
     #[test]
     fn can_read_print_declaration() {
-        let source = r#"print "hello";"#;
+        let source = "print 'hello';";
         let mut scanner = Scanner::new(source);
         scanner.scan_tokens();
         let expected = vec![
@@ -288,7 +240,7 @@ mod tests {
 
     #[test]
     fn can_read_variable_declaration() {
-        let source = r#"$var="hello";"#;
+        let source = r"$var='hello';";
         let mut scanner = Scanner::new(source);
         scanner.scan_tokens();
         let expected = vec![
@@ -297,6 +249,44 @@ mod tests {
             Token::new(Type::LiteralString, Span::new(5, 12)),
             Token::new(Type::Semicolon, Span::new(12, 13)),
             Token::new(Type::EndOfFile, Span::new(13, 13)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
+    fn can_read_variable_declaration_with_spaces() {
+        let source = r#"$var = "hello";"#;
+        let mut scanner = Scanner::new(source);
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Variable, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(5, 6)),
+            Token::new(Type::LiteralStringInterpolationStart, Span::new(7, 8)),
+            Token::new(Type::LiteralString, Span::new(8, 13)),
+            Token::new(Type::LiteralStringInterpolationEnd, Span::new(13, 14)),
+            Token::new(Type::Semicolon, Span::new(14, 15)),
+            Token::new(Type::EndOfFile, Span::new(15, 15)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
+    fn can_read_here_doc() {
+        let source = "$var = <<EOF;\nhello, this is a here document\nEOF\n";
+        let mut scanner = Scanner::new(source);
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Variable, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(5, 6)),
+            Token::new(Type::Redirect, Span::new(7, 9)),
+            Token::new(Type::Identifier, Span::new(9, 12)),
+            Token::new(Type::Semicolon, Span::new(12, 13)),
+            Token::new(Type::LiteralString, Span::new(15, 44)),
+            Token::new(Type::Identifier, Span::new(46, 49)),
+            Token::new(Type::RedirectEnd, Span::new(49, 49)),
+            Token::new(Type::EndOfFile, Span::new(49, 49)),
         ];
 
         assert_eq!(scanner.tokens(), expected);
