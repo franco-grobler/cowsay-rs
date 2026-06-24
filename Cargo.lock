@@ -248,6 +248,9 @@ dependencies = [
 [[package]]
 name = "cowsay-interpreter"
 version = "0.3.24"
+dependencies = [
+ "pretty_assertions",
+]
 
 [[package]]
 name = "cowsay-parser"
