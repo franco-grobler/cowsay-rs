@@ -109,7 +109,7 @@ impl<'a> Parser<'a> {
         message: String,
         span: Span,
     ) -> RuntimeError {
-        println!("Error encountered: {message}");
+        eprintln!("Error encountered: {message}");
         let err = RuntimeError::ParsingError { message, span };
         self.errors.push(err.clone());
         err
