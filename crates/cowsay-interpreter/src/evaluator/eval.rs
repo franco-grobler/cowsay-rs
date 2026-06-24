@@ -117,7 +117,10 @@ impl Evaluator {
                 Ok(value)
             }
 
-            Expression::InterpolatedString { parts } => {
+            Expression::InterpolatedString {
+                parts,
+                is_heredoc: _,
+            } => {
                 let mut string_builder = String::new();
                 for part in parts {
                     let value = self.evaluate(part)?;
