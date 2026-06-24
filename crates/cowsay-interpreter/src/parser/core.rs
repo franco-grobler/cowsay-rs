@@ -58,17 +58,17 @@ impl<'a> Parser<'a> {
     /// Consumes and returns the current token.
     pub(super) fn advance(&mut self) -> Token {
         loop {
-            if !self.is_at_end() {
-                self.current += 1; // This will now compile perfectly!
+            if self.is_at_end() {
+                break;
             }
+            self.current += 1;
 
-            // This is now an owned copy, so it releases `self` immediately
             let token = self.previous();
-
             if token.typ != Type::Error {
                 return token;
             }
         }
+        *self.peek()
     }
 
     /// Returns the most recently consumed token.
