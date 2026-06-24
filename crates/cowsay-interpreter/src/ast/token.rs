@@ -55,6 +55,8 @@ pub enum Type {
     EndOfFile,
     /// <<
     Redirect,
+    /// Found Identifier
+    RedirectEnd,
     /// <<-
     RedirectStrip,
     /// =
@@ -119,6 +121,10 @@ pub enum Type {
     LiteralNumber,
     /// String
     LiteralString,
+    /// String with interpolation starting point
+    LiteralStringInterpolationStart,
+    /// String with interpolation starting point
+    LiteralStringInterpolationEnd,
 
     /// Errors
     Error,
