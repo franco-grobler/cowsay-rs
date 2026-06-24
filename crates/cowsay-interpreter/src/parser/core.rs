@@ -161,6 +161,7 @@ mod tests {
         number::Number,
         parser::core::Parser,
     };
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn can_read_comparison() {
@@ -208,7 +209,7 @@ mod tests {
     }
 
     #[test]
-    fn can_read_variable_devlaration() {
+    fn can_read_variable_declaration() {
         let source = r#"$var="hello";"#;
         let tokens = vec![
             Token::new(Type::Variable, Span::new(0, 4)),
@@ -228,6 +229,69 @@ mod tests {
                     "\"hello\"".to_string()
                 )))
             }]
+        );
+    }
+
+    #[test]
+    fn can_read_variable_declaration_with_spaces() {
+        let source = "$thoughts = 'o';";
+        let tokens = vec![
+            Token {
+                typ: Type::Variable,
+                span: Span { start: 0, end: 9 },
+            },
+            Token {
+                typ: Type::Equal,
+                span: Span { start: 10, end: 11 },
+            },
+            Token {
+                typ: Type::LiteralString,
+                span: Span { start: 12, end: 15 },
+            },
+            Token {
+                typ: Type::Semicolon,
+                span: Span { start: 15, end: 16 },
+            },
+            Token {
+                typ: Type::EndOfFile,
+                span: Span::new(13, 13),
+            },
+        ];
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse(),
+            vec![Statement::Variable {
+                name: "thoughts".to_string(),
+                name_token: Token::new(Type::Variable, Span::new(0, 9)),
+                initializer: Some(Expression::Literal(Literal::String(
+                    "'o'".to_string()
+                )))
+            }]
+        );
+    }
+
+    #[test]
+    fn can_read_here_doc() {
+        let source = "$var = <<EOF;\nhello, this is a here document\nEOF\n";
+        let tokens = vec![
+            Token::new(Type::Variable, Span::new(0, 4)),
+            Token::new(Type::Equal, Span::new(5, 6)),
+            Token::new(Type::Redirect, Span::new(7, 9)),
+            Token::new(Type::Identifier, Span::new(9, 12)),
+            Token::new(Type::Semicolon, Span::new(12, 13)),
+            Token::new(Type::LiteralString, Span::new(15, 44)),
+            Token::new(Type::Identifier, Span::new(46, 49)),
+            Token::new(Type::RedirectEnd, Span::new(49, 49)),
+            Token::new(Type::EndOfFile, Span::new(49, 49)),
+        ];
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse(),
+            vec![Statement::Expression(Expression::InterpolatedString {
+                parts: vec![]
+            })]
         );
     }
 }
