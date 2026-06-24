@@ -27,10 +27,19 @@ impl Parser<'_> {
                 None
             };
 
-        self.consume(
-            Type::Semicolon,
-            "Expected ';' after variable declaration.".to_string(),
-        )?;
+        let is_heredoc_init = matches!(
+            initializer,
+            Some(Expression::InterpolatedString {
+                is_heredoc: true,
+                ..
+            })
+        );
+        if !is_heredoc_init {
+            self.consume(
+                Type::Semicolon,
+                "Expected ';' after variable declaration.".to_string(),
+            )?;
+        }
 
         Ok(Statement::Variable {
             name: name.clone(),
