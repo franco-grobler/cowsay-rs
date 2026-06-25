@@ -280,7 +280,7 @@ mod tests {
             Token::new(Type::Redirect, Span::new(7, 9)),
             Token::new(Type::Identifier, Span::new(9, 12)),
             Token::new(Type::Semicolon, Span::new(12, 13)),
-            Token::new(Type::LiteralString, Span::new(15, 44)),
+            Token::new(Type::LiteralString, Span::new(14, 44)),
             Token::new(Type::Identifier, Span::new(46, 49)),
             Token::new(Type::RedirectEnd, Span::new(49, 49)),
             Token::new(Type::EndOfFile, Span::new(49, 49)),
@@ -289,9 +289,16 @@ mod tests {
 
         assert_eq!(
             parser.parse(),
-            vec![Statement::Expression(Expression::InterpolatedString {
-                parts: vec![]
-            })]
+            vec![Statement::Variable {
+                name: "var".to_string(),
+                name_token: Token::new(Type::Variable, Span::new(0, 4)),
+                initializer: Some(Expression::InterpolatedString {
+                    parts: vec![Expression::Literal(Literal::String(
+                        "hello, this is a here document".to_string()
+                    ))],
+                    is_heredoc: true,
+                })
+            },]
         );
     }
 }
