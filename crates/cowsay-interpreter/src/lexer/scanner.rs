@@ -147,6 +147,9 @@ impl<'a> Scanner<'a> {
                 ';' => {
                     self.add_token(Type::Semicolon, start_idx);
                 }
+                '#' => {
+                    self.scan_comment(start_idx);
+                }
 
                 // Ignore whitespace
                 ' ' | '\r' | '\t' | '\n' => {}
