@@ -49,6 +49,8 @@ impl Display for Token {
 pub enum Type {
     /// Variable name
     Identifier,
+    /// Comment
+    Comment,
 
     // Operators
     /// EOF
