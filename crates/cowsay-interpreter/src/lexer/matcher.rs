@@ -155,4 +155,10 @@ impl Scanner<'_> {
         self.add_token(Type::Identifier, self.current_idx - delimiter_len);
         self.add_token(Type::RedirectEnd, self.current_idx);
     }
+
+    /// Consume a comment
+    pub(crate) fn scan_comment(&mut self, start_idx: usize) {
+        self.advance_line();
+        self.add_token(Type::Comment, start_idx);
+    }
 }
