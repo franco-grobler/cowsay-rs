@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use crate::ast::expressions::{Expression, Literal as AstLiteral};
 use crate::ast::statements::Statement;
-use crate::ast::token::Type;
+use crate::ast::token::{Span, Type};
 use crate::evaluator::environment::Environment;
 use crate::evaluator::utils::{evaluate_binary, is_truthy};
 use crate::result::{RuntimeError, Value};
@@ -22,8 +22,7 @@ impl Evaluator {
             environment: Rc::new(RefCell::new(Environment::new())),
         }
     }
-    /// Executes a statement. Notice it returns () on success.
-    #[allow(unused_variables)]
+    /// Executes a statement.
     pub fn execute(&mut self, stmt: &Statement) -> Result<(), RuntimeError> {
         match stmt {
             Statement::Expression(expr) => {
@@ -39,7 +38,7 @@ impl Evaluator {
             }
             Statement::Variable {
                 name,
-                name_token,
+                name_token: _,
                 initializer,
             } => {
                 let value = match initializer {
@@ -123,9 +122,32 @@ impl Evaluator {
             } => {
                 let mut string_builder = String::new();
                 for part in parts {
-                    let value = self.evaluate(part)?;
-                    string_builder.push_str(&value.to_string());
+                    let value = self.evaluate(part)?.to_string();
+                    let mut chars = value.chars();
+                    while let Some(c) = chars.next() {
+                        if c == '\\' {
+                            let err = RuntimeError::ParsingError {
+                                message: "Expected a character to be escaped."
+                                    .to_string(),
+                                span: Span::new(0, 0), // FIX: I need the location here
+                            };
+                            let escaped = chars.next().ok_or(err)?;
+                            match escaped {
+                                'n' => string_builder.push('\n'),
+                                'r' => string_builder.push('\r'),
+                                't' => string_builder.push('\t'),
+                                '\\' => string_builder.push('\\'),
+                                '"' => string_builder.push('"'),
+
+                                _ => {
+                                    string_builder.push(escaped);
+                                }
+                            }
+                        }
+                    }
+                    string_builder.push_str(&value);
                 }
+
                 Ok(Value::String(string_builder))
             }
         }
