@@ -10,7 +10,7 @@ pub struct Environment {
     /// The local variables in this specific scope
     values: HashMap<String, Value>,
     /// The parent scope
-    pub enclosing: Option<Rc<RefCell<Environment>>>,
+    pub enclosing: Option<Rc<RefCell<Self>>>,
 }
 
 impl Default for Environment {

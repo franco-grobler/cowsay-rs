@@ -10,14 +10,14 @@ pub enum Expression {
     /// Binary expression.
     Binary {
         /// Left operand.
-        left: Box<Expression>,
+        left: Box<Self>,
         /// Operator to apply.
         operator: Token,
         /// Right operand.
-        right: Box<Expression>,
+        right: Box<Self>,
     },
     /// Grouping expression.
-    Grouping(Box<Expression>),
+    Grouping(Box<Self>),
     /// Literal expression.
     Literal(Literal),
     /// Unary expression.
@@ -25,7 +25,7 @@ pub enum Expression {
         /// Operator to apply to expression
         operator: Token,
         /// Expression receiving operator
-        expression: Box<Expression>,
+        expression: Box<Self>,
     },
     /// Variable lookup expression
     Variable {
@@ -37,7 +37,7 @@ pub enum Expression {
     /// Interpolated string
     InterpolatedString {
         /// Parts of the string as expressions
-        parts: Vec<Expression>,
+        parts: Vec<Self>,
         /// True if heredoc
         is_heredoc: bool,
     },
