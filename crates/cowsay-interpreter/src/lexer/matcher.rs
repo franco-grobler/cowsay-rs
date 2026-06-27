@@ -136,8 +136,9 @@ impl Scanner<'_> {
         self.advance_line();
 
         let remaining_source = &self.source[self.current_idx..];
-        let delimiter =
-            &self.source[delim_start_idx..delim_start_idx + delimiter_len];
+        let delimiter = self.source
+            [delim_start_idx..delim_start_idx + delimiter_len]
+            .trim_matches('"');
         let search_target = format!("\n{delimiter}");
         let delim_end_idx = remaining_source.find(&search_target);
         if let Some(idx) = delim_end_idx {
