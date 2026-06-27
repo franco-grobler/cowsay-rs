@@ -75,7 +75,7 @@ pub enum RuntimeError {
         /// Variable name.
         name: String,
         /// Location
-        span: Span,
+        span: Option<Span>,
     },
     /// Unknown sequence of characters.
     UndefinedControlSequence {
