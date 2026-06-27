@@ -8,6 +8,7 @@ use std::process;
 
 use cowsay_interpreter::evaluator::eval::Evaluator;
 use cowsay_interpreter::lexer::scanner::Scanner;
+use cowsay_interpreter::number::Number;
 use cowsay_interpreter::parser;
 
 fn main() {
@@ -91,8 +92,34 @@ fn run(source: &str, evaluator: &mut Evaluator) {
     let tokens = scanner.tokens();
     let mut parser = parser::core::Parser::new(tokens.to_vec(), source);
     let statements = parser.parse();
-    for statement in statements {
-        let _ = evaluator.execute(&statement);
+
+    evaluator.environment.borrow_mut().define(
+        "t".to_string(),
+        cowsay_interpreter::result::Value::Number(Number(0.0)),
+    );
+    evaluator.environment.borrow_mut().define(
+        "eyes".to_string(),
+        cowsay_interpreter::result::Value::String("oo".to_string()),
+    );
+    evaluator.environment.borrow_mut().define(
+        "thoughts".to_string(),
+        cowsay_interpreter::result::Value::String("o".to_string()),
+    );
+    evaluator.environment.borrow_mut().define(
+        "tongue".to_string(),
+        cowsay_interpreter::result::Value::String("U".to_string()),
+    );
+
+    for statement in &statements {
+        let _ = evaluator.execute(statement);
     }
-    println!("Environment: {}", evaluator.environment.borrow());
+
+    let cow_frame = evaluator
+        .environment
+        .borrow_mut()
+        .get("the_cow", None)
+        .unwrap();
+
+    // Print the new frame
+    println!("{cow_frame}");
 }
