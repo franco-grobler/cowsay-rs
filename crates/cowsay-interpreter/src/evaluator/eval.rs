@@ -61,7 +61,9 @@ impl Evaluator {
             Expression::Literal(ast_literal) => {
                 let value = match ast_literal {
                     AstLiteral::Number(f) => Value::Number(*f),
-                    AstLiteral::String(s) => Value::String(s.clone()),
+                    AstLiteral::String(s) => {
+                        Value::String(s.trim_matches('\'').to_string())
+                    }
                     AstLiteral::Boolean(b) => Value::Boolean(*b),
                     AstLiteral::Nil => Value::Nil,
                 };
