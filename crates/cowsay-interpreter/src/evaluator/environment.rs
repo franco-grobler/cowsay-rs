@@ -69,14 +69,14 @@ impl Environment {
     pub fn get(
         &self,
         name: &str,
-        token: &Token,
+        token: Option<&Token>,
     ) -> Result<Value, RuntimeError> {
-        // First, check local scope
+        // Check local scope
         if let Some(value) = self.values.get(name) {
             return Ok(value.clone());
         }
 
-        // If not found, recursively check the parent scope
+        // Recursively check the parent scope
         if let Some(enclosing) = &self.enclosing {
             return enclosing.borrow().get(name, token);
         }
@@ -84,7 +84,7 @@ impl Environment {
         // If we hit the top and it's not there, it's an error!
         Err(RuntimeError::UndefinedVariable {
             name: name.to_string(),
-            span: token.span,
+            span: token.map(|t| t.span),
         })
     }
 
@@ -108,7 +108,7 @@ impl Environment {
 
         Err(RuntimeError::UndefinedVariable {
             name: name.to_string(),
-            span: token.span,
+            span: Some(token.span),
         })
     }
 }

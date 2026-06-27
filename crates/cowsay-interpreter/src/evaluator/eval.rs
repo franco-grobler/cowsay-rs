@@ -114,7 +114,7 @@ impl Evaluator {
             }
 
             Expression::Variable { name, token } => {
-                let value = self.environment.borrow().get(name, token)?;
+                let value = self.environment.borrow().get(name, Some(token))?;
                 Ok(value)
             }
 
