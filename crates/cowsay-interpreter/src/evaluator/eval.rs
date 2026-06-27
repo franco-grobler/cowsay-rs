@@ -145,9 +145,10 @@ impl Evaluator {
                                     string_builder.push(escaped);
                                 }
                             }
+                        } else {
+                            string_builder.push(c);
                         }
                     }
-                    string_builder.push_str(&value);
                 }
 
                 Ok(Value::String(string_builder))
