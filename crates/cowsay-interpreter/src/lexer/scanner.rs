@@ -199,6 +199,19 @@ mod tests {
     }
 
     #[test]
+    fn can_read_comments() {
+        let mut scanner = Scanner::new("# hi\n$hello");
+        scanner.scan_tokens();
+        let expected = vec![
+            Token::new(Type::Comment, Span::new(0, 5)),
+            Token::new(Type::Variable, Span::new(5, 11)),
+            Token::new(Type::EndOfFile, Span::new(11, 11)),
+        ];
+
+        assert_eq!(scanner.tokens(), expected);
+    }
+
+    #[test]
     fn can_read_simple_assignment() {
         let mut scanner = Scanner::new("$var = 'hello'");
         scanner.scan_tokens();
