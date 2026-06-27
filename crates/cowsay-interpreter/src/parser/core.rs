@@ -34,6 +34,11 @@ impl<'a> Parser<'a> {
         let mut statements = Vec::new();
 
         while !self.is_at_end() {
+            if self.peek().typ == Type::Comment {
+                self.current += 1;
+                continue;
+            }
+
             if let Ok(stmt) = self.declaration() {
                 statements.push(stmt);
             } else {
@@ -64,7 +69,7 @@ impl<'a> Parser<'a> {
             self.current += 1;
 
             let token = self.previous();
-            if token.typ != Type::Error {
+            if token.typ != Type::Error && token.typ != Type::Comment {
                 return token;
             }
         }
@@ -186,6 +191,28 @@ mod tests {
                     2.0
                 )))),
             })]
+        );
+    }
+
+    #[test]
+    fn can_skips_comment_lines() {
+        let source = "# hi\n$hello;";
+        let tokens = vec![
+            Token::new(Type::Comment, Span::new(0, 5)),
+            Token::new(Type::Variable, Span::new(5, 11)),
+            Token::new(Type::Semicolon, Span::new(11, 12)),
+            Token::new(Type::EndOfFile, Span::new(12, 12)),
+        ];
+
+        let mut parser = Parser::new(tokens, source);
+
+        assert_eq!(
+            parser.parse(),
+            vec![Statement::Variable {
+                name: "hello".to_string(),
+                name_token: Token::new(Type::Variable, Span::new(5, 11)),
+                initializer: None
+            }]
         );
     }
 
