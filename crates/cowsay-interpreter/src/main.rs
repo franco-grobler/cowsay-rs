@@ -122,4 +122,9 @@ fn run(source: &str, evaluator: &mut Evaluator) {
 
     // Print the new frame
     println!("{cow_frame}");
+    if !parser.errors().is_empty() {
+        eprintln!("Environment: {}", evaluator.environment.borrow());
+        eprintln!("errors: {:?}", parser.errors());
+        eprintln!("tokens: {tokens:?}");
+    }
 }
