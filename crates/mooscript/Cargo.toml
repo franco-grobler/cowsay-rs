@@ -1,5 +1,5 @@
 [package]
-name = "cowsay-interpreter"
+name = "mooscript"
 description = "Cowfile interpreter"
 version.workspace = true
 edition.workspace = true
@@ -14,6 +14,7 @@ categories.workspace = true
 keywords.workspace = true
 
 [dependencies]
+annotate-snippets = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = { workspace = true }
