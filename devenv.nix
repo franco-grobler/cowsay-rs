@@ -26,17 +26,11 @@
   languages = {
     javascript = {
       enable = true;
-      bun = {
-        enable = true;
-      };
+      corepack.enable = true;
     };
     rust = {
       enable = true;
       toolchainFile = ./rust-toolchain.toml;
     };
   };
-
-  enterShell = ''
-    unset DEVELOPER_DIR;
-  '';
 }

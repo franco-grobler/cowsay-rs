@@ -1,28 +1,21 @@
 [package]
-name = "cowsay"
-description = "A Rust implementation of the classic cowsay program"
-publish = true
+name = "cowsay-interpreter"
+description = "Cowfile interpreter"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 homepage.workspace = true
+readme.workspace = true
 documentation.workspace = true
 repository.workspace = true
 authors.workspace = true
 license.workspace = true
 categories.workspace = true
 keywords.workspace = true
-readme.workspace = true
 
 [dependencies]
-cowsay-parser = { workspace = true }
-cowsay-template = { workspace = true }
-
-include_directory = { workspace = true }
-rand = { workspace = true }
 
 [dev-dependencies]
-glob = { workspace = true }
 pretty_assertions = { workspace = true }
 
 [lints]

@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.package]
 version = "0.3.24"
 edition = "2024"
-rust-version = "1.91.0"
+rust-version = "1.96.0"
 homepage = "https://franco-grobler.github.io/cowsay-rs/"
 readme = "./README.md"
 documentation = "https://franco-grobler.github.io/cowsay-rs/"
@@ -18,17 +18,18 @@ keywords = ["cowsay", "cli", "command-line", "ascii-art", "fun"]
 
 [workspace.dependencies]
 cowsay = { path = "crates/cowsay" }
+cowsay-interpreter = { path = "crates/cowsay-interpreter" }
 cowsay-parser = { path = "crates/cowsay-parser" }
 cowsay-template = { path = "crates/cowsay-template" }
 
 clap = { version = "4.5.53", features = ["derive"] }
 console_error_panic_hook = { version = "0.1.7" }
 console_log = { version = "1.0.0" }
-getrandom = { version = "0.3.4" }
+getrandom = { version = "0.4.2" }
 include_directory = "0.1.1"
 js-sys = { version = "0.3.83" }
 log = { version = "0.4.29" }
-rand = "0.9.2"
+rand = "0.10.1"
 regex = "1.12.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde-wasm-bindgen = { version = "0.6.5" }

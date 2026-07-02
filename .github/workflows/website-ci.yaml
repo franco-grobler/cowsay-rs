@@ -32,28 +32,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - run: corepack enable
+      - run: corepack install
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22.20"
+          node-version: "24.14"
+          cache: "pnpm"
 
-      - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
-        with:
-          bun-version-file: "website/.bun-version"
-
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache # The directory where Bun caches packages
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }} # Key based on OS and lockfile hash
-          restore-keys: |
-            ${{ runner.os }}-bun- # Fallback key
-
-      - run: bun install
+      - run: pnpm install --frozen-lockfile
 
       - name: Eslint
-        run: bun run lint
+        run: pnpm run lint
 
       - name: Prettier
-        run: bun run format
+        run: pnpm run format
