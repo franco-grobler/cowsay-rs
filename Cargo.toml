@@ -18,9 +18,9 @@ keywords = ["cowsay", "cli", "command-line", "ascii-art", "fun"]
 
 [workspace.dependencies]
 cowsay = { path = "crates/cowsay" }
-cowsay-interpreter = { path = "crates/cowsay-interpreter" }
 cowsay-parser = { path = "crates/cowsay-parser" }
 cowsay-template = { path = "crates/cowsay-template" }
+mooscript = { path = "crates/mooscript" }
 
 clap = { version = "4.5.53", features = ["derive"] }
 console_error_panic_hook = { version = "0.1.7" }
