@@ -1,0 +1,12 @@
+$eyes = ($t % 4 == 0) ? "--" : "OO";
+$tongue = ($t % 2 == 0) ? " U" : "  ";
+
+$the_cow = <<EOC;
+       $thoughts
+        $thoughts
+         ^__^
+         ($eyes)\\_______
+         (__)\\       )\\/\\
+          $tongue ||----w |
+             ||     ||
+EOC
