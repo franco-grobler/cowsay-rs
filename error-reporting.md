@@ -69,9 +69,16 @@ pub struct Diagnostic {
     pub notes: Vec<String>,
 }
 
-pub enum Severity { Error, Warning, Advice }
+pub enum Severity {
+    Error,
+    Warning,
+    Advice,
+}
 
-pub struct Label { span: Span, text: String }
+pub struct Label {
+    span: Span,
+    text: String,
+}
 ```
 
 Derive `Debug, Clone`. Document every public item (strict `missing_docs` lint).
