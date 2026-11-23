@@ -19,7 +19,7 @@ run-container:
 create-release:
     ./scripts/create-release.sh
 
-# Update github action job
+# Update pinned CI action versions
 [group("CI")]
 update-ci-actions:
-    ./scripts/update-github-actions-checkout-version.sh
+    ./scripts/update-ci-action-versions.sh
