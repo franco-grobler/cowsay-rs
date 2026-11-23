@@ -1,0 +1,37 @@
+name: Website CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+  pull_request:
+    paths:
+      - "website/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: website
+
+jobs:
+  build:
+    runs-on: docker
+    container: node:24-trixie
+    steps:
+      - uses: https://github.com/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - uses: https://github.com/oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version-file: "website/.bun-version"
+
+      - run: bun install --frozen-lockfile
+
+      - name: Eslint
+        run: bun run lint
+
+      - name: Prettier
+        run: bun run format
