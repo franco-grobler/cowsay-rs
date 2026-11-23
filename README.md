@@ -1,7 +1,7 @@
 # Cowsay-rs
 
 [![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
-[![CI](https://git.apps.lab.bamboo.grobler.fyi/franco-grobler/cowsay-rs/actions/workflows/ci.yaml/badge.svg?branch=main)](https://git.apps.lab.bamboo.grobler.fyi/franco-grobler/cowsay-rs/actions?workflow=ci.yaml)
+[![CI](https://forgejo.apps.lab.bamboo.grobler.fyi/franco-grobler/cowsay-rs/actions/workflows/ci.yaml/badge.svg?branch=main)](https://forgejo.apps.lab.bamboo.grobler.fyi/franco-grobler/cowsay-rs/actions?workflow=ci.yaml)
 
 A Rust implementation of the classic cowsay program.
 
